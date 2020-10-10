@@ -86,5 +86,8 @@
     <ClInclude Include="draw_utilities.h">
       <Filter>utilities</Filter>
     </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

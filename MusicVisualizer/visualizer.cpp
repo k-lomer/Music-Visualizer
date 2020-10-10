@@ -18,7 +18,10 @@ const SDL_Color red{ 255, 0, 0, 255 };
 const SDL_Color green{ 0, 255, 0, 255 };
 const SDL_Color blue{ 0, 0, 255, 255 };
 
-Visualizer::Visualizer(): recorder() {
+const std::chrono::seconds Visualizer::change_time(10);
+const int Visualizer::num_layers(8);
+
+Visualizer::Visualizer(): recorder(), layer_change_timer(change_time) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		std::cout << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
 		return;
@@ -38,11 +41,9 @@ Visualizer::Visualizer(): recorder() {
 		recording_thread = std::thread(&AudioRecorder::record, &recorder, (AudioSink *)this, std::ref(exit_recording_thread_flag));
 	}
 	
-	for (int i = 0; i < 10; ++i) {
-		visual_layers.push_back(std::move(vl_factory.random_visual_layer(window_width, window_height)));
+	for (int i = 0; i < num_layers; ++i) {
+		add_visual_layer();
 	}
-
-
 }
 
 Visualizer::~Visualizer()
@@ -61,6 +62,17 @@ Visualizer::~Visualizer()
 
 bool Visualizer::init_successful() const {
 	return (renderer && recording_thread.joinable());
+}
+
+void Visualizer::add_visual_layer() {
+	visual_layers.push_back(std::move(vl_factory.random_visual_layer(window_width, window_height)));
+}
+
+void Visualizer::change_visual_layer() {
+	if (!visual_layers.empty()) {
+		visual_layers.erase(visual_layers.begin());
+	}
+	add_visual_layer();
 }
 
 
@@ -128,6 +140,11 @@ bool Visualizer::update() {
 			return false;
 		}
 		handle_event(current_event);
+	}
+
+	if (layer_change_timer.expired()) {
+		change_visual_layer();
+		layer_change_timer.reset();
 	}
 
 	// Do not render if minimized

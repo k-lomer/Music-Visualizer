@@ -7,6 +7,7 @@
 #include "audio_recorder.h"
 #include "audio_sink.h"
 #include "SDL.h"
+#include "timer.h"
 #include "visual_layer.h"
 #include "visual_layer_factory.h"
 
@@ -42,7 +43,6 @@ private:
 	bool mFullScreen = false;
 	bool mMinimized = false;
 
-
 	AudioRecorder recorder;
 	std::thread recording_thread;
 	std::atomic_bool exit_recording_thread_flag = false;
@@ -52,11 +52,22 @@ private:
 
 	VisualLayerFactory vl_factory;
 	std::vector<std::unique_ptr<VisualLayer>> visual_layers;
+	CountdownTimer<std::chrono::seconds> layer_change_timer;
+	static const std::chrono::seconds change_time;
+	static const int num_layers;
 
 	// Handle SDL window events
 	// param: e - the SDL window event to handle
 	void handle_event(const SDL_Event & e);
 
+	// Add a visual layer to the visualizer
+	void add_visual_layer();
+
+	// Change one of the visual layers
+	void change_visual_layer();
+
 	// Draw the visual layers on the screen;
 	void draw();
+
 };
+

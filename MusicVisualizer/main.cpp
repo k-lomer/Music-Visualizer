@@ -3,7 +3,7 @@
 
 #include "visualizer.h"
 
-constexpr int sleep_time = 20;
+constexpr int sleep_time = 5;
 
 int main(int argc, char* argv[])
 {
