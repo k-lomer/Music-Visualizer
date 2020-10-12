@@ -15,4 +15,6 @@ public:
 private:
     int max_pixel_radius;
     SDL_Color color;
+    int current_radius = 0;
+    const float previous_weight = 0.75; // How much weight to give to the previous value, should be a float between 0 and 1
 };
