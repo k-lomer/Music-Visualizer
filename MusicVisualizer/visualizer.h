@@ -58,7 +58,7 @@ private:
     std::vector<std::unique_ptr<VisualLayer>> visual_layers;
     CountdownTimer<std::chrono::seconds> layer_change_timer;
     static const std::chrono::seconds change_time;
-    static const int num_layers;
+    static const int num_layers_init;
     Color::color_palette palette = Color::Vaporwave;
 
     // Handle SDL window events
@@ -68,11 +68,17 @@ private:
     // Add a visual layer to the visualizer
     void add_visual_layer();
 
+    // Remove a visual layer from the visualizer
+    void remove_visual_layer();
+
     // Change the oldest of the visual layers
     void change_visual_layer();
 
     // Change all of the visual layers
     void change_all_layers();
+
+    // Change the color palette
+    void change_color();
 
     // Draw the visual layers on the screen;
     void draw();

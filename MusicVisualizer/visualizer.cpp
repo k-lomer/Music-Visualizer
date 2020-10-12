@@ -14,7 +14,7 @@
 #include "moving_wave_layer.h"
 
 const std::chrono::seconds Visualizer::change_time(10);
-const int Visualizer::num_layers(8);
+const int Visualizer::num_layers_init = 5;
 
 Visualizer::Visualizer(): recorder(), layer_change_timer(change_time) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -36,7 +36,7 @@ Visualizer::Visualizer(): recorder(), layer_change_timer(change_time) {
         recording_thread = std::thread(&AudioRecorder::record, &recorder, (AudioSink *)this, std::ref(exit_recording_thread_flag));
     }
     
-    for (int i = 0; i < num_layers; ++i) {
+    for (int i = 0; i < num_layers_init; ++i) {
         add_visual_layer();
     }
 }
@@ -63,17 +63,29 @@ void Visualizer::add_visual_layer() {
     visual_layers.push_back(std::move(vl_factory.random_visual_layer(window_width, window_height, palette)));
 }
 
-void Visualizer::change_visual_layer() {
+void Visualizer::remove_visual_layer() {
     if (!visual_layers.empty()) {
         visual_layers.erase(visual_layers.begin());
     }
-    add_visual_layer();
+}
+
+void Visualizer::change_visual_layer() {
+    if (!visual_layers.empty()) {
+        remove_visual_layer();
+        add_visual_layer();
+    }
 }
 
 void Visualizer::change_all_layers() {
-    for (int i = 0; i < num_layers; ++i) {
+    size_t num_layers = visual_layers.size();
+    for (size_t i = 0; i < num_layers; ++i) {
         change_visual_layer();
     }
+}
+
+void Visualizer::change_color() {
+    palette = Color::color_palette((palette + 1) % (Color::MAX_CP + 1));
+    change_all_layers();
 }
 
 
@@ -108,16 +120,34 @@ void Visualizer::handle_event(const SDL_Event & e) {
         }
 
     }
-    //Enter exit full screen on return key
-    else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN) {
-        if (mFullScreen) {
-            SDL_SetWindowFullscreen(window, SDL_FALSE);
-            mFullScreen = false;
+    else if (e.type == SDL_KEYDOWN){
+        //Enter exit full screen on return key
+        if (e.key.keysym.sym == SDLK_RETURN) {
+            if (mFullScreen) {
+                SDL_SetWindowFullscreen(window, SDL_FALSE);
+                mFullScreen = false;
+            }
+            else {
+                SDL_SetWindowFullscreen(window, SDL_TRUE);
+                mFullScreen = true;
+                mMinimized = false;
+            }
         }
-        else {
-            SDL_SetWindowFullscreen(window, SDL_TRUE);
-            mFullScreen = true;
-            mMinimized = false;
+        // Change all visuals on space key
+        else if (e.key.keysym.sym == SDLK_SPACE) {
+            change_all_layers();
+        }
+        // Change color on 'c' key
+        else if (e.key.keysym.sym == SDLK_c) {
+            change_color();
+        }
+        // Add another visual layer
+        else if (e.key.keysym.sym == SDLK_UP) {
+            add_visual_layer();
+        }
+        // Remove a visual layer
+        else if (e.key.keysym.sym == SDLK_DOWN) {
+                remove_visual_layer();
         }
     }
 }
@@ -133,7 +163,6 @@ void Visualizer::copy_data(float * data, int channels, int frames) {
         packet_buffer = packet();
     }
 }
-
 
 bool Visualizer::update() {
     //Handle events on queue
