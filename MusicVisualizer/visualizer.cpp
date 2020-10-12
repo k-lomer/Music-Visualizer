@@ -70,6 +70,12 @@ void Visualizer::change_visual_layer() {
     add_visual_layer();
 }
 
+void Visualizer::change_all_layers() {
+    for (int i = 0; i < num_layers; ++i) {
+        change_visual_layer();
+    }
+}
+
 
 void Visualizer::handle_event(const SDL_Event & e) {
     //Window event occured
@@ -79,6 +85,7 @@ void Visualizer::handle_event(const SDL_Event & e) {
         case SDL_WINDOWEVENT_SIZE_CHANGED:
             window_width = e.window.data1;
             window_height = e.window.data2;
+            change_all_layers();
             SDL_RenderPresent(renderer);
             break;
 

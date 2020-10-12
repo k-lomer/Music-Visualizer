@@ -59,7 +59,7 @@ private:
     CountdownTimer<std::chrono::seconds> layer_change_timer;
     static const std::chrono::seconds change_time;
     static const int num_layers;
-    Color::color_palette palette = Color::Desert;
+    Color::color_palette palette = Color::Vaporwave;
 
     // Handle SDL window events
     // param: e - the SDL window event to handle
@@ -70,6 +70,9 @@ private:
 
     // Change the oldest of the visual layers
     void change_visual_layer();
+
+    // Change all of the visual layers
+    void change_all_layers();
 
     // Draw the visual layers on the screen;
     void draw();
