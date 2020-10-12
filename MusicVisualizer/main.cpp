@@ -7,14 +7,14 @@ constexpr int sleep_time = 5;
 
 int main(int argc, char* argv[])
 {
-	Visualizer generator;
-	bool continue_app = generator.init_successful();
+    Visualizer generator;
+    bool continue_app = generator.init_successful();
 
-	while (continue_app)
-	{
-		continue_app = generator.update();
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
-	}
+    while (continue_app)
+    {
+        continue_app = generator.update();
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+    }
 
-	return 0;
+    return 0;
 }

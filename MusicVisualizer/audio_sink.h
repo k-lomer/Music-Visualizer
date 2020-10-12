@@ -4,10 +4,10 @@
 class AudioSink
 {
 public:
-	virtual ~AudioSink() {}
-	// Copy a packet of data from the audio recorder
-	// param: data - pointer to data values
-	// param: channels - the number of audio channels
-	// param: frames - the number of frames of data
-	virtual void copy_data(float * data, int channels, int frames) = 0;
+    virtual ~AudioSink() {}
+    // Copy a packet of data from the audio recorder
+    // param: data - pointer to data values
+    // param: channels - the number of audio channels
+    // param: frames - the number of frames of data
+    virtual void copy_data(float * data, int channels, int frames) = 0;
 };
