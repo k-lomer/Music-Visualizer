@@ -137,7 +137,9 @@
     <ClInclude Include="amplitude_circle_layer.h" />
     <ClInclude Include="audio_recorder.h" />
     <ClInclude Include="audio_sink.h" />
+    <ClInclude Include="color_palettes.h" />
     <ClInclude Include="draw_utilities.h" />
+    <ClInclude Include="colors.h" />
     <ClInclude Include="moving_wave_layer.h" />
     <ClInclude Include="polygon_layer.h" />
     <ClInclude Include="screen_box_layer.h" />

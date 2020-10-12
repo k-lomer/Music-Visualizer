@@ -13,11 +13,6 @@
 #include "screen_box_layer.h"
 #include "moving_wave_layer.h"
 
-const SDL_Color white{ 255, 255, 255, 255 };
-const SDL_Color red{ 255, 0, 0, 255 };
-const SDL_Color green{ 0, 255, 0, 255 };
-const SDL_Color blue{ 0, 0, 255, 255 };
-
 const std::chrono::seconds Visualizer::change_time(10);
 const int Visualizer::num_layers(8);
 
@@ -65,7 +60,7 @@ bool Visualizer::init_successful() const {
 }
 
 void Visualizer::add_visual_layer() {
-    visual_layers.push_back(std::move(vl_factory.random_visual_layer(window_width, window_height)));
+    visual_layers.push_back(std::move(vl_factory.random_visual_layer(window_width, window_height, palette)));
 }
 
 void Visualizer::change_visual_layer() {

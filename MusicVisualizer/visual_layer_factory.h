@@ -4,6 +4,8 @@
 #include <memory>
 #include <random>
 
+#include "color_palettes.h"
+
 enum visual_layer_type {Wave,
                         ScreenBox,
                         PolygonWave,
@@ -19,8 +21,9 @@ public:
     // Create a VisualLayer with random parameters
     // param: window_width - the pixel width of the window
     // param: window_height - the pixel height of the window
+    // param: palette - the color palette to use for the layer
     // return: std::unique_ptr<VisualLayer> - a unique_ptr to the new VisualLayer
-    std::unique_ptr<VisualLayer> random_visual_layer(int window_width, int window_height);
+    std::unique_ptr<VisualLayer> random_visual_layer(int window_width, int window_height, Color::color_palette palette = Color::Random);
 
 private:
     std::random_device rando;
@@ -34,4 +37,5 @@ private:
     int get_rand_int(int min_val, int max_val); // inclusive
     double get_rand_double(double min_val, double max_val); // inclusive
     SDL_Color get_rand_color();
+    SDL_Color get_rand_palette_color(Color::color_palette cp);
 };

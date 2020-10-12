@@ -1,4 +1,7 @@
 #include "visual_layer_factory.h"
+
+#include "color_palettes.h"
+// Visual Layers
 #include "wave_layer.h"
 #include "screen_box_layer.h"
 #include "polygon_layer.h"
@@ -29,11 +32,21 @@ SDL_Color VisualLayerFactory::get_rand_color() {
     return SDL_Color{ (Uint8)random_color_int(rando), (Uint8)random_color_int(rando), (Uint8)random_color_int(rando), SDL_ALPHA_OPAQUE };
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height) {
+SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
+    int palette_length = (int)Color::palette_lookup.at(cp).size();
+    if (palette_length > 0) {
+        return Color::palette_lookup.at(cp)[get_rand_int(0, palette_length - 1)];
+    }
+    else { // if there are no colors in the pallette, return a random color
+        return get_rand_color();
+    }
+}
+
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
     visual_layer_type new_vl_type = get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(2, 10);
-    SDL_Color wave_color = get_rand_color();
+    SDL_Color wave_color = get_rand_palette_color(palette);
 
     switch (new_vl_type) {
     case Wave:

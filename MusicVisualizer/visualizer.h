@@ -6,6 +6,7 @@
 
 #include "audio_recorder.h"
 #include "audio_sink.h"
+#include "color_palettes.h"
 #include "SDL.h"
 #include "timer.h"
 #include "visual_layer.h"
@@ -58,6 +59,7 @@ private:
     CountdownTimer<std::chrono::seconds> layer_change_timer;
     static const std::chrono::seconds change_time;
     static const int num_layers;
+    Color::color_palette palette = Color::Desert;
 
     // Handle SDL window events
     // param: e - the SDL window event to handle
@@ -66,7 +68,7 @@ private:
     // Add a visual layer to the visualizer
     void add_visual_layer();
 
-    // Change one of the visual layers
+    // Change the oldest of the visual layers
     void change_visual_layer();
 
     // Draw the visual layers on the screen;
