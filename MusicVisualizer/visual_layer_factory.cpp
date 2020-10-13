@@ -67,7 +67,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         int num_sides = get_rand_int(3, 12);
         int radius = get_rand_int(30, std::min(window_width, window_height) / 2);
         SDL_Point centre{ window_width / 2, window_height / 2 };
-        double rotation_rate = get_rand_double(-0.1, 0.1);
+        double rotation_rate = get_rand_double(-0.05, 0.05);
         return std::make_unique<PolygonLayer>(num_sides, radius, centre, rotation_rate, wave_amplitude/3, wave_color);
     }
     case MovingWave:
