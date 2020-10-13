@@ -10,14 +10,14 @@ int distance(const SDL_Point& v_1, const SDL_Point& v_2);
 // Calculate the angle from horizontal of the line between two points
 double angle(const SDL_Point& v_1, const SDL_Point& v_2);
 
-// Translate a vector of points (inplace)
-void translate(std::vector<SDL_Point>& points, const SDL_Point & translation);
+// Translate a vector of points
+std::vector<SDL_Point> translate(const std::vector<SDL_Point>& points, const SDL_Point & translation);
 
 // Rotate a single point about the centre
 SDL_Point rotate_point(const SDL_Point &v, const SDL_Point &centre, double radians);
 
-// Rotate a vector of points about the centre (inplace)
-void rotate(std::vector<SDL_Point>& points, const SDL_Point & centre, double radians);
+// Rotate a vector of points about the centre
+std::vector<SDL_Point> rotate(const std::vector<SDL_Point>& points, const SDL_Point & centre, double radians);
 
 // Generate a wave of pixel points
 // param: wave - the amplitude of each point on the wave

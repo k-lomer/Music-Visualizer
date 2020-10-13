@@ -10,17 +10,21 @@ double angle(const SDL_Point& v_1, const SDL_Point& v_2) {
     return atan2(double(v_2.y - v_1.y), double(v_2.x - v_1.x));
 }
 
-void translate(std::vector<SDL_Point>& points, const SDL_Point & translation) {
-    for (auto &point : points) {
-        point.x += translation.x;
-        point.y += translation.y;
+std::vector<SDL_Point> translate(const std::vector<SDL_Point>& points, const SDL_Point & translation) {
+    std::vector<SDL_Point> translated_points;
+    for (const auto &point : points) {
+        translated_points.push_back(SDL_Point{ point.x + translation.x, point.y + translation.y });
     }
+    return translated_points;
 }
 
-void rotate(std::vector<SDL_Point>& points, const SDL_Point & centre, double radians) {
-    for (int i = 0; i < points.size(); ++i) {
-        points[i] = rotate_point(points[i], centre, radians);
+std::vector<SDL_Point> rotate(const std::vector<SDL_Point>& points, const SDL_Point & centre, double radians) {
+    std::vector<SDL_Point> rotated_points;
+
+    for (const auto &point : points) {
+        rotated_points.push_back(rotate_point(point, centre, radians));
     }
+    return rotated_points;
 }
 
 SDL_Point rotate_point(const SDL_Point &v, const SDL_Point &centre, double radians) {
@@ -76,8 +80,8 @@ void draw_wave(SDL_Renderer * const renderer, const std::vector<float> &wave, co
     std::vector<SDL_Point> wave_points = gen_wave_points(wave, length, amplitude);
     
     // move to correct start and end points
-    translate(wave_points, start);
-    rotate(wave_points, start, angle(start, end));
+    wave_points = translate(wave_points, start);
+    wave_points = rotate(wave_points, start, angle(start, end));
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawLines(renderer, &wave_points[0], (int)wave_points.size());
