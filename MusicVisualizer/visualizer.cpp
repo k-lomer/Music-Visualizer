@@ -16,7 +16,10 @@
 const std::chrono::seconds Visualizer::change_time(10);
 const int Visualizer::num_layers_init = 5;
 
-Visualizer::Visualizer(): recorder(), layer_change_timer(change_time) {
+Visualizer::Visualizer():
+    recorder(),
+    layer_change_timer(change_time),
+    fps_timer(std::chrono::seconds(1)){
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cout << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
         return;
@@ -188,6 +191,15 @@ bool Visualizer::update() {
     SDL_RenderClear(renderer);
     draw();
     SDL_RenderPresent(renderer);
+
+    if (debug_print_fps) {
+        frames += 1;
+        if (fps_timer.expired()) {
+            std::cout << "FPS: " << frames << std::endl;
+            frames = 0;
+            fps_timer.reset();
+        }
+    }
 
     return true;
 }

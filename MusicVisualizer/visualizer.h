@@ -61,6 +61,11 @@ private:
     static const int num_layers_init;
     Color::color_palette palette = Color::Vaporwave;
 
+    // Debug FPS
+    bool debug_print_fps = true;
+    CountdownTimer<std::chrono::seconds> fps_timer;
+    int frames = 0;
+
     // Handle SDL window events
     // param: e - the SDL window event to handle
     void handle_event(const SDL_Event & e);
