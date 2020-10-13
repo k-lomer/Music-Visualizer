@@ -38,7 +38,7 @@ const std::map < color_palette, std::vector<SDL_Color>> palette_lookup{
     {Pastel, {pale_violet_red, azure, honeydew, pale_green, light_coral}},
     {Cafe, {dark_golden_rod, sienna, chocolate, peru, misty_rose, ghost_white}},
     {Mars, {silver, light_steel_blue, maroon, crimson, indian_red, rosy_brown}},
-    {Matrix, {black, dark_green, lime_green, lime}},
+    {Matrix, {dark_green, lime_green, lime}},
     {Fuschia, {magenta, deep_pink, white, medium_spring_green}}
 };
 }
