@@ -51,6 +51,9 @@
     <ClCompile Include="draw_utilities.cpp">
       <Filter>utilities</Filter>
     </ClCompile>
+    <ClCompile Include="dsp_utilities.cpp">
+      <Filter>utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_recorder.h">
@@ -86,14 +89,17 @@
     <ClInclude Include="draw_utilities.h">
       <Filter>utilities</Filter>
     </ClInclude>
-    <ClInclude Include="timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="colors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="color_palettes.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dsp_utilities.h">
+      <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

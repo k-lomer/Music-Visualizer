@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClCompile Include="amplitude_circle_layer.cpp" />
     <ClCompile Include="draw_utilities.cpp" />
+    <ClCompile Include="dsp_utilities.cpp" />
     <ClCompile Include="moving_wave_layer.cpp" />
     <ClCompile Include="polygon_layer.cpp" />
     <ClCompile Include="screen_box_layer.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="color_palettes.h" />
     <ClInclude Include="draw_utilities.h" />
     <ClInclude Include="colors.h" />
+    <ClInclude Include="dsp_utilities.h" />
     <ClInclude Include="moving_wave_layer.h" />
     <ClInclude Include="polygon_layer.h" />
     <ClInclude Include="screen_box_layer.h" />
