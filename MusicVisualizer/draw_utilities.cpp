@@ -60,17 +60,27 @@ std::vector<SDL_Point> gen_wave_points(std::vector<float> wave, int length, int 
     return wave_points;
 }
 
-
+// This implementation works by computing the height at which the width of the circle changes and filling that space with lines
+// For rotational symmetry we plot the same for width and height reversed
+// This could be more efficient but it works well enough for now
 void draw_circle(SDL_Renderer * const renderer, const SDL_Point &centre, int radius, const SDL_Color& color) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    
+    int radius_squared = radius * radius;
+    int previous_offset_2 = radius+1;
+    for (int offset_1 = 0; offset_1 <= radius; ++offset_1) {
+        int new_offset_2 = (int)sqrt(double(radius_squared - offset_1 * offset_1));
+        for (int offset_2 = new_offset_2; offset_2 <= previous_offset_2; ++offset_2) {
+            // aply offsets horizontally
+            SDL_RenderDrawLine(renderer, centre.x + offset_1, centre.y + offset_2, centre.x - offset_1, centre.y + offset_2);
+            SDL_RenderDrawLine(renderer, centre.x + offset_1, centre.y - offset_2, centre.x - offset_1, centre.y - offset_2);
+            // apply offsets vertically for symmetry
+            SDL_RenderDrawLine(renderer, centre.x - offset_2, centre.y + offset_1, centre.x - offset_2, centre.y - offset_1);
+            SDL_RenderDrawLine(renderer, centre.x + offset_2, centre.y + offset_1, centre.x + offset_2, centre.y - offset_1);
 
-    for (int x = centre.x - radius; x <= centre.x + radius; x++) {
-        for (int y = centre.y - radius; y <= centre.y + radius; y++) {
-            if ((std::pow(centre.y - y, 2) + std::pow(centre.x - x, 2)) <=
-                std::pow(radius, 2)) {
-                SDL_RenderDrawPoint(renderer, x, y);
-            }
         }
+        previous_offset_2 = new_offset_2;
+
     }
 }
 
