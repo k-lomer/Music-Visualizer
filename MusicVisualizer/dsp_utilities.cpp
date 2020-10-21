@@ -15,7 +15,7 @@ wave dft(const wave & signal) {
         n >>= 1;
         ++log_2_N;
     }
-    std::vector<std::complex<double>> padded_complex_signal(std::pow(2,log_2_N), 0.0);
+    std::vector<std::complex<double>> padded_complex_signal(int(std::pow(2, log_2_N)), 0.0);
     for (size_t i = 0; i < signal.size(); ++i) {
         padded_complex_signal[i] = std::complex<double>(signal[i]);
     }
