@@ -3,7 +3,8 @@
 
 #include "visualizer.h"
 
-constexpr int sleep_time = 5;
+constexpr int fps = 60;
+constexpr std::chrono::milliseconds frame_duration(1000 / fps);
 
 int main(int argc, char* argv[])
 {
@@ -12,8 +13,14 @@ int main(int argc, char* argv[])
 
     while (continue_app)
     {
+        auto t0 = std::chrono::steady_clock::now();
         continue_app = generator.update();
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+        auto t1 = std::chrono::steady_clock::now();
+
+        std::chrono::milliseconds update_duration(std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count());
+        if (update_duration < frame_duration) {
+            std::this_thread::sleep_for(frame_duration - update_duration);
+        }
     }
 
     return 0;
