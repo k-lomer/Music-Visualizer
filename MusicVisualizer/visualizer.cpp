@@ -84,6 +84,7 @@ void Visualizer::change_all_layers() {
     for (size_t i = 0; i < num_layers; ++i) {
         change_visual_layer();
     }
+    layer_change_timer.reset();
 }
 
 void Visualizer::change_color() {
