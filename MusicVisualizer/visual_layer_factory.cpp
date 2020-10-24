@@ -45,7 +45,7 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
     visual_layer_type new_vl_type = get_rand_layer_type();
     
-    int wave_amplitude = window_height / get_rand_int(2, 10);
+    int wave_amplitude = window_height / get_rand_int(10, 20);
     SDL_Color wave_color = get_rand_palette_color(palette);
 
     switch (new_vl_type) {
@@ -54,7 +54,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         int num_waves = get_rand_int(1, 8);
         SDL_Point wave_start{ 0, window_height / 2 };
         SDL_Point wave_end{ window_width, window_height / 2 };
-        return std::make_unique<WaveLayer>(num_waves, wave_start, wave_end, wave_amplitude * 2, wave_color);
+        return std::make_unique<WaveLayer>(num_waves, wave_start, wave_end, wave_amplitude * 3, wave_color);
     }
     case ScreenBox:
     {
@@ -80,7 +80,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     default:
     {
         SDL_Point centre{ window_width / 2, window_height / 2 };
-        return std::make_unique<AmplitudeCircleLayer>(centre, wave_amplitude, wave_color);
+        return std::make_unique<AmplitudeCircleLayer>(centre, wave_amplitude * 5, wave_color);
     }
     }
 }

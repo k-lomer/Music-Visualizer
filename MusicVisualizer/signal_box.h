@@ -32,8 +32,13 @@ private:
     float max_decay_factor;
     wave raw_signal;
     wave raw_freq;
-    float raw_max;
     wave updated_abs_signal;
     wave updated_freq;
-    float updated_max;
+
+    float raw_max = 0.0f;
+    float raw_freq_max = 0.0f;
+    float updated_max = 0.0f;
+    float updated_freq_max = 0.0f;
+    float alltime_max = 0.0f;
+    float alltime_freq_max = 0.0f;
 };

@@ -4,15 +4,21 @@
 
 #include "dsp_utilities.h"
 
-SignalBox::SignalBox() : raw_max(0.0f), updated_max(0.0f), decay_factor(0.9f), max_decay_factor(0.99f) {}
+SignalBox::SignalBox() : decay_factor(0.92f), max_decay_factor(0.99f) {}
 
 void SignalBox::update_signal(const wave & new_signal) {
     raw_signal = new_signal;
     weighted_decay_update(updated_abs_signal, abs(raw_signal), decay_factor);
     raw_freq = dft(raw_signal);
     weighted_decay_update(updated_freq, abs(raw_freq), decay_factor);
+
     raw_max = raw_signal.empty() ? 0.0f : *max_element(std::begin(raw_signal), std::end(raw_signal));
     updated_max = raw_max > updated_max ? raw_max : max_decay_factor * updated_max;
+    alltime_max = raw_max == 0.0f ? 0.0f : std::max(raw_max, alltime_max);
+
+    raw_freq_max = raw_freq.empty() ? 0.0f : *max_element(std::begin(raw_freq), std::end(raw_freq));
+    updated_freq_max = raw_freq_max > updated_freq_max ? raw_freq_max : max_decay_factor * updated_freq_max;
+    alltime_freq_max = raw_freq_max == 0.0f ? 0.0f : std::max(raw_freq_max, alltime_freq_max);
 }
 
 wave SignalBox::gen_wave(SignalFlag signal_type, double tapering) const{
@@ -31,6 +37,10 @@ wave SignalBox::gen_wave(SignalFlag signal_type, double tapering) const{
     }
     if (signal_type & Normalize) {
         base_wave = normalize(base_wave);
+    }
+    else { // scale relative to all time maximum value
+        float max_value = signal_type & Frequency ? alltime_freq_max : alltime_max;
+        base_wave = scale(base_wave, 1.0f / max_value);
     }
 
     // Apply linear tapering to wave 
