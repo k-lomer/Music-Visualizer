@@ -4,7 +4,7 @@
 
 #include "dsp_utilities.h"
 
-SignalBox::SignalBox() : raw_max(0.0f), updated_max(0.0f), decay_factor(0.8f), max_decay_factor(0.99f) {}
+SignalBox::SignalBox() : raw_max(0.0f), updated_max(0.0f), decay_factor(0.9f), max_decay_factor(0.99f) {}
 
 void SignalBox::update_signal(const wave & new_signal) {
     raw_signal = new_signal;
