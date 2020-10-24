@@ -121,4 +121,9 @@ void weighted_decay_update(wave & previous_signal, const wave & new_signal, floa
     }
 }
 
-
+wave add_reflection(const wave & signal) {
+    wave reflection(signal);
+    std::reverse(reflection.begin(), reflection.end());
+    std::transform(signal.begin(), signal.end(), reflection.begin(), reflection.begin(), std::plus<float>());
+    return reflection;
+}

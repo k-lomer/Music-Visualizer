@@ -43,3 +43,8 @@ wave abs(const wave & signal);
 // param: new_signal - the new values to use
 // param: decay - value between 0 and 1, the proportion of the previous_signal to keep
 void weighted_decay_update(wave & previous_signal, const wave & new_signal, float decay);
+
+// Sum the values of a wave and its reflection 
+// param: signal - the signal to use
+// return: wave - the addition of the wave and its reflection
+wave add_reflection(const wave & signal);

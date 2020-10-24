@@ -13,7 +13,7 @@ PolygonLayer::PolygonLayer(int num_sides, int radius, SDL_Point poly_centre, dou
     }
 }
 
-void PolygonLayer::draw(SDL_Renderer * renderer, const packet & packet_buffer) {
+void PolygonLayer::draw(SDL_Renderer * renderer, const SignalBox & signal_box) {
     rotation += rotation_rate;
     if (rotation > 2 * M_PI) {
         rotation -= 2 * M_PI;
@@ -23,9 +23,9 @@ void PolygonLayer::draw(SDL_Renderer * renderer, const packet & packet_buffer) {
     }
 
     std::vector<SDL_Point> rotated_vertices = rotate(vertices, centre, rotation);
-
+    auto wave = signal_box.gen_wave(signal_type);
 
     for (int i = 0; i < rotated_vertices.size(); ++i) {
-        draw_wave(renderer, packet_buffer, rotated_vertices[i], rotated_vertices[(i+1) % rotated_vertices.size()], amplitude, color);
+        draw_wave(renderer, wave, rotated_vertices[i], rotated_vertices[(i+1) % rotated_vertices.size()], amplitude, color);
     }
 }

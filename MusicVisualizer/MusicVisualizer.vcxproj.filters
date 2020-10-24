@@ -54,6 +54,9 @@
     <ClCompile Include="dsp_utilities.cpp">
       <Filter>utilities</Filter>
     </ClCompile>
+    <ClCompile Include="signal_box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_recorder.h">
@@ -100,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="signal_box.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

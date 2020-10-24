@@ -16,7 +16,7 @@ public:
     MovingWaveLayer(int num_waves, orientation wave_orientation, double wave_movement, int width, int height, int wave_amplitude, SDL_Color wave_color);
 
 
-    virtual void draw(SDL_Renderer * renderer, const packet & packet_buffer) override;
+    virtual void draw(SDL_Renderer * renderer, const SignalBox & signal_box) override;
 
 private:
     orientation wave_orientation;

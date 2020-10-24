@@ -206,7 +206,10 @@ bool Visualizer::update() {
 
 void Visualizer::draw() {
     std::unique_lock<std::mutex>read_guard(packet_buffer_mutex);
+    signal_box.update_signal(packet_buffer);
+    read_guard.unlock();
+
     for (auto & layer : visual_layers) {
-        layer->draw(renderer, packet_buffer);
+        layer->draw(renderer, signal_box);
     }
 }

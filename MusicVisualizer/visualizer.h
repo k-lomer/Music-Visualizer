@@ -8,6 +8,7 @@
 #include "audio_sink.h"
 #include "color_palettes.h"
 #include "SDL.h"
+#include "signal_box.h"
 #include "timer.h"
 #include "visual_layer.h"
 #include "visual_layer_factory.h"
@@ -52,6 +53,7 @@ private:
     std::mutex packet_buffer_mutex;
     typedef std::vector<float> packet;
     packet packet_buffer; // Must use mutex to access
+    SignalBox signal_box;
 
     // Visual Layer members
     VisualLayerFactory vl_factory;

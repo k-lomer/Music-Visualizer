@@ -13,7 +13,7 @@ public:
     // param: wave_color - the color of the waves on the sides
     PolygonLayer(int num_sides, int radius, SDL_Point poly_centre, double rotation_rate, int wave_amplitude, SDL_Color wave_color);
 
-    virtual void draw(SDL_Renderer * renderer, const packet & packet_buffer) override;
+    virtual void draw(SDL_Renderer * renderer, const SignalBox & signal_box) override;
 
 private:
     SDL_Point centre;

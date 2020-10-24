@@ -10,11 +10,9 @@ public:
     // param: circle_color - the color of the circle
     AmplitudeCircleLayer(SDL_Point centre, int pixel_radius, SDL_Color circle_color) : max_pixel_radius(pixel_radius), color(circle_color) { translation = centre; }
 
-    virtual void draw(SDL_Renderer * const renderer, const packet & packet_buffer) override;
+    virtual void draw(SDL_Renderer * const renderer, const SignalBox & signal_box) override;
 
 private:
     int max_pixel_radius;
     SDL_Color color;
-    int current_radius = 0;
-    const float previous_weight = 0.999f; // How much weight to give to the previous value, should be a float between 0 and 1
 };

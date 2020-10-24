@@ -134,6 +134,7 @@
     <ClCompile Include="moving_wave_layer.cpp" />
     <ClCompile Include="polygon_layer.cpp" />
     <ClCompile Include="screen_box_layer.cpp" />
+    <ClCompile Include="signal_box.cpp" />
     <ClCompile Include="visualizer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="audio_recorder.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="moving_wave_layer.h" />
     <ClInclude Include="polygon_layer.h" />
     <ClInclude Include="screen_box_layer.h" />
+    <ClInclude Include="signal_box.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="visualizer.h" />
     <ClInclude Include="visual_layer.h" />
