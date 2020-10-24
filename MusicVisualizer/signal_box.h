@@ -28,8 +28,8 @@ public:
     float get_max(bool decay) const;
     
 private:
-    float decay_factor = 0.9f;
-    float max_decay_factor = 0.9f;
+    float decay_factor;
+    float max_decay_factor;
     wave raw_signal;
     wave raw_freq;
     float raw_max;
