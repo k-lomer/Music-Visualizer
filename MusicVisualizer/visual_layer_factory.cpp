@@ -51,16 +51,15 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     switch (new_vl_type) {
     case Wave:
     {
-        int num_waves = get_rand_int(1, 10);
-
+        int num_waves = get_rand_int(1, 8);
         SDL_Point wave_start{ 0, window_height / 2 };
         SDL_Point wave_end{ window_width, window_height / 2 };
-
         return std::make_unique<WaveLayer>(num_waves, wave_start, wave_end, wave_amplitude * 2, wave_color);
     }
     case ScreenBox:
     {
-        return std::make_unique<ScreenBoxLayer>(window_width, window_height, wave_amplitude, wave_color);
+        int num_waves = get_rand_int(1, 5);
+        return std::make_unique<ScreenBoxLayer>(num_waves, window_width, window_height, wave_amplitude, wave_color);
     }
     case PolygonWave:
     {
