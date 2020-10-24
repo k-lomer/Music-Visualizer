@@ -8,6 +8,10 @@
 constexpr double pi = 3.14159265358979323846;
 
 wave dft(const wave & signal) {
+    if (signal.empty()) {
+        return signal;
+    }
+
     // pad signal to length power of 2
     size_t n = signal.size();
     int log_2_N = 0;
@@ -31,6 +35,9 @@ wave dft(const wave & signal) {
 }
 
 std::vector<std::complex<double>> fft(const std::vector<std::complex<double>> & signal) {
+    if (signal.empty()) {
+        return signal;
+    }
 
     size_t N = signal.size();
     if (N <= 1) {
@@ -85,11 +92,19 @@ wave scale(const wave & signal, float scale_factor) {
 }
 
 float abs_max(const wave & signal) {
+    if (signal.empty()) {
+        return 0.0f;
+    }
+
     auto min_max = std::minmax_element(signal.begin(), signal.end());
     return std::max(std::fabsf(*min_max.first), std::fabsf(*min_max.second));
 }
 
 wave abs(const wave & signal) {
+    if (signal.empty()) {
+        return signal;
+    }
+
     wave abs_signal(signal.size());
     std::transform(signal.begin(), signal.end(), abs_signal.begin(), std::fabsf);
     return abs_signal;
@@ -122,6 +137,10 @@ void weighted_decay_update(wave & previous_signal, const wave & new_signal, floa
 }
 
 wave add_reflection(const wave & signal) {
+    if (signal.empty()) {
+        return signal;
+    }
+
     wave reflection(signal);
     std::reverse(reflection.begin(), reflection.end());
     std::transform(signal.begin(), signal.end(), reflection.begin(), reflection.begin(), std::plus<float>());

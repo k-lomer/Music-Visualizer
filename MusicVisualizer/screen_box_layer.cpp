@@ -3,7 +3,7 @@
 #include "draw_utilities.h"
 
 void ScreenBoxLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box) {
-    auto wave = signal_box.gen_wave(signal_type);
+    auto wave = signal_box.gen_wave(signal_type, 0.2);
     for (int i = wave_count; i > 0; --i) {
         int wave_amplitude = int(amplitude * scale * i / wave_count);
         // use width/height - 1 so the stationary line is visible

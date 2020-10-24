@@ -24,7 +24,7 @@ public:
     SignalBox();
     ~SignalBox() {}
     void update_signal(const wave & new_signal);
-    wave gen_wave(SignalFlag signal_type) const;
+    wave gen_wave(SignalFlag signal_type, double tapering = 0.0) const;
     float get_max(bool decay) const;
     
 private:

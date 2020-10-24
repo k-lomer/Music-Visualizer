@@ -92,12 +92,6 @@
     <ClInclude Include="draw_utilities.h">
       <Filter>utilities</Filter>
     </ClInclude>
-    <ClInclude Include="colors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="color_palettes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dsp_utilities.h">
       <Filter>utilities</Filter>
     </ClInclude>
@@ -106,6 +100,12 @@
     </ClInclude>
     <ClInclude Include="signal_box.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="color_palettes.h">
+      <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="colors.h">
+      <Filter>utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

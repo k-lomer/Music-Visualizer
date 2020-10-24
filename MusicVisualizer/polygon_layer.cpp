@@ -23,7 +23,7 @@ void PolygonLayer::draw(SDL_Renderer * renderer, const SignalBox & signal_box) {
     }
 
     std::vector<SDL_Point> rotated_vertices = rotate(vertices, centre, rotation);
-    auto wave = signal_box.gen_wave(signal_type);
+    auto wave = signal_box.gen_wave(signal_type, 0.25);
 
     for (int i = 0; i < rotated_vertices.size(); ++i) {
         draw_wave(renderer, wave, rotated_vertices[i], rotated_vertices[(i+1) % rotated_vertices.size()], -amplitude, color);
