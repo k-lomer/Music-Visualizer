@@ -27,11 +27,23 @@ wave normalize(const wave & signal);
 // return: wave - the scaled signal
 wave scale(const wave & signal, float scale_factor);
 
+// Shift the values in a vector by a given amount (by addition)
+// param: signal - the real float values of a signal
+// param: shift - the factor to multiply the values by
+// return: wave - the signal with all values shifted
+wave vertical_shift(const wave & signal, float shift);
+
 // The largest absolute value of the signal
 // If the signal is empty return zero
 // param: signal - the real float values of a signal
 // return: float - the maximum absolute value
 float abs_max(const wave & signal);
+
+// The smallest value of the signal
+// If the signal is empty return zero
+// param: signal - the real float values of a signal
+// return: float - the smallest value
+float min(const wave & signal);
 
 // Take the absolute of each value in the signal
 // param: signal - the float values of a signal

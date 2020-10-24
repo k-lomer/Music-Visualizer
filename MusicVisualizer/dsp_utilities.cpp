@@ -91,6 +91,17 @@ wave scale(const wave & signal, float scale_factor) {
     return scaled_signal;
 }
 
+wave vertical_shift(const wave & signal, float shift){
+    if (signal.empty()) {
+        return signal;
+    }
+
+    wave scaled_signal(signal.size());
+    std::transform(signal.begin(), signal.end(), scaled_signal.begin(),
+        std::bind(std::plus<float>(), std::placeholders::_1, shift));
+    return scaled_signal;
+}
+
 float abs_max(const wave & signal) {
     if (signal.empty()) {
         return 0.0f;
@@ -98,6 +109,13 @@ float abs_max(const wave & signal) {
 
     auto min_max = std::minmax_element(signal.begin(), signal.end());
     return std::max(std::fabsf(*min_max.first), std::fabsf(*min_max.second));
+}
+
+float min(const wave & signal) {
+    if (signal.empty()) {
+        return 0.0f;
+    }
+    return *std::min_element(signal.begin(), signal.end());
 }
 
 wave abs(const wave & signal) {

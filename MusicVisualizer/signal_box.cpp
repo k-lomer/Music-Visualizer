@@ -12,11 +12,11 @@ void SignalBox::update_signal(const wave & new_signal) {
     raw_freq = dft(raw_signal);
     weighted_decay_update(updated_freq, abs(raw_freq), decay_factor);
 
-    raw_max = raw_signal.empty() ? 0.0f : *max_element(std::begin(raw_signal), std::end(raw_signal));
+    raw_max = abs_max(raw_signal);
     updated_max = raw_max > updated_max ? raw_max : max_decay_factor * updated_max;
     alltime_max = raw_max == 0.0f ? 0.0f : std::max(raw_max, alltime_max);
 
-    raw_freq_max = raw_freq.empty() ? 0.0f : *max_element(std::begin(raw_freq), std::end(raw_freq));
+    raw_freq_max = abs_max(raw_freq);
     updated_freq_max = raw_freq_max > updated_freq_max ? raw_freq_max : max_decay_factor * updated_freq_max;
     alltime_freq_max = raw_freq_max == 0.0f ? 0.0f : std::max(raw_freq_max, alltime_freq_max);
 }
@@ -32,6 +32,16 @@ wave SignalBox::gen_wave(SignalFlag signal_type, double tapering) const{
     }
 
     // Apply effects
+    if (signal_type & RootZero) {
+        float min_value = min(base_wave);
+        if (min_value > 0.0f) {
+            float max_value = abs_max(base_wave);
+            // Root values to zero
+            base_wave = vertical_shift(base_wave, -min_value);
+            // Scale up to previous size
+            base_wave = scale(base_wave, max_value / (max_value - min_value));
+        }
+    }
     if (signal_type & Reflect) {
         base_wave = add_reflection(base_wave);
     }

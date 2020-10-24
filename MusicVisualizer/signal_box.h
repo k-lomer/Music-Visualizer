@@ -11,7 +11,8 @@ enum SignalFlag {
     Frequency   = 1 << 0,
     Decay       = 1 << 1,
     Reflect     = 1 << 2,
-    Normalize   = 1 << 3
+    Normalize   = 1 << 3,
+    RootZero    = 1 << 4
 };
 
 // From windows.h, defines all bitwise operators for SignalFlag enums
