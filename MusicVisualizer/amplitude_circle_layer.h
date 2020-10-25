@@ -15,4 +15,5 @@ public:
 private:
     int max_pixel_radius;
     SDL_Color color;
+    SDL_Point translation;
 };

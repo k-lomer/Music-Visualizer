@@ -22,4 +22,5 @@ private:
     // the vertices which make up the polygon (ordered)
     std::vector<SDL_Point> vertices;
     double rotation_rate;
+    double rotation = 0.0;
 };

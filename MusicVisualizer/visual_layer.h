@@ -16,9 +16,6 @@ public:
     virtual ~VisualLayer() {};
 
 protected:
-    double rotation = 0.0;
-    double scale = 1.0;
-    SDL_Point translation = SDL_Point{ 0, 0 };
     SignalFlag signal_type = Decay | Reflect;
 };
 
