@@ -11,7 +11,8 @@ enum visual_layer_type {Wave,
                         PolygonWave,
                         MovingWave,
                         AmplitudeCircle,
-                        MAX_VL_TYPE = AmplitudeCircle};
+                        SacredSeal,
+                        MAX_VL_TYPE = SacredSeal};
 
 // Class for creating visual layers for the visualizer
 class VisualLayerFactory {
@@ -33,6 +34,7 @@ private:
 
     // functions for generating random values
     visual_layer_type get_rand_layer_type();
+    visual_layer_type get_rand_composite_layer_type();
     bool get_rand_bool();
     int get_rand_int(int min_val, int max_val); // inclusive
     double get_rand_double(double min_val, double max_val); // inclusive

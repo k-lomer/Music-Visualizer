@@ -14,7 +14,7 @@
 #include "moving_wave_layer.h"
 
 const std::chrono::seconds Visualizer::change_time(10);
-const int Visualizer::num_layers_init = 5;
+const int Visualizer::num_layers_init = 1;
 
 Visualizer::Visualizer():
     recorder(),

@@ -13,11 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="layers">
-      <UniqueIdentifier>{e7ea59c7-76f7-4f2d-983f-756b2ee9d7a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="utilities">
       <UniqueIdentifier>{ba39c5d7-e219-4c47-998a-95a287f7e0ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="composite layers">
+      <UniqueIdentifier>{1b3670ec-9ecf-47bb-a6bf-c76f31ee819d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base layers">
+      <UniqueIdentifier>{e7ea59c7-76f7-4f2d-983f-756b2ee9d7a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,19 +37,19 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="amplitude_circle_layer.cpp">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClCompile>
     <ClCompile Include="moving_wave_layer.cpp">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClCompile>
     <ClCompile Include="polygon_layer.cpp">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClCompile>
     <ClCompile Include="screen_box_layer.cpp">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClCompile>
     <ClCompile Include="wave_layer.cpp">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClCompile>
     <ClCompile Include="draw_utilities.cpp">
       <Filter>utilities</Filter>
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="signal_box.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sacred_seal.cpp">
+      <Filter>composite layers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,22 +78,22 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="amplitude_circle_layer.h">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClInclude>
     <ClInclude Include="moving_wave_layer.h">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClInclude>
     <ClInclude Include="polygon_layer.h">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClInclude>
     <ClInclude Include="screen_box_layer.h">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClInclude>
     <ClInclude Include="visual_layer.h">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClInclude>
     <ClInclude Include="wave_layer.h">
-      <Filter>layers</Filter>
+      <Filter>base layers</Filter>
     </ClInclude>
     <ClInclude Include="draw_utilities.h">
       <Filter>utilities</Filter>
@@ -106,6 +112,12 @@
     </ClInclude>
     <ClInclude Include="colors.h">
       <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="sacred_seal.h">
+      <Filter>composite layers</Filter>
+    </ClInclude>
+    <ClInclude Include="composite_layer.h">
+      <Filter>composite layers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

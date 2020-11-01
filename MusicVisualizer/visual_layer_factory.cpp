@@ -7,6 +7,8 @@
 #include "polygon_layer.h"
 #include "moving_wave_layer.h"
 #include "amplitude_circle_layer.h"
+// Composite Layers
+#include "sacred_seal.h"
 
 VisualLayerFactory::VisualLayerFactory(): random_layer_type(0, MAX_VL_TYPE), random_bool(0,1), random_color_int(0, 255) {}
 
@@ -43,9 +45,9 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = get_rand_layer_type();
+    visual_layer_type new_vl_type = SacredSeal;//get_rand_layer_type();
     
-    int wave_amplitude = window_height / get_rand_int(10, 20);
+    int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
 
     switch (new_vl_type) {
@@ -77,10 +79,41 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         return std::make_unique<MovingWaveLayer>(num_waves, wave_orientation, wave_movement, window_width, window_height, wave_amplitude, wave_color);
     }
     case AmplitudeCircle:
-    default:
     {
         SDL_Point centre{ window_width / 2, window_height / 2 };
         return std::make_unique<AmplitudeCircleLayer>(centre, wave_amplitude * 5, wave_color);
+    }
+    case SacredSeal:
+    default:
+    {
+        int radius = get_rand_int(std::min(window_width, window_height) / 4, std::min(window_width, window_height) / 2);
+        std::vector<SacredSealLayer::SacredSealConfig> config;
+        int layers = get_rand_int(2, 5);
+        for (int i = 0; i < layers; ++i) {
+            int num_sides = get_rand_int(3, 8);
+            double rotation_rate = get_rand_double(-0.03, 0.03);
+            wave_color = get_rand_palette_color(palette);
+            config.push_back(SacredSealLayer::SacredSealConfig{ num_sides, rotation_rate, wave_color });
+        }
+        bool double_seals = get_rand_bool();
+        if (double_seals) {
+            SDL_Point centre_left{ window_width / 4, window_height / 2 };
+            SDL_Point centre_right{ 3 * window_width / 4, window_height / 2 };
+            radius = get_rand_int(radius / 2, radius);
+            std::unique_ptr<VisualLayer> left_seal = std::make_unique<SacredSealLayer>(config, centre_left, radius, wave_amplitude);
+            for (auto & conf : config) {
+                conf.rotation_rate *= -1.0;
+            }
+            std::unique_ptr<VisualLayer> right_seal = std::make_unique<SacredSealLayer>(config, centre_right, radius, wave_amplitude);
+            std::vector<std::unique_ptr<VisualLayer>> layers;
+            layers.push_back(std::move(left_seal));
+            layers.push_back(std::move(right_seal));
+            return std::make_unique<CompositeLayer>(std::move(layers));
+        }
+        else {
+            SDL_Point centre{ window_width / 2, window_height / 2 };
+            return std::make_unique<SacredSealLayer>(config, centre, radius, wave_amplitude);
+        }
     }
     }
 }
