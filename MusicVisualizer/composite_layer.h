@@ -13,8 +13,12 @@ public:
     // param: layers - the layers to use 
     CompositeLayer(std::vector<std::unique_ptr<VisualLayer>> layers);
 
+    // Add a new layer to the composition
+    // param: layer - the layer to add
+    void add_layer(std::unique_ptr<VisualLayer> layer);
 
     virtual void draw(SDL_Renderer * const renderer, const SignalBox & signal_box) override;
+
 
 protected:
     std::vector<std::unique_ptr<VisualLayer>> visual_layers;

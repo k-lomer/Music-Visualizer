@@ -63,6 +63,9 @@
     <ClCompile Include="sacred_seal.cpp">
       <Filter>composite layers</Filter>
     </ClCompile>
+    <ClCompile Include="composite_layer.cpp">
+      <Filter>composite layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_recorder.h">

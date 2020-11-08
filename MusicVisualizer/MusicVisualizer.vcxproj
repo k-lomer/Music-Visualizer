@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="amplitude_circle_layer.cpp" />
+    <ClCompile Include="composite_layer.cpp" />
     <ClCompile Include="draw_utilities.cpp" />
     <ClCompile Include="dsp_utilities.cpp" />
     <ClCompile Include="moving_wave_layer.cpp" />

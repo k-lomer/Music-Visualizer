@@ -6,13 +6,17 @@
 
 #include "color_palettes.h"
 
-enum visual_layer_type {Wave,
-                        ScreenBox,
-                        PolygonWave,
-                        MovingWave,
-                        AmplitudeCircle,
-                        SacredSeal,
-                        MAX_VL_TYPE = SacredSeal};
+enum visual_layer_type {
+    Wave,
+    ScreenBox,
+    PolygonWave,
+    MovingWave,
+    AmplitudeCircle,
+    CheckerBoard,
+    SacredSeal,
+    MIN_VL_TYPE = CheckerBoard,
+    MAX_VL_TYPE = SacredSeal
+};
 
 // Class for creating visual layers for the visualizer
 class VisualLayerFactory {
