@@ -13,6 +13,7 @@ enum visual_layer_type {
     MovingWave,
     AmplitudeCircle,
     CheckerBoard,
+    ScrollingLines,
     SacredSeal,
     MIN_VL_TYPE = CheckerBoard,
     MAX_VL_TYPE = SacredSeal

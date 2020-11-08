@@ -98,6 +98,22 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         }
         return composite;
     }
+    case ScrollingLines:
+    {
+        int num_line_sets = get_rand_int(2, 5);
+        orientation wave_orientation = get_rand_bool() ? Horizontal : Vertical;
+        std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
+
+        for (int i = 0; i < num_line_sets; ++i) {
+            int num_waves = get_rand_int(2, 8);
+            double wave_movement = get_rand_double(-5.0, 5.0);
+            wave_color = get_rand_palette_color(palette);
+            wave_amplitude = window_height / get_rand_int(5, 20);
+            composite->add_layer(
+                std::make_unique<MovingWaveLayer>(num_waves, wave_orientation, wave_movement, window_width, window_height, wave_amplitude, wave_color));
+        }
+        return composite;
+    }
     case SacredSeal:
     default:
     {
