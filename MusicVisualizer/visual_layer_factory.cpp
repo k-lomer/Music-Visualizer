@@ -45,7 +45,7 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = get_rand_layer_type();
+    visual_layer_type new_vl_type = BoxedCircle;//get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -104,6 +104,15 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         orientation wave_orientation = get_rand_bool() ? Horizontal : Vertical;
         std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
 
+        // Add an optional pulsing circle
+        if (wave_orientation == Horizontal) {
+            if (get_rand_bool()) {
+                SDL_Point centre{ window_width / 2, window_height / 2 };
+                int circle_radius = std::min(window_height, window_width) / get_rand_int(2, 10);
+                composite->add_layer(std::make_unique<AmplitudeCircleLayer>(centre, circle_radius, wave_color));
+            }
+        }
+
         for (int i = 0; i < num_line_sets; ++i) {
             int num_waves = get_rand_int(2, 8);
             double wave_movement = get_rand_double(-5.0, 5.0);
@@ -111,6 +120,25 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
             wave_amplitude = window_height / get_rand_int(5, 20);
             composite->add_layer(
                 std::make_unique<MovingWaveLayer>(num_waves, wave_orientation, wave_movement, window_width, window_height, wave_amplitude, wave_color));
+        }
+
+        return composite;
+    }
+    case BoxedCircle:
+    {
+        std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
+        // circle
+        SDL_Point centre{ window_width / 2, window_height / 2 };
+        int circle_radius = std::min(window_height, window_width) / get_rand_int(3, 5);
+        composite->add_layer(std::make_unique<AmplitudeCircleLayer>(centre, circle_radius, wave_color));
+        // box
+        int num_boxes = get_rand_int(1, 3);
+        wave_amplitude = std::min(window_height, window_width) / 2 - circle_radius;
+        for (int i = 0; i < num_boxes; ++i) {
+            wave_color = get_rand_palette_color(palette);
+            int num_waves = get_rand_int(1, 3);
+            composite->add_layer(std::make_unique<ScreenBoxLayer>(num_waves, window_width, window_height, wave_amplitude, wave_color));
+            wave_amplitude /= 2;
         }
         return composite;
     }

@@ -14,6 +14,7 @@ enum visual_layer_type {
     AmplitudeCircle,
     CheckerBoard,
     ScrollingLines,
+    BoxedCircle,
     SacredSeal,
     MIN_VL_TYPE = CheckerBoard,
     MAX_VL_TYPE = SacredSeal
