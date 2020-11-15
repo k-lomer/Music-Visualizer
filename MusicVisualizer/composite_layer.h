@@ -20,6 +20,6 @@ public:
     virtual void draw(SDL_Renderer * const renderer, const SignalBox & signal_box) override;
 
 
-protected:
+private:
     std::vector<std::unique_ptr<VisualLayer>> visual_layers;
 };

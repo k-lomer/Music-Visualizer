@@ -134,9 +134,11 @@
     <ClCompile Include="dsp_utilities.cpp" />
     <ClCompile Include="moving_wave_layer.cpp" />
     <ClCompile Include="polygon_layer.cpp" />
+    <ClCompile Include="polygon_spiral.cpp" />
     <ClCompile Include="sacred_seal.cpp" />
     <ClCompile Include="screen_box_layer.cpp" />
     <ClCompile Include="signal_box.cpp" />
+    <ClCompile Include="circle_grid.cpp" />
     <ClCompile Include="visualizer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="audio_recorder.cpp" />
@@ -152,8 +154,10 @@
     <ClInclude Include="draw_utilities.h" />
     <ClInclude Include="colors.h" />
     <ClInclude Include="dsp_utilities.h" />
+    <ClInclude Include="circle_grid.h" />
     <ClInclude Include="moving_wave_layer.h" />
     <ClInclude Include="polygon_layer.h" />
+    <ClInclude Include="polygon_spiral.h" />
     <ClInclude Include="sacred_seal.h" />
     <ClInclude Include="screen_box_layer.h" />
     <ClInclude Include="signal_box.h" />

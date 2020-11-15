@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "composite_layer.h"
 
 // A sacred geometric combination of concentric rotating regular polygons

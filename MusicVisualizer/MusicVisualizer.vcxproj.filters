@@ -66,6 +66,12 @@
     <ClCompile Include="composite_layer.cpp">
       <Filter>composite layers</Filter>
     </ClCompile>
+    <ClCompile Include="circle_grid.cpp">
+      <Filter>composite layers</Filter>
+    </ClCompile>
+    <ClCompile Include="polygon_spiral.cpp">
+      <Filter>composite layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_recorder.h">
@@ -120,6 +126,12 @@
       <Filter>composite layers</Filter>
     </ClInclude>
     <ClInclude Include="composite_layer.h">
+      <Filter>composite layers</Filter>
+    </ClInclude>
+    <ClInclude Include="circle_grid.h">
+      <Filter>composite layers</Filter>
+    </ClInclude>
+    <ClInclude Include="polygon_spiral.h">
       <Filter>composite layers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,6 +13,10 @@ PolygonLayer::PolygonLayer(int num_sides, int radius, SDL_Point poly_centre, dou
     }
 }
 
+PolygonLayer::PolygonLayer(const std::vector<SDL_Point> & poly_vertices, SDL_Point poly_centre, double rotation_rate, int wave_amplitude, SDL_Color wave_color)
+    : vertices(poly_vertices), centre(poly_centre), rotation_rate(rotation_rate), amplitude(wave_amplitude), color(wave_color) {}
+
+
 void PolygonLayer::draw(SDL_Renderer * renderer, const SignalBox & signal_box) {
     rotation += rotation_rate;
     if (rotation > 2 * M_PI) {

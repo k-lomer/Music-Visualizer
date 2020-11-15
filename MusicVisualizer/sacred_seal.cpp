@@ -4,7 +4,7 @@
 
 SacredSealLayer::SacredSealLayer(const std::vector<SacredSealConfig> & config, SDL_Point centre, int radius, int wave_amplitude) {
     for (const auto & config : config) {
-        visual_layers.push_back(std::make_unique<PolygonLayer>(config.num_sides, radius, centre, config.rotation_rate, wave_amplitude, config.color));
+        add_layer(std::make_unique<PolygonLayer>(config.num_sides, radius, centre, config.rotation_rate, wave_amplitude, config.color));
         // scale radius and amplitude accordingly
         int next_radius = compute_next_radius(radius, config.num_sides);
         wave_amplitude = wave_amplitude * next_radius / radius;

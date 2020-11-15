@@ -9,6 +9,8 @@
 #include "amplitude_circle_layer.h"
 // Composite Layers
 #include "sacred_seal.h"
+#include "circle_grid.h"
+#include "polygon_spiral.h"
 
 VisualLayerFactory::VisualLayerFactory(): random_layer_type(MIN_VL_TYPE, MAX_VL_TYPE), random_bool(0,1), random_color_int(0, 255) {}
 
@@ -45,7 +47,7 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = BoxedCircle;//get_rand_layer_type();
+    visual_layer_type new_vl_type = PolygonSpiral;//get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -129,18 +131,59 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
         // circle
         SDL_Point centre{ window_width / 2, window_height / 2 };
+        int num_circles = get_rand_int(1, 4);
         int circle_radius = std::min(window_height, window_width) / get_rand_int(3, 5);
-        composite->add_layer(std::make_unique<AmplitudeCircleLayer>(centre, circle_radius, wave_color));
+        for (int i = 0; i < num_circles; ++i) {
+            wave_color = get_rand_palette_color(palette);
+            composite->add_layer(std::make_unique<AmplitudeCircleLayer>(centre, circle_radius / (i+1), wave_color));
+        
+        }
         // box
         int num_boxes = get_rand_int(1, 3);
         wave_amplitude = std::min(window_height, window_width) / 2 - circle_radius;
         for (int i = 0; i < num_boxes; ++i) {
             wave_color = get_rand_palette_color(palette);
-            int num_waves = get_rand_int(1, 3);
+            int num_waves = get_rand_int(1, 4);
             composite->add_layer(std::make_unique<ScreenBoxLayer>(num_waves, window_width, window_height, wave_amplitude, wave_color));
             wave_amplitude /= 2;
         }
         return composite;
+    }
+    case CentralWave:
+    {
+        std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
+        int num_colors = get_rand_int(1, 3);
+        for (int i = 0; i < num_colors; ++i) {
+            int wave_amplitude = window_height / get_rand_int(5, 30);
+            wave_color = get_rand_palette_color(palette);
+            int num_waves = get_rand_int(1, 10 / num_colors);
+            SDL_Point wave_start{ 0, window_height / 2 };
+            SDL_Point wave_end{ window_width, window_height / 2 };
+            composite->add_layer(std::make_unique<WaveLayer>(num_waves, wave_start, wave_end, wave_amplitude * 3, wave_color));
+        }
+        return composite;
+    }
+    case CircleGrid:
+    {
+        int cols = get_rand_int(2, 5);
+        int rows = get_rand_int(1, cols);
+        if (window_height > window_width) {
+            std::swap(cols, rows);
+        }
+        int num_colors = get_rand_int(1, 3);
+        std::vector<SDL_Color> colors;
+        for (int i = 0; i < num_colors; ++i) {
+            colors.push_back(get_rand_palette_color(palette));
+        }
+        return std::make_unique<CircleGridLayer>(colors, rows, cols, window_width, window_height);
+    }
+    case PolygonSpiral:
+    {
+        int num_sides = get_rand_int(3, 6);
+        int iterations = get_rand_int(5, 30);
+        double position = get_rand_double(0.2, 0.8);
+        double rotation_rate = get_rand_double(-0.03, 0.03);
+        return std::make_unique<PolygonSpiralLayer>(num_sides, window_width, window_height, iterations, position, rotation_rate, wave_amplitude, wave_color);
     }
     case SacredSeal:
     default:

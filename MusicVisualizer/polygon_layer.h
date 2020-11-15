@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+
+#include "SDL.h"
 #include "visual_layer.h"
 
 // A class which is a regular polygon whose sides are audio waves
@@ -13,7 +16,15 @@ public:
     // param: wave_color - the color of the waves on the sides
     PolygonLayer(int num_sides, int radius, SDL_Point poly_centre, double rotation_rate, int wave_amplitude, SDL_Color wave_color);
 
+    // param: vertices - the vertices which make up the polygon
+    // param: poly_centre - the coordinates of the centre of the polygon
+    // param: rotation_rate - the degrees to rotate per frame
+    // param: wave_amplitude - the maximum pixel amplitude of the waves on the sides
+    // param: wave_color - the color of the waves on the sides
+    PolygonLayer(const std::vector<SDL_Point> & poly_vertices, SDL_Point poly_centre, double rotation_rate, int wave_amplitude, SDL_Color wave_color);
+
     virtual void draw(SDL_Renderer * renderer, const SignalBox & signal_box) override;
+    std::vector<SDL_Point> get_vertices() const {return vertices;}
 
 private:
     SDL_Point centre;
