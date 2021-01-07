@@ -72,6 +72,9 @@
     <ClCompile Include="polygon_spiral.cpp">
       <Filter>composite layers</Filter>
     </ClCompile>
+    <ClCompile Include="tunnel.cpp">
+      <Filter>composite layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_recorder.h">
@@ -132,6 +135,9 @@
       <Filter>composite layers</Filter>
     </ClInclude>
     <ClInclude Include="polygon_spiral.h">
+      <Filter>composite layers</Filter>
+    </ClInclude>
+    <ClInclude Include="tunnel.h">
       <Filter>composite layers</Filter>
     </ClInclude>
   </ItemGroup>

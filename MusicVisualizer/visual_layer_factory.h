@@ -18,6 +18,7 @@ enum visual_layer_type {
     CentralWave,
     CircleGrid,
     PolygonSpiral,
+    Tunnel,
     SacredSeal,
     MIN_VL_TYPE = CheckerBoard,
     MAX_VL_TYPE = SacredSeal

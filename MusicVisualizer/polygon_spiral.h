@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #include "composite_layer.h"
 
@@ -7,6 +6,10 @@
 class PolygonSpiralLayer : public virtual CompositeLayer {
 public:
     // param: num_sides - the number of sides of the regular polygon
+    // param: window_width - the pixel width of the window
+    // param: window_height - the pixel height of the window
+    // param: iterations - how many iterations of the spiral to compute
+    // param: position - how far along the edge to begin the next iteration (between 0 and 1)
     // param: rotation_rate - the degrees to rotate per frame
     // param: wave_amplitude - the maximum pixel amplitude of the waves on the sides
     // param: wave_color - the color of the waves on the sides

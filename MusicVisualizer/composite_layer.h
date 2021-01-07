@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <deque>
 
 #include "visual_layer.h"
 
@@ -11,7 +12,7 @@ public:
     CompositeLayer();
     // Constructor which initializes layers
     // param: layers - the layers to use 
-    CompositeLayer(std::vector<std::unique_ptr<VisualLayer>> layers);
+    CompositeLayer(std::deque<std::unique_ptr<VisualLayer>> layers);
 
     // Add a new layer to the composition
     // param: layer - the layer to add
@@ -20,6 +21,6 @@ public:
     virtual void draw(SDL_Renderer * const renderer, const SignalBox & signal_box) override;
 
 
-private:
-    std::vector<std::unique_ptr<VisualLayer>> visual_layers;
+protected:
+    std::deque<std::unique_ptr<VisualLayer>> visual_layers;
 };

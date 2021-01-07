@@ -11,6 +11,7 @@
 #include "sacred_seal.h"
 #include "circle_grid.h"
 #include "polygon_spiral.h"
+#include "tunnel.h"
 
 VisualLayerFactory::VisualLayerFactory(): random_layer_type(MIN_VL_TYPE, MAX_VL_TYPE), random_bool(0,1), random_color_int(0, 255) {}
 
@@ -47,7 +48,7 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = PolygonSpiral;//get_rand_layer_type();
+    visual_layer_type new_vl_type = get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -136,7 +137,6 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         for (int i = 0; i < num_circles; ++i) {
             wave_color = get_rand_palette_color(palette);
             composite->add_layer(std::make_unique<AmplitudeCircleLayer>(centre, circle_radius / (i+1), wave_color));
-        
         }
         // box
         int num_boxes = get_rand_int(1, 3);
@@ -184,6 +184,14 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         double position = get_rand_double(0.2, 0.8);
         double rotation_rate = get_rand_double(-0.03, 0.03);
         return std::make_unique<PolygonSpiralLayer>(num_sides, window_width, window_height, iterations, position, rotation_rate, wave_amplitude, wave_color);
+    }
+    case Tunnel:
+    {
+        int num_boxes = get_rand_int(1, 3);
+        int num_waves = get_rand_int(1, 4);
+        int levels = get_rand_int(2, 6);
+        double scale_rate = get_rand_double(-0.004, 0.004);
+        return std::make_unique<TunnelLayer>(window_width, window_height, num_waves, levels, wave_amplitude, wave_color, scale_rate);
     }
     case SacredSeal:
     default:
