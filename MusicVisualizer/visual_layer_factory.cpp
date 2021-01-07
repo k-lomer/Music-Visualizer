@@ -48,7 +48,7 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = get_rand_layer_type();
+    visual_layer_type new_vl_type = WaveSpinner;//get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -192,6 +192,31 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         int levels = get_rand_int(2, 6);
         double scale_rate = get_rand_double(-0.004, 0.004);
         return std::make_unique<TunnelLayer>(window_width, window_height, num_waves, levels, wave_amplitude, wave_color, scale_rate);
+    }
+    case WaveSpinner:
+    {
+        std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
+        int num_spinners = get_rand_int(1, 6);
+        SDL_Point wave_start{ 0, 0 };
+        SDL_Point wave_end{ window_width, window_height };
+        int wave_amplitude = window_height / get_rand_int(5, 30);
+        bool even_spacing = get_rand_bool();
+        int wave_count = get_rand_int(1, 5);
+
+        if (even_spacing){
+            double rotation_rate = get_rand_double(-0.03, 0.03);
+            for (int i = 0; i < num_spinners; ++i) {
+                double initial_rotation = i * 2.0 * M_PI / num_spinners;
+                composite->add_layer(std::make_unique<WaveLayer>(wave_count, wave_start, wave_end, wave_amplitude, wave_color, initial_rotation, rotation_rate));
+            }
+        }
+        else {
+            double rotation_rate = get_rand_double(-0.03, 0.03);
+            for (int i = 0; i < num_spinners; ++i) {
+                composite->add_layer(std::make_unique<WaveLayer>(wave_count, wave_start, wave_end, wave_amplitude, wave_color, 0.0, rotation_rate / (i + 1)));
+            }
+        }
+        return composite;
     }
     case SacredSeal:
     default:

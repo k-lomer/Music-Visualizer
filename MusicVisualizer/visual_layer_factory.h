@@ -19,6 +19,7 @@ enum visual_layer_type {
     CircleGrid,
     PolygonSpiral,
     Tunnel,
+    WaveSpinner,
     SacredSeal,
     MIN_VL_TYPE = CheckerBoard,
     MAX_VL_TYPE = SacredSeal
