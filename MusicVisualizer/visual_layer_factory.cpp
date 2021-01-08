@@ -199,21 +199,29 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         int num_spinners = get_rand_int(1, 6);
         SDL_Point wave_start{ 0, 0 };
         SDL_Point wave_end{ window_width, window_height };
-        int wave_amplitude = window_height / get_rand_int(5, 30);
+        int wave_amplitude = window_height / get_rand_int(2, 10);
         bool even_spacing = get_rand_bool();
         int wave_count = get_rand_int(1, 5);
 
         if (even_spacing){
             double rotation_rate = get_rand_double(-0.03, 0.03);
-            for (int i = 0; i < num_spinners; ++i) {
-                double initial_rotation = i * 2.0 * M_PI / num_spinners;
-                composite->add_layer(std::make_unique<WaveLayer>(wave_count, wave_start, wave_end, wave_amplitude, wave_color, initial_rotation, rotation_rate));
+            int num_sets = get_rand_int(1, 3);
+            for (int s = 0; s < num_sets; ++s)
+            {
+                wave_color = get_rand_palette_color(palette);
+                double offset = get_rand_double(0.0, M_PI / num_spinners);
+                for (int i = 0; i < num_spinners; ++i) {
+                    double initial_rotation = i * M_PI / num_spinners;
+                    composite->add_layer(std::make_unique<WaveLayer>(wave_count, wave_start, wave_end, wave_amplitude, wave_color, initial_rotation + offset, rotation_rate));
+                }
             }
         }
         else {
             double rotation_rate = get_rand_double(-0.03, 0.03);
             for (int i = 0; i < num_spinners; ++i) {
-                composite->add_layer(std::make_unique<WaveLayer>(wave_count, wave_start, wave_end, wave_amplitude, wave_color, 0.0, rotation_rate / (i + 1)));
+                wave_color = get_rand_palette_color(palette);
+                double initial_rotation = get_rand_double(0.0, 2.0 * M_PI);
+                composite->add_layer(std::make_unique<WaveLayer>(wave_count, wave_start, wave_end, wave_amplitude, wave_color, initial_rotation, rotation_rate / (i + 1)));
             }
         }
         return composite;
