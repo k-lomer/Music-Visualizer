@@ -7,6 +7,7 @@
 #include "polygon_layer.h"
 #include "moving_wave_layer.h"
 #include "amplitude_circle_layer.h"
+#include "bars_layer.h"
 // Composite Layers
 #include "sacred_seal.h"
 #include "circle_grid.h"
@@ -48,7 +49,7 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = WaveSpinner;//get_rand_layer_type();
+    visual_layer_type new_vl_type = Bars;//get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -85,6 +86,14 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     {
         SDL_Point centre{ window_width / 2, window_height / 2 };
         return std::make_unique<AmplitudeCircleLayer>(centre, wave_amplitude * 5, wave_color);
+    }
+    case Bars:
+    {
+        int num_bars = get_rand_int(10, 100);
+        SDL_Point bars_start{ 0, window_height / 2 };
+        SDL_Point bars_end{ window_width, window_height / 2 };
+        int amplitude = window_height / 3;
+        return std::make_unique<BarsLayer>(num_bars, bars_start, bars_end, amplitude, wave_color);
     }
     case CheckerBoard:
     {

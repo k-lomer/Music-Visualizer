@@ -96,3 +96,30 @@ void draw_wave(SDL_Renderer * const renderer, const std::vector<float> &wave, co
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawLines(renderer, &wave_points[0], (int)wave_points.size());
 }
+
+void draw_bars(SDL_Renderer * const renderer, const std::vector<float> &bar_values, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color) {
+    int length = distance(start, end);
+    if (length == 0) { return; }
+    std::vector<SDL_Point> bar_heights = gen_wave_points(bar_values, length, -amplitude);
+
+    // move to correct start and end points
+    std::vector<SDL_Point> bar_midpoints = translate(bar_heights, start);
+    bar_midpoints = rotate(bar_midpoints, start, angle(start, end));
+
+    // Assumes start is further right than end
+    int min_bar_width = (end.x - start.x) / (int)bar_values.size();
+    // account for total length not divisible by number of bars
+    int pixel_remainder = (end.x - start.x) % bar_values.size();
+
+    std::vector<SDL_Rect> bars;
+    int x_pos = start.x;
+    for (int i = 0; i < bar_values.size(); ++i) {
+        int bar_width = min_bar_width + (i < pixel_remainder ? 1 : 0);
+        bars.push_back(SDL_Rect{ x_pos, bar_midpoints[i].y - bar_heights[i].y, bar_width, bar_heights[i].y });
+        x_pos += bar_width;
+    }
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRects(renderer, &bars[0], (int)bars.size());
+
+}
+

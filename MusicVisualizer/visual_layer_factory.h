@@ -13,6 +13,7 @@ enum visual_layer_type {
     MovingWave,
     AmplitudeCircle,
     CheckerBoard,
+    Bars,
     ScrollingLines,
     BoxedCircle,
     CentralWave,
