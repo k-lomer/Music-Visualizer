@@ -106,10 +106,9 @@ void draw_bars(SDL_Renderer * const renderer, const std::vector<float> &bar_valu
     std::vector<SDL_Point> bar_midpoints = translate(bar_heights, start);
     bar_midpoints = rotate(bar_midpoints, start, angle(start, end));
 
-    // Assumes start is further right than end
-    int min_bar_width = (end.x - start.x) / (int)bar_values.size();
+    int min_bar_width = abs(end.x - start.x) / (int)bar_values.size();
     // account for total length not divisible by number of bars
-    int pixel_remainder = (end.x - start.x) % bar_values.size();
+    int pixel_remainder = abs(end.x - start.x) % bar_values.size();
 
     std::vector<SDL_Rect> bars;
     int x_pos = start.x;
