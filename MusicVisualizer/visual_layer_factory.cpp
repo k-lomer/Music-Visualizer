@@ -49,7 +49,7 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = Bars;//get_rand_layer_type();
+    visual_layer_type new_vl_type = get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -89,7 +89,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     }
     case Bars:
     {
-        int num_bars = get_rand_int(10, 100);
+        int num_bars = get_rand_int(10, 50);
         SDL_Point bars_start{ 0, window_height / 2 };
         SDL_Point bars_end{ window_width, window_height / 2 };
         int amplitude = window_height / 3;
@@ -240,7 +240,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     {
         int radius = get_rand_int(std::min(window_width, window_height) / 4, std::min(window_width, window_height) / 2);
         std::vector<SacredSealLayer::SacredSealConfig> config;
-        int layers = get_rand_int(2, 5);
+        int layers = get_rand_int(4, 7);
         for (int i = 0; i < layers; ++i) {
             int num_sides = get_rand_int(3, 8);
             double rotation_rate = get_rand_double(-0.03, 0.03);
@@ -253,7 +253,6 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
             SDL_Point centre_left{ window_width / 4, window_height / 2 };
             SDL_Point centre_right{ 3 * window_width / 4, window_height / 2 };
 
-            radius = get_rand_int(radius / 2, radius);
             composite->add_layer(std::make_unique<SacredSealLayer>(config, centre_left, radius, wave_amplitude));
             // reverse rotation for other seal
             for (auto & conf : config) {
