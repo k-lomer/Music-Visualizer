@@ -21,6 +21,7 @@ enum visual_layer_type {
     PolygonSpiral,
     Tunnel,
     WaveSpinner,
+    UnknownPleasure,
     SacredSeal,
     MIN_VL_TYPE = CheckerBoard,
     MAX_VL_TYPE = SacredSeal

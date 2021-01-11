@@ -141,6 +141,7 @@
     <ClCompile Include="signal_box.cpp" />
     <ClCompile Include="circle_grid.cpp" />
     <ClCompile Include="tunnel.cpp" />
+    <ClCompile Include="unknown_pleasure_layer.cpp" />
     <ClCompile Include="visualizer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="audio_recorder.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="signal_box.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="tunnel.h" />
+    <ClInclude Include="unknown_pleasure_layer.h" />
     <ClInclude Include="visualizer.h" />
     <ClInclude Include="visual_layer.h" />
     <ClInclude Include="visual_layer_factory.h" />

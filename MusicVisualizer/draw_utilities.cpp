@@ -36,6 +36,24 @@ SDL_Point rotate_point(const SDL_Point &v, const SDL_Point &centre, double radia
     return SDL_Point{ rotated.x + centre.x, rotated.y + centre.y };
 }
 
+std::vector<SDL_Point> interpolate_line(const SDL_Point & v_1, const SDL_Point & v_2, int num_points) {
+    std::vector<SDL_Point> line_points{ v_1 };
+    if (num_points > 2) {
+        double x = double(v_1.x);
+        double y = double(v_1.y);
+        double x_step = double(v_2.x - v_1.x) / double(num_points - 1);
+        double y_step = double(v_2.y - v_1.y) / double(num_points - 1);
+        for (int i = 0; i < num_points - 2; ++i) {
+            x += x_step;
+            y += y_step;
+            line_points.push_back(SDL_Point{ int(x), int(y) });
+        }
+    }
+    line_points.push_back(v_2);
+
+    return line_points;
+}
+
 std::vector<SDL_Point> gen_wave_points(std::vector<float> wave, int length, int amplitude) {
     // Handle silent/empty wave
     if (wave.empty()) {
@@ -87,7 +105,7 @@ void draw_circle(SDL_Renderer * const renderer, const SDL_Point &centre, int rad
 void draw_wave(SDL_Renderer * const renderer, const std::vector<float> &wave, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color) {
     int length = distance(start, end);
     if (length == 0) { return; }
-    std::vector<SDL_Point> wave_points = gen_wave_points(wave, length, amplitude);
+    std::vector<SDL_Point> wave_points = gen_wave_points(wave, length, -amplitude);
     
     // move to correct start and end points
     wave_points = translate(wave_points, start);

@@ -78,6 +78,9 @@
     <ClCompile Include="bars_layer.cpp">
       <Filter>base layers</Filter>
     </ClCompile>
+    <ClCompile Include="unknown_pleasure_layer.cpp">
+      <Filter>base layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_recorder.h">
@@ -144,6 +147,9 @@
       <Filter>composite layers</Filter>
     </ClInclude>
     <ClInclude Include="bars_layer.h">
+      <Filter>base layers</Filter>
+    </ClInclude>
+    <ClInclude Include="unknown_pleasure_layer.h">
       <Filter>base layers</Filter>
     </ClInclude>
   </ItemGroup>

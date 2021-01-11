@@ -8,6 +8,7 @@
 #include "moving_wave_layer.h"
 #include "amplitude_circle_layer.h"
 #include "bars_layer.h"
+#include "unknown_pleasure_layer.h"
 // Composite Layers
 #include "sacred_seal.h"
 #include "circle_grid.h"
@@ -234,6 +235,17 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
             }
         }
         return composite;
+    }
+    case UnknownPleasure:
+    {
+        int num_waves = get_rand_int(10, 20);
+        wave_amplitude = window_height / 8;
+        SDL_Point first_wave_start{ window_width / 8, 7 * window_height / 8 };
+        SDL_Point first_wave_end{7 * window_width / 8, 7 * window_height / 8 };
+        SDL_Point last_wave_start{ window_width / 8, window_height / 8 };
+        SDL_Point last_wave_end{ 7 * window_width / 8, window_height / 8 };
+        return std::make_unique<UnknownPleasureLayer>(num_waves, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, wave_color);
+
     }
     case SacredSeal:
     default:

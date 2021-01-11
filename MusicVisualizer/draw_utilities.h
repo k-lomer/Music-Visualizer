@@ -19,6 +19,9 @@ SDL_Point rotate_point(const SDL_Point &v, const SDL_Point &centre, double radia
 // Rotate a vector of points about the centre
 std::vector<SDL_Point> rotate(const std::vector<SDL_Point>& points, const SDL_Point & centre, double radians);
 
+// Interpolate the points on a straight line
+std::vector<SDL_Point> interpolate_line(const SDL_Point & v_1, const SDL_Point & v_2, int num_points);
+
 // Generate a wave of pixel points
 // param: wave - the amplitude of each point on the wave
 // param: length - the pixel length of the wave
