@@ -13,19 +13,14 @@ public:
     // param: wave_end - the coordinates of the end of the waves
     // param: wave_amplitude - the the maximum pixel amplitude of the waves
     // param: wave_color - the color of the waves
-    UnknownPleasureLayer(int num_waves, SDL_Point first_wave_start, SDL_Point first_wave_end, SDL_Point last_wave_start, SDL_Point last_wave_end, int wave_amplitude, SDL_Color wave_color)
-        : wave_count(num_waves), front_start(first_wave_start), front_end(first_wave_end),
-        back_start(last_wave_start), back_end(last_wave_end), amplitude(wave_amplitude), color(wave_color)
-    {
-        for (int i = 0; i < num_waves; ++i) {
-            waveforms.emplace_back();
-        }
-    }
+    UnknownPleasureLayer(int num_waves, int frame_delay, SDL_Point first_wave_start, SDL_Point first_wave_end,
+        SDL_Point last_wave_start, SDL_Point last_wave_end, int wave_amplitude, SDL_Color wave_color);
 
     virtual void draw(SDL_Renderer * renderer, const SignalBox & signal_box) override;
 
 private:
     int wave_count;
+    int delay;
     SDL_Point front_start;
     SDL_Point front_end;
     SDL_Point back_start;

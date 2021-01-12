@@ -50,7 +50,7 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = get_rand_layer_type();
+    visual_layer_type new_vl_type = UnknownPleasure;// get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -242,9 +242,10 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         wave_amplitude = window_height / 8;
         SDL_Point first_wave_start{ window_width / 8, 7 * window_height / 8 };
         SDL_Point first_wave_end{7 * window_width / 8, 7 * window_height / 8 };
-        SDL_Point last_wave_start{ window_width / 8, window_height / 8 };
-        SDL_Point last_wave_end{ 7 * window_width / 8, window_height / 8 };
-        return std::make_unique<UnknownPleasureLayer>(num_waves, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, wave_color);
+        SDL_Point last_wave_start{ 2 * window_width / 8, window_height / 8 };
+        SDL_Point last_wave_end{ 6 * window_width / 8, window_height / 8 };
+        int frame_delay = 3;
+        return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, wave_color);
 
     }
     case SacredSeal:
