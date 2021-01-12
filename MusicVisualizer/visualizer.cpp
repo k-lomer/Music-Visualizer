@@ -84,6 +84,7 @@ void Visualizer::change_all_layers() {
     for (size_t i = 0; i < num_layers; ++i) {
         change_visual_layer();
     }
+    signal_box.reset();
     layer_change_timer.reset();
 }
 
@@ -178,7 +179,7 @@ bool Visualizer::update() {
     }
 
     if (layer_change_timer.expired()) {
-        change_visual_layer();
+        change_all_layers();
         layer_change_timer.reset();
     }
 

@@ -27,6 +27,9 @@ public:
     SignalBox();
     ~SignalBox() {}
 
+    // Reset the signal box
+    void reset();
+
     // Update the base signals
     // param: new_signal - the raw signal to update values
     void update_signal(const wave & new_signal);

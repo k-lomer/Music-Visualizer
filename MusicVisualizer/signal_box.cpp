@@ -6,6 +6,19 @@
 
 SignalBox::SignalBox() : decay_factor(0.92f), max_decay_factor(0.99f) {}
 
+void SignalBox::reset() {
+    raw_signal = wave();
+    raw_freq = wave();
+    updated_abs_signal = wave();
+    updated_freq = wave();
+    raw_max = 0.0f;
+    raw_freq_max = 0.0f;
+    updated_max = 0.0f;
+    updated_freq_max = 0.0f;
+    alltime_max = 0.0f;
+    alltime_freq_max = 0.0f;
+}
+
 void SignalBox::update_signal(const wave & new_signal) {
     raw_signal = new_signal;
     weighted_decay_update(updated_abs_signal, abs(raw_signal), decay_factor);
