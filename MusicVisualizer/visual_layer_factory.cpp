@@ -239,12 +239,12 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     case UnknownPleasure:
     {
         int num_waves = get_rand_int(10, 20);
-        wave_amplitude = window_height / 8;
-        SDL_Point first_wave_start{ window_width / 8, 7 * window_height / 8 };
-        SDL_Point first_wave_end{7 * window_width / 8, 7 * window_height / 8 };
+        wave_amplitude = window_height / 6;
+        SDL_Point first_wave_start{ window_width / 8, 6 * window_height / 8 };
+        SDL_Point first_wave_end{7 * window_width / 8, 6 * window_height / 8 };
         SDL_Point last_wave_start{ 2 * window_width / 8, window_height / 8 };
         SDL_Point last_wave_end{ 6 * window_width / 8, window_height / 8 };
-        int frame_delay = 3;
+        int frame_delay = 20;
         return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, wave_color);
 
     }

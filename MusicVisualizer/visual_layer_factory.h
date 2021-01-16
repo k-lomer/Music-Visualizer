@@ -12,12 +12,12 @@ enum visual_layer_type {
     PolygonWave,
     MovingWave,
     AmplitudeCircle,
-    CheckerBoard,
-    Bars,
-    ScrollingLines,
-    BoxedCircle,
-    CentralWave,
     CircleGrid,
+    BoxedCircle,
+    Bars,
+    CheckerBoard,
+    ScrollingLines,
+    CentralWave,
     PolygonSpiral,
     Tunnel,
     WaveSpinner,
@@ -47,7 +47,6 @@ private:
 
     // functions for generating random values
     visual_layer_type get_rand_layer_type();
-    visual_layer_type get_rand_composite_layer_type();
     bool get_rand_bool();
     int get_rand_int(int min_val, int max_val); // inclusive
     double get_rand_double(double min_val, double max_val); // inclusive

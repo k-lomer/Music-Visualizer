@@ -13,12 +13,13 @@ UnknownPleasureLayer::UnknownPleasureLayer(int num_waves, int frame_delay, SDL_P
 }
 
 void UnknownPleasureLayer::draw(SDL_Renderer * renderer, const SignalBox & signal_box) {
-    waveforms.push_front(signal_box.gen_wave(signal_type));
+    waveforms.push_front(signal_box.gen_wave(signal_type, 0.3));
     waveforms.pop_back();
 
     auto starts = interpolate_line(front_start, back_start, wave_count);
     auto ends = interpolate_line(front_end, back_end, wave_count);
-    for (int i = 0; i < starts.size(); ++i) {
+    for (int i = int(starts.size()) - 1; i >= 0 ; --i) {
+        draw_wave_fill(renderer, waveforms[i * delay], starts[i], ends[i], amplitude, SDL_Color{0, 0, 0, SDL_ALPHA_OPAQUE });
         draw_wave(renderer, waveforms[i * delay], starts[i], ends[i], amplitude, color);
     }
 }

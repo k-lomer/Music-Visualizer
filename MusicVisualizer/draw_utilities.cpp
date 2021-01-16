@@ -115,6 +115,39 @@ void draw_wave(SDL_Renderer * const renderer, const std::vector<float> &wave, co
     SDL_RenderDrawLines(renderer, &wave_points[0], (int)wave_points.size());
 }
 
+void draw_wave_fill(SDL_Renderer * const renderer, const std::vector<float> &wave, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color) {
+    std::vector<SDL_Point> fill_points;
+    int length = distance(start, end);
+    if (length == 0) { 
+        fill_points = std::vector<SDL_Point>{start, end};
+    }
+    else {
+        std::vector<SDL_Point> wave_points = gen_wave_points(wave, length, -amplitude);
+        for (int i = 0; i < wave_points.size() - 1; ++i) {
+            // generate column points in the polygon between two wave points
+            SDL_Point w_1 = wave_points[i];
+            SDL_Point w_2 = wave_points[i + 1];
+            auto polygon_points = interpolate_line(w_1, w_2, abs(w_2.x - w_1.x));
+            for (int j = 0; j < polygon_points.size() - 1; ++j) {
+                if (j % 2 == 0) {
+                    fill_points.push_back(SDL_Point{ polygon_points[j].x, 0 });
+                    fill_points.push_back(SDL_Point{ polygon_points[j] });
+                }
+                else {
+                    fill_points.push_back(SDL_Point{ polygon_points[j] });
+                    fill_points.push_back(SDL_Point{ polygon_points[j].x, 0 });
+                }
+            }
+        }
+
+        fill_points = translate(fill_points, start);
+        fill_points = rotate(fill_points, start, angle(start, end));
+    }
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLines(renderer, &fill_points[0], (int)fill_points.size());
+}
+
+
 void draw_bars(SDL_Renderer * const renderer, const std::vector<float> &bar_values, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color) {
     int length = distance(start, end);
     if (length == 0) { return; }
