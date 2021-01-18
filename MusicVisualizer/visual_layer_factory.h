@@ -52,4 +52,5 @@ private:
     double get_rand_double(double min_val, double max_val); // inclusive
     SDL_Color get_rand_color();
     SDL_Color get_rand_palette_color(Color::color_palette cp);
+    template <typename T> std::vector<T> shuffle(std::vector<T> v);
 };

@@ -49,8 +49,17 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
     }
 }
 
+template <typename T> std::vector<T> VisualLayerFactory::shuffle(std::vector<T> v) {
+    for (int i = v.size() - 1; i >= 0; --i) {
+        int swap_i = get_rand_int(0, i);
+        std::swap(v[i], v[swap_i]);
+    }
+    return v;
+}
+
+
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = UnknownPleasure;// get_rand_layer_type();
+    visual_layer_type new_vl_type = get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -244,8 +253,21 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         SDL_Point first_wave_end{7 * window_width / 8, 6 * window_height / 8 };
         SDL_Point last_wave_start{ 2 * window_width / 8, window_height / 8 };
         SDL_Point last_wave_end{ 6 * window_width / 8, window_height / 8 };
-        int frame_delay = 20;
-        return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, wave_color);
+        int frame_delay = 10;
+
+        // randomly pick single color or multiple colors
+        std::vector<SDL_Color> colors = get_rand_bool() ? std::vector<SDL_Color>{wave_color} : shuffle(Color::palette_lookup.at(palette));
+
+        int layer_type = get_rand_int(1, 3);
+        if (layer_type == 1) { // no fill
+            return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, colors, false);
+        }
+        else if (layer_type == 2) { // background fill
+            return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, colors, true);
+        }
+        else { // only fill
+            return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, colors);
+        }
 
     }
     case SacredSeal:
