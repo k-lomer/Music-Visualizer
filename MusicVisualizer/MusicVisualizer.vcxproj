@@ -134,6 +134,8 @@
     <ClCompile Include="draw_utilities.cpp" />
     <ClCompile Include="dsp_utilities.cpp" />
     <ClCompile Include="moving_wave_layer.cpp" />
+    <ClCompile Include="parametric.cpp" />
+    <ClCompile Include="parametric_curve_layer.cpp" />
     <ClCompile Include="polygon_layer.cpp" />
     <ClCompile Include="polygon_spiral.cpp" />
     <ClCompile Include="sacred_seal.cpp" />
@@ -160,6 +162,8 @@
     <ClInclude Include="dsp_utilities.h" />
     <ClInclude Include="circle_grid.h" />
     <ClInclude Include="moving_wave_layer.h" />
+    <ClInclude Include="parametric.h" />
+    <ClInclude Include="parametric_curve_layer.h" />
     <ClInclude Include="polygon_layer.h" />
     <ClInclude Include="polygon_spiral.h" />
     <ClInclude Include="sacred_seal.h" />

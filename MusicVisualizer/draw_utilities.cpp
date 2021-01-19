@@ -10,6 +10,10 @@ double angle(const SDL_Point& v_1, const SDL_Point& v_2) {
     return atan2(double(v_2.y - v_1.y), double(v_2.x - v_1.x));
 }
 
+SDL_Point translate_point(const SDL_Point & v, const SDL_Point & translation) {
+    return SDL_Point{ v.x + translation.x, v.y + translation.y };
+}
+
 std::vector<SDL_Point> translate(const std::vector<SDL_Point>& points, const SDL_Point & translation) {
     std::vector<SDL_Point> translated_points;
     for (const auto &point : points) {
@@ -26,6 +30,16 @@ std::vector<SDL_Point> rotate(const std::vector<SDL_Point>& points, const SDL_Po
     }
     return rotated_points;
 }
+
+std::vector<SDL_Point> scale(const std::vector<SDL_FPoint> & points, double scale_factor) {
+    std::vector<SDL_Point> scaled_points;
+
+    for (const auto & point : points) {
+        scaled_points.push_back(SDL_Point{ int(scale_factor * double(point.x)), int(scale_factor * double(point.y)) });
+    }
+    return scaled_points;
+}
+
 
 SDL_Point rotate_point(const SDL_Point &v, const SDL_Point &centre, double radians) {
     double c = cos(radians);

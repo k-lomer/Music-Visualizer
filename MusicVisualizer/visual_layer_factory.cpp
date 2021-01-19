@@ -1,6 +1,10 @@
 #include "visual_layer_factory.h"
 
+#include <iostream>
+#include <numeric>
+
 #include "color_palettes.h"
+#include "parametric.h"
 // Visual Layers
 #include "wave_layer.h"
 #include "screen_box_layer.h"
@@ -9,6 +13,7 @@
 #include "amplitude_circle_layer.h"
 #include "bars_layer.h"
 #include "unknown_pleasure_layer.h"
+#include "parametric_curve_layer.h"
 // Composite Layers
 #include "sacred_seal.h"
 #include "circle_grid.h"
@@ -50,7 +55,7 @@ SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
 }
 
 template <typename T> std::vector<T> VisualLayerFactory::shuffle(std::vector<T> v) {
-    for (int i = v.size() - 1; i >= 0; --i) {
+    for (int i = int(v.size()) - 1; i >= 0; --i) {
         int swap_i = get_rand_int(0, i);
         std::swap(v[i], v[swap_i]);
     }
@@ -59,7 +64,7 @@ template <typename T> std::vector<T> VisualLayerFactory::shuffle(std::vector<T> 
 
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = get_rand_layer_type();
+    visual_layer_type new_vl_type = ParametricCurve;// get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -118,6 +123,33 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
             composite->add_layer(
                 std::make_unique<MovingWaveLayer>(num_waves, wave_orientation, wave_movement, window_width, window_height, wave_amplitude*2, wave_color));
         }
+        return composite;
+    }
+    case ParametricCurve:
+    {
+        double x_coeff = get_rand_double(2.0, 3.0);
+        double y_coeff = get_rand_double(2.0, 3.0);
+        double coeff_baseline = get_rand_double(0.5, 1.5);
+        std::cout << "X: " << x_coeff << ", Y: " << y_coeff << ", baseline: " << coeff_baseline << std::endl;
+        SDL_Point centre{ window_width / 2, window_height / 2 };
+        int raw_curve_division = 64;
+        int curve_scale = std::min(window_height, window_width) / raw_curve_division;
+        std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
+
+        int scale_layers = get_rand_int(2, 4);
+        double min_scale = get_rand_double(double(raw_curve_division) / 16.0, double(raw_curve_division) / 4.0);
+        double max_scale = get_rand_double(min_scale * 2.0, double(raw_curve_division) / 2.0);
+        std::vector<double> layer_scales;
+        for (int i = 0; i < scale_layers; ++i) {
+            layer_scales.push_back(min_scale + (max_scale - min_scale) * double(i) / double(scale_layers) );
+        }
+        auto colors = shuffle(Color::palette_lookup.at(palette));
+        bool horizontal_direction = get_rand_bool();
+
+        ParametricEquation2d para_curve(x_coeff, y_coeff, curve_scale);
+        composite->add_layer(std::make_unique<ParametricCurveLayer>(colors, para_curve, coeff_baseline, centre, layer_scales, horizontal_direction));
+        ParametricEquation2d inverted_para_curve(x_coeff, y_coeff, -curve_scale);
+        composite->add_layer(std::make_unique<ParametricCurveLayer>(colors, inverted_para_curve, coeff_baseline, centre, layer_scales, horizontal_direction));
         return composite;
     }
     case ScrollingLines:

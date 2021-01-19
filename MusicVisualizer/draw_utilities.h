@@ -10,6 +10,9 @@ int distance(const SDL_Point& v_1, const SDL_Point& v_2);
 // Calculate the angle from horizontal of the line between two points
 double angle(const SDL_Point& v_1, const SDL_Point& v_2);
 
+// Translate a single point
+SDL_Point translate_point(const SDL_Point & v, const SDL_Point & translation);
+
 // Translate a vector of points
 std::vector<SDL_Point> translate(const std::vector<SDL_Point>& points, const SDL_Point & translation);
 
@@ -18,6 +21,9 @@ SDL_Point rotate_point(const SDL_Point &v, const SDL_Point &centre, double radia
 
 // Rotate a vector of points about the centre
 std::vector<SDL_Point> rotate(const std::vector<SDL_Point>& points, const SDL_Point & centre, double radians);
+
+// Scale a vector of points about (0,0)
+std::vector<SDL_Point> scale(const std::vector<SDL_FPoint> & points, double scale_factor);
 
 // Interpolate the points on a straight line
 std::vector<SDL_Point> interpolate_line(const SDL_Point & v_1, const SDL_Point & v_2, int num_points);
