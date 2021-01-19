@@ -15,17 +15,18 @@ public:
     // Compute the point at parameter t (rounded to int)
     // param: t - the parameter value
     // return: SDL_FPoint - the computed point
-    SDL_FPoint operator () (double t);
+    SDL_FPoint operator () (double t) const;
 
     // Generate a vector of points, evenly spaced on the parametric curve
     // param: num_points - the number of points to generate
+    // param: t_span - the span of t that the points cover
     // param: t_offset - the offset from 0 of the points
     // param: join_ends - whether to join the first and last points
     // return: std::vector<SDL_FPoint> - the generated points
-    std::vector<SDL_FPoint> gen_even_points(int num_points, double t_offset = 0.0, bool join_ends = true);
+    std::vector<SDL_FPoint> gen_even_points(int num_points, double t_span = 2.0 * M_PI, double t_offset = 0.0, bool join_ends = true) const;
 
     void set_coeffs(double x_coeff, double y_coeff) { x_a = x_coeff; y_b = y_coeff; }
-    std::pair<double, double> get_coeffs() { return std::pair<double, double>{x_a, y_b}; }
+    std::pair<double, double> get_coeffs() const { return std::pair<double, double>{x_a, y_b}; }
 
 private:
     double x_a;

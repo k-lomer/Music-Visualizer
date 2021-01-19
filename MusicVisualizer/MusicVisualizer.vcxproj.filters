@@ -87,6 +87,9 @@
     <ClCompile Include="parametric_curve_layer.cpp">
       <Filter>base layers</Filter>
     </ClCompile>
+    <ClCompile Include="parametric_wave_layer.cpp">
+      <Filter>base layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_recorder.h">
@@ -162,6 +165,9 @@
       <Filter>utilities</Filter>
     </ClInclude>
     <ClInclude Include="parametric_curve_layer.h">
+      <Filter>base layers</Filter>
+    </ClInclude>
+    <ClInclude Include="parametric_wave_layer.h">
       <Filter>base layers</Filter>
     </ClInclude>
   </ItemGroup>

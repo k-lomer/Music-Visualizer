@@ -10,6 +10,7 @@
 #include "screen_box_layer.h"
 #include "polygon_layer.h"
 #include "moving_wave_layer.h"
+#include "parametric_wave_layer.h"
 #include "amplitude_circle_layer.h"
 #include "bars_layer.h"
 #include "unknown_pleasure_layer.h"
@@ -149,6 +150,33 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         composite->add_layer(std::make_unique<ParametricCurveLayer>(colors, para_curve, coeff_baseline, centre, layer_scales, horizontal_direction));
         ParametricEquation2d inverted_para_curve(x_coeff, y_coeff, -curve_scale);
         composite->add_layer(std::make_unique<ParametricCurveLayer>(colors, inverted_para_curve, coeff_baseline, centre, layer_scales, horizontal_direction));
+        return composite;
+    }
+    case ParametricWave:
+    {
+        std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
+        auto colors = shuffle(Color::palette_lookup.at(palette));
+        int para_wave_layers = get_rand_int(1, 3);
+        for (int i = 0; i < para_wave_layers; ++i) {
+            double x_coeff_1 = get_rand_double(1.0, 5.0);
+            double x_coeff_2 = get_rand_double(1.0, 5.0);
+            double y_coeff_1 = get_rand_double(1.0, 3.0);
+            double y_coeff_2 = get_rand_double(1.0, 3.0);
+            int curve_scale_1 = get_rand_int(std::min(window_height, window_width) / 6, std::min(window_height, window_width) / 3);
+            int curve_scale_2 = get_rand_int(std::min(window_height, window_width) / 6, std::min(window_height, window_width) / 3);
+            ParametricEquation2d para_curve_1(x_coeff_1, y_coeff_1, curve_scale_1);
+            ParametricEquation2d para_curve_2(x_coeff_2, y_coeff_2, curve_scale_2);
+
+            SDL_Point centre_1{ get_rand_int(window_width / 3, 2 * window_width / 3), get_rand_int(window_height / 3, 2 * window_height / 3) };
+            SDL_Point centre_2{ get_rand_int(window_width / 3, 2 * window_width / 3), get_rand_int(window_height / 3, 2 * window_height / 3) };
+            int num_waves = get_rand_int(40 / (para_wave_layers + 1), 120 / (para_wave_layers + 1));
+            double step = get_rand_double(M_PI / 80, M_PI / 50);
+            double span = step * num_waves;
+            double step_size = M_PI / get_rand_double(4.0, 8.0) / 60.0;
+            int amplitude = std::min(window_height, window_width) / get_rand_int(30, 40);
+            
+            composite->add_layer(std::make_unique<ParametricWaveLayer>(num_waves, span, colors[i % colors.size()], para_curve_1, para_curve_2, centre_1, centre_2, step_size, amplitude));
+        }
         return composite;
     }
     case ScrollingLines:

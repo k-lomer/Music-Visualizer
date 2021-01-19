@@ -17,6 +17,7 @@ enum visual_layer_type {
     Bars,
     CheckerBoard,
     ParametricCurve,
+    ParametricWave,
     ScrollingLines,
     CentralWave,
     PolygonSpiral,

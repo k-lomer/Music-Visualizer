@@ -6,7 +6,11 @@
 // A parametric curve whose shape varies with the current amplitude
 class ParametricCurveLayer : public VisualLayer {
 public:
-    // param: curve_color - the color of the curve
+    // param: curve_colors - the colors to use for the curves
+    // param: para_curve - the parametric curve to use
+    // param: coeff_baseline - the minimum value to use for the coefficients
+    // param: centre - the centre of the curve
+    // param: horizontal_decrease - whether the coefficients should increase or decrease in the x direction with sound amplitude
     ParametricCurveLayer(const std::vector<SDL_Color> & curve_colors, const ParametricEquation2d & para_curve, double coeff_baseline,
         const SDL_Point & centre, const std::vector<double> & curve_scales, bool horizontal_decrease)
         : colors(curve_colors), curve(para_curve), baseline(coeff_baseline), centre(centre),  scales(curve_scales), direction(horizontal_decrease) {
