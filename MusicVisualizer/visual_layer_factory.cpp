@@ -64,7 +64,7 @@ template <typename T> std::vector<T> VisualLayerFactory::shuffle(std::vector<T> 
 
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, Color::color_palette palette) {
-    visual_layer_type new_vl_type = ParametricCurve;// get_rand_layer_type();
+    visual_layer_type new_vl_type = get_rand_layer_type();
     
     int wave_amplitude = window_height / get_rand_int(10, 30);
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -130,7 +130,6 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         double x_coeff = get_rand_double(2.0, 3.0);
         double y_coeff = get_rand_double(2.0, 3.0);
         double coeff_baseline = get_rand_double(0.5, 1.5);
-        std::cout << "X: " << x_coeff << ", Y: " << y_coeff << ", baseline: " << coeff_baseline << std::endl;
         SDL_Point centre{ window_width / 2, window_height / 2 };
         int raw_curve_division = 64;
         int curve_scale = std::min(window_height, window_width) / raw_curve_division;
