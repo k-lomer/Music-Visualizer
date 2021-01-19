@@ -1,7 +1,5 @@
 #include "amplitude_circle_layer.h"
 
-#include <algorithm>
-
 #include "draw_utilities.h"
 
 void AmplitudeCircleLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box) {
