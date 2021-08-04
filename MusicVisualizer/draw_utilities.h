@@ -35,7 +35,11 @@ std::vector<SDL_Point> interpolate_line(const SDL_Point & v_1, const SDL_Point &
 std::vector<SDL_Point> gen_wave_points(std::vector<float> wave, int length, int amplitude);
 
 // Draw a circle with the given renderer
-void draw_circle(SDL_Renderer * const renderer, const SDL_Point &centre, int radius, const SDL_Color& color);
+void draw_circle(SDL_Renderer * const renderer, const SDL_Point & centre, int radius, const SDL_Color & color, int thickness=0);
+
+// Compute the perimeter points for a single octant
+std::vector<SDL_Point> bresenhams_circle_points(int r);
+
 
 // Draw a wave with the given renderer
 void draw_wave(SDL_Renderer * const renderer, const std::vector<float> &wave, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color);

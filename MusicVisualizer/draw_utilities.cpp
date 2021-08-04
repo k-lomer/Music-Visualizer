@@ -1,6 +1,7 @@
 #include "draw_utilities.h"
 
 #include <cmath>
+#include <iostream>
 
 int distance(const SDL_Point& v_1, const SDL_Point& v_2) {
     return int(sqrt((std::pow(v_1.x - v_2.x, 2) + std::pow(v_1.y - v_2.y, 2))));
@@ -92,28 +93,133 @@ std::vector<SDL_Point> gen_wave_points(std::vector<float> wave, int length, int 
     return wave_points;
 }
 
-// This implementation works by computing the height at which the width of the circle changes and filling that space with lines
-// For rotational symmetry we plot the same for width and height reversed
-// This could be more efficient but it works well enough for now
-void draw_circle(SDL_Renderer * const renderer, const SDL_Point &centre, int radius, const SDL_Color& color) {
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    
-    int radius_squared = radius * radius;
-    int previous_offset_2 = radius+1;
-    for (int offset_1 = 0; offset_1 <= radius; ++offset_1) {
-        int new_offset_2 = (int)sqrt(double(radius_squared - offset_1 * offset_1));
-        for (int offset_2 = new_offset_2; offset_2 <= previous_offset_2; ++offset_2) {
-            // aply offsets horizontally
-            SDL_RenderDrawLine(renderer, centre.x + offset_1, centre.y + offset_2, centre.x - offset_1, centre.y + offset_2);
-            SDL_RenderDrawLine(renderer, centre.x + offset_1, centre.y - offset_2, centre.x - offset_1, centre.y - offset_2);
-            // apply offsets vertically for symmetry
-            SDL_RenderDrawLine(renderer, centre.x - offset_2, centre.y + offset_1, centre.x - offset_2, centre.y - offset_1);
-            SDL_RenderDrawLine(renderer, centre.x + offset_2, centre.y + offset_1, centre.x + offset_2, centre.y - offset_1);
 
+void draw_circle(SDL_Renderer * const renderer, const SDL_Point & centre, int radius, const SDL_Color & color, int thickness) {
+    std::vector<SDL_Point> perimeter(bresenhams_circle_points(radius));
+    std::vector<SDL_Point> fill_points;
+
+    if (thickness <= 0 || thickness >= radius) { // fill
+        for (int i = 0; i < perimeter.size(); ++i) {
+            fill_points.push_back(perimeter[i]);
+            fill_points.push_back(SDL_Point{ -perimeter[i].x, perimeter[i].y });
         }
-        previous_offset_2 = new_offset_2;
-
+        for (int i = int(perimeter.size()) - 1; i >= 0; --i) {
+            fill_points.push_back(SDL_Point{ perimeter[i].y, perimeter[i].x });
+            fill_points.push_back(SDL_Point{ -perimeter[i].y, perimeter[i].x });
+        }
+        for (int i = 0; i < perimeter.size(); ++i) {
+            fill_points.push_back(SDL_Point{ perimeter[i].y, -perimeter[i].x });
+            fill_points.push_back(SDL_Point{ -perimeter[i].y, -perimeter[i].x });
+        }
+        for (int i = int(perimeter.size()) - 1; i >= 0; --i) {
+            fill_points.push_back(SDL_Point{ perimeter[i].x, -perimeter[i].y });
+            fill_points.push_back(SDL_Point{ -perimeter[i].x, -perimeter[i].y });
+        }
     }
+    else if (thickness == 1) { // outline only
+        fill_points = std::move(perimeter);
+        fill_points.push_back(fill_points[0]);
+    }
+    else { // thick line
+        // This is the hardest case. We try to draw the right half of the circle first, then the left half
+        std::vector<SDL_Point> inner_perimeter(bresenhams_circle_points(radius - thickness));
+        std::vector<SDL_Point> inner_points;
+        int y = perimeter[0].y;
+        for (; y > inner_perimeter[0].y; --y) {
+            inner_points.push_back(SDL_Point{ 0, y });
+        }
+
+        for (const auto& point : inner_perimeter) {
+            if (y < 0) {
+                break;
+            }
+            else if (point.y > y) {
+                continue;
+            }
+            else {
+                inner_points.push_back(point);
+                --y;
+            }
+        }
+
+        std::vector<SDL_Point> outer_points;
+        outer_points.push_back(perimeter[0]);
+        y = perimeter[0].y;
+        for (int i = 0; i < perimeter.size(); ++i) {
+            if (perimeter[i].y == y) {
+                outer_points.back() = perimeter[i];
+            }
+            else {
+                outer_points.push_back(perimeter[i]);
+                --y;
+            }
+            if (y < 0) {
+                break;
+            }
+        }
+        
+        // Generate points for the ring
+        for (int i = 0; i < inner_points.size(); ++i) {
+            fill_points.push_back(inner_points[i]);
+            fill_points.push_back(outer_points[i]);
+        }
+        for (int i = int(inner_points.size()) - 1; i >= 0; --i) {
+            fill_points.push_back(SDL_Point{ inner_points[i].x, -inner_points[i].y });
+            fill_points.push_back(SDL_Point{ outer_points[i].x, -outer_points[i].y });
+        }
+        std::cout << std::endl;
+        for (int i = 0; i < inner_points.size(); ++i) {
+            fill_points.push_back(SDL_Point{ -inner_points[i].x, -inner_points[i].y });
+            fill_points.push_back(SDL_Point{ -outer_points[i].x, -outer_points[i].y });
+        }
+        for (int i = int(inner_points.size()) - 1; i >= 0; --i) {
+            fill_points.push_back(SDL_Point{ -inner_points[i].x, inner_points[i].y });
+            fill_points.push_back(SDL_Point{ -outer_points[i].x, outer_points[i].y });
+        }
+    }
+
+    fill_points = translate(fill_points, centre);
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLines(renderer, &fill_points[0], (int)fill_points.size());
+}
+
+std::vector<SDL_Point> bresenhams_circle_points(int r) {
+    std::vector<SDL_Point> points;
+    int x = 0;
+    int y = r;
+    int d = 3 - (2 * r);
+
+    while (x <= y) {
+        points.push_back(SDL_Point{ x, y });
+        ++x;
+        if (d < 0) {
+            d = d + (4 * x) + 6;
+        }
+        else {
+            d = d + 4 * (x - y) + 10;
+            --y;
+        }
+    }
+
+    int eighth_point_count = points.size();
+
+    for (int i = eighth_point_count - 1; i >= 0; --i)
+        points.push_back(SDL_Point{ points[i].y, points[i].x });
+    for (int i = 0; i < eighth_point_count; ++i)
+        points.push_back(SDL_Point{ points[i].y, -points[i].x });
+    for (int i = eighth_point_count - 1; i >= 0; --i)
+        points.push_back(SDL_Point{ points[i].x, -points[i].y });
+    for (int i = 0; i < eighth_point_count; ++i)
+        points.push_back(SDL_Point{ -points[i].x, -points[i].y });
+    for (int i = eighth_point_count - 1; i >= 0; --i)
+        points.push_back(SDL_Point{ -points[i].y, -points[i].x });
+    for (int i = 0; i < eighth_point_count; ++i)
+        points.push_back(SDL_Point{ -points[i].y, points[i].x });
+    for (int i = eighth_point_count - 1; i >= 0; --i)
+        points.push_back(SDL_Point{ -points[i].x, points[i].y });
+
+
+    return points;
 }
 
 void draw_wave(SDL_Renderer * const renderer, const std::vector<float> &wave, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color) {

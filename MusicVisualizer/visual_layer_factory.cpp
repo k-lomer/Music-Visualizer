@@ -185,15 +185,6 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
         orientation wave_orientation = get_rand_bool() ? Horizontal : Vertical;
         std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
 
-        // Add an optional pulsing circle
-        if (wave_orientation == Horizontal) {
-            if (get_rand_bool()) {
-                SDL_Point centre{ window_width / 2, window_height / 2 };
-                int circle_radius = std::min(window_height, window_width) / get_rand_int(2, 10);
-                composite->add_layer(std::make_unique<AmplitudeCircleLayer>(centre, circle_radius, wave_color));
-            }
-        }
-
         for (int i = 0; i < num_line_sets; ++i) {
             int num_waves = get_rand_int(2, 8);
             double wave_movement = get_rand_double(-5.0, 5.0);
@@ -258,16 +249,16 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     case PolygonSpiral:
     {
         int num_sides = get_rand_int(3, 6);
-        int iterations = get_rand_int(5, 30);
+        int iterations = get_rand_int(5, num_sides * 4);
         double position = get_rand_double(0.2, 0.8);
         double rotation_rate = get_rand_double(-0.03, 0.03);
         return std::make_unique<PolygonSpiralLayer>(num_sides, window_width, window_height, iterations, position, rotation_rate, wave_amplitude, wave_color);
     }
     case Tunnel:
     {
-        int num_boxes = get_rand_int(1, 3);
-        int num_waves = get_rand_int(1, 4);
+        int num_waves = get_rand_int(3, 6);
         int levels = get_rand_int(2, 6);
+        wave_amplitude = std::min(window_height, window_width) / 2 / levels;
         double scale_rate = get_rand_double(-0.004, 0.004);
         return std::make_unique<TunnelLayer>(window_width, window_height, num_waves, levels, wave_amplitude, wave_color, scale_rate);
     }
@@ -306,7 +297,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     }
     case UnknownPleasure:
     {
-        int num_waves = get_rand_int(10, 20);
+        int num_waves = get_rand_int(8, 15);
         wave_amplitude = window_height / 6;
         SDL_Point first_wave_start{ window_width / 8, 6 * window_height / 8 };
         SDL_Point first_wave_end{7 * window_width / 8, 6 * window_height / 8 };
@@ -332,9 +323,10 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     case SacredSeal:
     default:
     {
-        int radius = get_rand_int(std::min(window_width, window_height) / 4, std::min(window_width, window_height) / 2);
+        wave_amplitude = window_height / get_rand_int(5, 15);
+        int radius = get_rand_int(std::min(window_width, window_height) / 2, std::min(window_width, window_height));
         std::vector<SacredSealLayer::SacredSealConfig> config;
-        int layers = get_rand_int(4, 7);
+        int layers = get_rand_int(5, 10);
         for (int i = 0; i < layers; ++i) {
             int num_sides = get_rand_int(3, 8);
             double rotation_rate = get_rand_double(-0.03, 0.03);
