@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "dsp_utilities.h"
+#include "../Utilities/dsp_utilities.h"
 
 SignalBox::SignalBox() : decay_factor(0.92f), max_decay_factor(0.99f) {}
 

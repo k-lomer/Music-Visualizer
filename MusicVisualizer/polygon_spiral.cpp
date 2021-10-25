@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "draw_utilities.h"
+#include "../Utilities/draw_utilities.h"
 #include "polygon_layer.h"
 
 PolygonSpiralLayer::PolygonSpiralLayer(int num_sides, int window_width, int window_height,

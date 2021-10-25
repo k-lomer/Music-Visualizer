@@ -1,6 +1,6 @@
 #include "polygon_layer.h"
 
-#include "draw_utilities.h"
+#include "../Utilities/draw_utilities.h"
 
 // The vertices are created in this constructor
 // Note that all polygons are initialized with horizontal bottom side

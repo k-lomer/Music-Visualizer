@@ -2,8 +2,8 @@
 
 #include "parametric_curve_layer.h"
 
-#include "draw_utilities.h"
-#include "parametric.h"
+#include "../Utilities/draw_utilities.h"
+#include "../Utilities/parametric.h"
 
 
 void ParametricCurveLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box) {

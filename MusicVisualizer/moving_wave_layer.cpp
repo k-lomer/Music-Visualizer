@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "draw_utilities.h"
+#include "../Utilities/draw_utilities.h"
 
 MovingWaveLayer::MovingWaveLayer(int num_waves, orientation wave_orientation, double wave_movement, int width, int height, int wave_amplitude, SDL_Color wave_color)
     : wave_orientation(wave_orientation), movement(wave_movement), window_width(width), window_height(height), amplitude(wave_amplitude), color(wave_color) {

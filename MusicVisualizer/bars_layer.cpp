@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include "draw_utilities.h"
+#include "../Utilities/draw_utilities.h"
 
 void BarsLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box) {
     auto wave = signal_box.gen_wave(Decay);

@@ -1,6 +1,6 @@
 #include "unknown_pleasure_layer.h"
 
-#include "draw_utilities.h"
+#include "../Utilities/draw_utilities.h"
 
 UnknownPleasureLayer::UnknownPleasureLayer(int num_waves, int frame_delay, SDL_Point first_wave_start, SDL_Point first_wave_end,
     SDL_Point last_wave_start, SDL_Point last_wave_end, int wave_amplitude, const std::vector<SDL_Color> & wave_colors, bool fill_waves)

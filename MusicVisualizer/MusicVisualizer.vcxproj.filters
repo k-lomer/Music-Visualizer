@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="utilities">
-      <UniqueIdentifier>{ba39c5d7-e219-4c47-998a-95a287f7e0ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="composite layers">
       <UniqueIdentifier>{1b3670ec-9ecf-47bb-a6bf-c76f31ee819d}</UniqueIdentifier>
     </Filter>
@@ -51,12 +48,6 @@
     <ClCompile Include="wave_layer.cpp">
       <Filter>base layers</Filter>
     </ClCompile>
-    <ClCompile Include="draw_utilities.cpp">
-      <Filter>utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="dsp_utilities.cpp">
-      <Filter>utilities</Filter>
-    </ClCompile>
     <ClCompile Include="signal_box.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -80,9 +71,6 @@
     </ClCompile>
     <ClCompile Include="unknown_pleasure_layer.cpp">
       <Filter>base layers</Filter>
-    </ClCompile>
-    <ClCompile Include="parametric.cpp">
-      <Filter>utilities</Filter>
     </ClCompile>
     <ClCompile Include="parametric_curve_layer.cpp">
       <Filter>base layers</Filter>
@@ -122,23 +110,8 @@
     <ClInclude Include="wave_layer.h">
       <Filter>base layers</Filter>
     </ClInclude>
-    <ClInclude Include="draw_utilities.h">
-      <Filter>utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="dsp_utilities.h">
-      <Filter>utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="timer.h">
-      <Filter>utilities</Filter>
-    </ClInclude>
     <ClInclude Include="signal_box.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="color_palettes.h">
-      <Filter>utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="colors.h">
-      <Filter>utilities</Filter>
     </ClInclude>
     <ClInclude Include="sacred_seal.h">
       <Filter>composite layers</Filter>
@@ -160,9 +133,6 @@
     </ClInclude>
     <ClInclude Include="unknown_pleasure_layer.h">
       <Filter>base layers</Filter>
-    </ClInclude>
-    <ClInclude Include="parametric.h">
-      <Filter>utilities</Filter>
     </ClInclude>
     <ClInclude Include="parametric_curve_layer.h">
       <Filter>base layers</Filter>

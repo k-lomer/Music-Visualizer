@@ -5,7 +5,7 @@
 #include <thread>
 #include <vector>
 
-#include "draw_utilities.h"
+#include "../Utilities/draw_utilities.h"
 #include "SDL.h"
 #include "amplitude_circle_layer.h"
 #include "wave_layer.h"

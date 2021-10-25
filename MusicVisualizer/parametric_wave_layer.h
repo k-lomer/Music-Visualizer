@@ -1,7 +1,7 @@
 #pragma once
 
 #include "visual_layer.h"
-#include "parametric.h"
+#include "../Utilities/parametric.h"
 
 // A series of waves between two parametric curves
 class ParametricWaveLayer : public VisualLayer {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "visual_layer.h"
-#include "parametric.h"
+#include "../Utilities/parametric.h"
 
 // A parametric curve whose shape varies with the current amplitude
 class ParametricCurveLayer : public VisualLayer {

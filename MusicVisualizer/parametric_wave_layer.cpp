@@ -1,6 +1,6 @@
 #include "parametric_wave_layer.h"
 
-#include "draw_utilities.h"
+#include "../Utilities/draw_utilities.h"
 
 void ParametricWaveLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box) {
     current_pos += update_step;

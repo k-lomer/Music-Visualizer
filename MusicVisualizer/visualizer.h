@@ -7,10 +7,10 @@
 
 #include "audio_recorder.h"
 #include "audio_sink.h"
-#include "color_palettes.h"
+#include "../Utilities/color_palettes.h"
 #include "SDL.h"
 #include "signal_box.h"
-#include "timer.h"
+#include "../Utilities/timer.h"
 #include "visual_layer.h"
 #include "visual_layer_factory.h"
 

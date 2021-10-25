@@ -1,6 +1,6 @@
 #include "screen_box_layer.h"
 
-#include "draw_utilities.h"
+#include "../Utilities/draw_utilities.h"
 
 void ScreenBoxLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box) {
     scale += scale_rate;

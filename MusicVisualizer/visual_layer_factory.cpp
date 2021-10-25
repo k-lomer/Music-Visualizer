@@ -3,8 +3,8 @@
 #include <iostream>
 #include <numeric>
 
-#include "color_palettes.h"
-#include "parametric.h"
+#include "../Utilities/color_palettes.h"
+#include "../Utilities/parametric.h"
 // Visual Layers
 #include "wave_layer.h"
 #include "screen_box_layer.h"

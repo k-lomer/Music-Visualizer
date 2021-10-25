@@ -4,7 +4,7 @@
 #include <memory>
 #include <random>
 
-#include "color_palettes.h"
+#include "../Utilities/color_palettes.h"
 
 enum visual_layer_type {
     Wave,
