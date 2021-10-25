@@ -1,0 +1,15 @@
+Longer sound buffer with no mutex problems
+Max value passes between visual changes
+Test Fourier transfer
+Use Fourier transfer
+    - wave
+    - bars
+    - circle attracted to highest bar
+After effects
+    - fade
+    - blur
+    - kaleidescope
+    - wave
+    - glitch
+Smooth parametric
+Visual review and twea
