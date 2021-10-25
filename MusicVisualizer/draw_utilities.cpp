@@ -201,7 +201,7 @@ std::vector<SDL_Point> bresenhams_circle_points(int r) {
         }
     }
 
-    int eighth_point_count = points.size();
+    int eighth_point_count = int(points.size());
 
     for (int i = eighth_point_count - 1; i >= 0; --i)
         points.push_back(SDL_Point{ points[i].y, points[i].x });
