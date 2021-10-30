@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MusicVisualizer", "MusicVis
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utilities", "Utilities\Utilities.vcxproj", "{51505C0E-93F0-447A-8B82-FF6D9DA946B6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestUtilities", "TestUtilities\TestUtilities.vcxproj", "{CCC31114-775B-41C8-93B4-AC0A1EE6FD40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{51505C0E-93F0-447A-8B82-FF6D9DA946B6}.Release|x64.Build.0 = Release|x64
 		{51505C0E-93F0-447A-8B82-FF6D9DA946B6}.Release|x86.ActiveCfg = Release|Win32
 		{51505C0E-93F0-447A-8B82-FF6D9DA946B6}.Release|x86.Build.0 = Release|Win32
+		{CCC31114-775B-41C8-93B4-AC0A1EE6FD40}.Debug|x64.ActiveCfg = Debug|x64
+		{CCC31114-775B-41C8-93B4-AC0A1EE6FD40}.Debug|x64.Build.0 = Debug|x64
+		{CCC31114-775B-41C8-93B4-AC0A1EE6FD40}.Debug|x86.ActiveCfg = Debug|Win32
+		{CCC31114-775B-41C8-93B4-AC0A1EE6FD40}.Debug|x86.Build.0 = Debug|Win32
+		{CCC31114-775B-41C8-93B4-AC0A1EE6FD40}.Release|x64.ActiveCfg = Release|x64
+		{CCC31114-775B-41C8-93B4-AC0A1EE6FD40}.Release|x64.Build.0 = Release|x64
+		{CCC31114-775B-41C8-93B4-AC0A1EE6FD40}.Release|x86.ActiveCfg = Release|Win32
+		{CCC31114-775B-41C8-93B4-AC0A1EE6FD40}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

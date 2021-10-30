@@ -1,5 +1,6 @@
 #include "dsp_utilities.h"
 
+#include <iostream>
 #include <algorithm>
 #include <complex>
 #include <cmath>
@@ -12,23 +13,22 @@ wave dft(const wave & signal) {
         return signal;
     }
 
-    // pad signal to length power of 2
+    // trim signal to length power of 2
     size_t n = signal.size();
     int log_2_N = 0;
-    while (n > 0) {
+    while (n > 1) {
         n >>= 1;
         ++log_2_N;
     }
-    std::vector<std::complex<double>> padded_complex_signal(int(std::pow(2, log_2_N)), 0.0);
-    for (size_t i = 0; i < signal.size(); ++i) {
-        padded_complex_signal[i] = std::complex<double>(signal[i]);
+    std::vector<std::complex<double>> trimmed_complex_signal(int(std::pow(2, log_2_N)));
+    for (size_t i = 0; i < trimmed_complex_signal.size(); ++i) {
+        trimmed_complex_signal[i] = std::complex<double>(signal[i]);
     }
 
-    std::vector<std::complex<double>> fft_values = fft(padded_complex_signal);
+    std::vector<std::complex<double>> fft_values = fft(trimmed_complex_signal);
 
-    int dft_length = std::min(100, int(fft_values.size()));
-    wave real_dft_values(dft_length);
-    std::transform(fft_values.begin(), fft_values.begin() + dft_length, real_dft_values.begin(),
+    wave real_dft_values(fft_values.size());
+    std::transform(fft_values.begin(), fft_values.end(), real_dft_values.begin(),
         [](std::complex<double> c)->float {return float(std::abs(c)); });
 
     return real_dft_values;
