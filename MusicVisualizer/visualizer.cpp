@@ -19,7 +19,8 @@ const int Visualizer::num_layers_init = 1;
 Visualizer::Visualizer():
     recorder(),
     layer_change_timer(change_time),
-    fps_timer(std::chrono::seconds(1)){
+    fps_timer(std::chrono::seconds(1)),
+    signal_box(recorder.get_num_channels(), recorder.get_sample_rate()){
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cout << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
         return;

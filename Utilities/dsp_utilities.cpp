@@ -164,3 +164,19 @@ wave add_reflection(const wave & signal) {
     std::transform(signal.begin(), signal.end(), reflection.begin(), reflection.begin(), std::plus<float>());
     return reflection;
 }
+
+wave squish_channels(const wave& signal, unsigned int channels) {
+    if (channels <= 1) {
+        return signal;
+    }
+
+    wave mono(signal.size() / channels, 0.0);
+    for (unsigned int i = 0; i < mono.size(); ++i)
+    {
+        for(unsigned int j=0; j < channels; ++j)
+        mono[i] += signal[channels * i + j];
+    }
+
+    return mono;
+}
+

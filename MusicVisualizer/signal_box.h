@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <deque>
 
 #include "SDL.h"
 #define NOMINMAX // to avoid min and max macros from windows.h
@@ -24,7 +25,7 @@ typedef std::vector<float> wave;
 // Provides processed signals for creating visual layers
 class SignalBox {
 public:
-    SignalBox();
+    SignalBox(unsigned int channels, unsigned long sample_rate);
     ~SignalBox() {}
 
     // Reset the signal box
@@ -44,19 +45,26 @@ public:
     // param: decay - whether to use the decayed updated signal or the raw signal
     // return: float - the maximum value
     float get_max(bool decay) const;
+
     
 private:
-    float decay_factor;
-    float max_decay_factor;
-    wave raw_signal;
-    wave raw_freq;
-    wave updated_abs_signal;
-    wave updated_freq;
+    std::deque< wave > m_previous_signals;
+    float m_decay_factor;
+    float m_max_decay_factor;
+    wave m_raw_signal;
+    wave m_raw_freq;
+    wave m_updated_abs_signal;
+    wave m_updated_freq;
 
-    float raw_max = 0.0f;
-    float raw_freq_max = 0.0f;
-    float updated_max = 0.0f;
-    float updated_freq_max = 0.0f;
-    float alltime_max = 0.0f;
-    float alltime_freq_max = 0.0f;
+    float m_raw_max = 0.0f;
+    float m_raw_freq_max = 0.0f;
+    float m_updated_max = 0.0f;
+    float m_updated_freq_max = 0.0f;
+    float m_alltime_max = 0.0f;
+    float m_alltime_freq_max = 0.0f;
+
+    int m_channels;
+    unsigned long m_sample_rate;
+    unsigned long m_cutoff_freq;
+    double m_freq_window;
 };

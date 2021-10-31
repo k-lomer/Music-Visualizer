@@ -11,7 +11,7 @@ void WaveLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box
         rotation += 2 * M_PI;
     }
     
-    auto wave = signal_box.gen_wave(signal_type);
+    auto wave = signal_box.gen_wave(Frequency);
     SDL_Point rotated_start = rotate_point(start, centre, rotation);
     SDL_Point rotated_end = rotate_point(end, centre, rotation);
 

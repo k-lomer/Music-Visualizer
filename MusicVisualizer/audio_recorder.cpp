@@ -56,6 +56,7 @@ AudioRecorder::AudioRecorder() {
 
         if (m_hr == S_OK && pwfx) {
             m_num_channels = pwfx->nChannels;
+            m_sample_rate = pwfx->nSamplesPerSec;
         }
 
         if (m_hr == S_OK) {
@@ -122,6 +123,6 @@ void AudioRecorder::record(AudioSink * audio_sink, std::atomic_bool &exit_flag) 
             m_hr = m_capture_client->ReleaseBuffer(num_frames_available);
             m_hr = m_capture_client->GetNextPacketSize(&packet_length);
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+        std::this_thread::sleep_for(std::chrono::milliseconds(s_sleep_time));
     }
 }

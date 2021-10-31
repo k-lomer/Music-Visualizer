@@ -4,44 +4,74 @@
 
 #include "../Utilities/dsp_utilities.h"
 
-SignalBox::SignalBox() : decay_factor(0.92f), max_decay_factor(0.99f) {}
+SignalBox::SignalBox(unsigned int channels, unsigned long sample_rate)
+    : m_channels(channels), m_sample_rate(sample_rate), m_decay_factor(0.92f), m_max_decay_factor(0.99f), m_cutoff_freq(1000), m_freq_window(0.2)
+{
+
+}
 
 void SignalBox::reset() {
-    raw_signal = wave();
-    raw_freq = wave();
-    updated_abs_signal = wave();
-    updated_freq = wave();
-    raw_max = 0.0f;
-    raw_freq_max = 0.0f;
-    updated_max = 0.0f;
-    updated_freq_max = 0.0f;
-    alltime_max = 0.0f;
-    alltime_freq_max = 0.0f;
+    m_raw_signal = wave();
+    m_raw_freq = wave();
+    m_updated_abs_signal = wave();
+    m_updated_freq = wave();
+    m_raw_max = 0.0f;
+    m_raw_freq_max = 0.0f;
+    m_updated_max = 0.0f;
+    m_updated_freq_max = 0.0f;
+    m_alltime_max = 0.0f;
+    m_alltime_freq_max = 0.0f;
 }
 
 void SignalBox::update_signal(const wave & new_signal) {
-    raw_signal = new_signal;
-    weighted_decay_update(updated_abs_signal, abs(raw_signal), decay_factor);
-    raw_freq = dft(raw_signal);
-    weighted_decay_update(updated_freq, abs(raw_freq), decay_factor);
+    wave new_signal_mono = squish_channels(new_signal, m_channels);
+    // Add to signal history and remove oldest signals if there are excess samples
+    unsigned long min_samples(m_freq_window * m_sample_rate);
 
-    raw_max = abs_max(raw_signal);
-    updated_max = raw_max > updated_max ? raw_max : max_decay_factor * updated_max;
-    alltime_max = raw_max == 0.0f ? 0.0f : std::max(raw_max, alltime_max);
+    if (min_samples < new_signal_mono.size()) {
+        m_previous_signals = { new_signal_mono };
+    }
+    else {
+        m_previous_signals.push_back(new_signal_mono);
+        unsigned long total_samples(0);
+        for (const wave& signal : m_previous_signals) {
+            total_samples += signal.size();
+        }
+        while (total_samples - m_previous_signals.front().size() > min_samples) {
+            total_samples -= m_previous_signals.front().size();
+            m_previous_signals.pop_front();
+        }
+    }
+    m_raw_signal = new_signal_mono;
+    weighted_decay_update(m_updated_abs_signal, abs(m_raw_signal), m_decay_factor);
 
-    raw_freq_max = abs_max(raw_freq);
-    updated_freq_max = raw_freq_max > updated_freq_max ? raw_freq_max : max_decay_factor * updated_freq_max;
-    alltime_freq_max = raw_freq_max == 0.0f ? 0.0f : std::max(raw_freq_max, alltime_freq_max);
+    wave long_signal;
+    for (const wave& signal : m_previous_signals) {
+        long_signal.insert(long_signal.end(), signal.begin(), signal.end());
+    }
+    wave freq = dft(long_signal);
+    unsigned long samples = freq.size();
+    unsigned long freq_cutoff_point = std::min( unsigned long(double(samples) * double(m_cutoff_freq) / double(m_sample_rate)), samples /2 );
+    m_raw_freq = wave(freq.begin(), freq.begin() + freq_cutoff_point);
+    weighted_decay_update(m_updated_freq, abs(m_raw_freq), m_decay_factor);
+
+    m_raw_max = abs_max(m_raw_signal);
+    m_updated_max = m_raw_max > m_updated_max ? m_raw_max : m_max_decay_factor * m_updated_max;
+    m_alltime_max = m_raw_max == 0.0f ? 0.0f : std::max(m_raw_max, m_alltime_max);
+
+    m_raw_freq_max = abs_max(m_raw_freq);
+    m_updated_freq_max = (m_raw_freq_max > m_updated_freq_max ? m_raw_freq_max : m_max_decay_factor * m_updated_freq_max);
+    m_alltime_freq_max = (m_raw_freq_max == 0.0f ? 0.0f : std::max(m_raw_freq_max, m_alltime_freq_max));
 }
 
 wave SignalBox::gen_wave(SignalFlag signal_type, double tapering) const{
     wave base_wave;
     // Get base wave
     if (signal_type & Frequency) {
-            base_wave = signal_type & Decay ? updated_freq : raw_freq;
+            base_wave = (signal_type & Decay ? m_updated_freq : m_raw_freq);
     }
     else {
-        base_wave = signal_type & Decay ? updated_abs_signal : raw_signal;
+        base_wave = (signal_type & Decay ? m_updated_abs_signal : m_raw_signal);
     }
 
     // Apply effects
@@ -62,7 +92,7 @@ wave SignalBox::gen_wave(SignalFlag signal_type, double tapering) const{
         base_wave = normalize(base_wave);
     }
     else { // scale relative to all time maximum value
-        float max_value = signal_type & Frequency ? alltime_freq_max : alltime_max;
+        float max_value = (signal_type & Frequency ? m_alltime_freq_max : m_alltime_max);
         base_wave = scale(base_wave, 1.0f / max_value);
     }
 
@@ -82,5 +112,5 @@ wave SignalBox::gen_wave(SignalFlag signal_type, double tapering) const{
 }
 
 float SignalBox::get_max(bool decay) const {
-    return decay ? updated_max : raw_max;
+    return decay ? m_updated_max : m_raw_max;
 }

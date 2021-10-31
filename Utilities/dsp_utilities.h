@@ -60,3 +60,9 @@ void weighted_decay_update(wave & previous_signal, const wave & new_signal, floa
 // param: signal - the signal to use
 // return: wave - the addition of the wave and its reflection
 wave add_reflection(const wave & signal);
+
+// Combine waves from multiple interleafed channels into a single wave
+// param: signal - the signal to use
+// param: channels - the number of channels
+// return: wave - the combined channels as a single signal
+wave squish_channels(const wave& signal, unsigned int channels);
