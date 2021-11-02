@@ -5,7 +5,7 @@
 #include "../Utilities/dsp_utilities.h"
 
 SignalBox::SignalBox(unsigned int channels, unsigned long sample_rate)
-    : m_channels(channels), m_sample_rate(sample_rate), m_decay_factor(0.92f), m_max_decay_factor(0.99f), m_cutoff_freq(1000), m_freq_window(0.2)
+    : m_channels(channels), m_sample_rate(sample_rate), m_decay_factor(0.92f), m_max_decay_factor(0.99f), m_cutoff_freq(800), m_freq_window(0.3)
 {
 
 }
@@ -23,8 +23,11 @@ void SignalBox::reset() {
     m_alltime_freq_max = 0.0f;
 }
 
-void SignalBox::update_signal(const wave & new_signal) {
-    wave new_signal_mono = squish_channels(new_signal, m_channels);
+void SignalBox::update_signal(const std::vector<std::shared_ptr<wave>> & new_signal) {
+    for (const std::shared_ptr<wave>& signal : new_signal) {
+        m_previous_signals.push_back(squish_channels(*signal, m_channels));
+    }
+    wave new_signal_mono = m_previous_signals.back();
     // Add to signal history and remove oldest signals if there are excess samples
     unsigned long min_samples(m_freq_window * m_sample_rate);
 
@@ -42,13 +45,13 @@ void SignalBox::update_signal(const wave & new_signal) {
             m_previous_signals.pop_front();
         }
     }
-    m_raw_signal = new_signal_mono;
-    weighted_decay_update(m_updated_abs_signal, abs(m_raw_signal), m_decay_factor);
-
     wave long_signal;
     for (const wave& signal : m_previous_signals) {
         long_signal.insert(long_signal.end(), signal.begin(), signal.end());
     }
+    m_raw_signal = new_signal_mono;
+    weighted_decay_update(m_updated_abs_signal, abs(m_raw_signal), m_decay_factor);
+
     wave freq = dft(long_signal);
     unsigned long samples = freq.size();
     unsigned long freq_cutoff_point = std::min( unsigned long(double(samples) * double(m_cutoff_freq) / double(m_sample_rate)), samples /2 );

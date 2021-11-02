@@ -159,14 +159,18 @@ void Visualizer::handle_event(const SDL_Event & e) {
 }
 
 void Visualizer::copy_data(float * data, int channels, int frames) {
-    std::lock_guard<std::mutex>write_guard(packet_buffer_mutex);
+    
 
     if (data) {
-        packet_buffer = packet(data, data + channels * frames);
+         std::shared_ptr<packet> packet_ptr = std::make_shared<packet>(data, data + channels * frames);
+         std::lock_guard<std::mutex>write_guard(packet_buffer_mutex);
+         packet_buffer.push_back(packet_ptr);
     }
     else {
         // use an empty vector if there is no data (silence)
-        packet_buffer = packet();
+        std::shared_ptr<packet> packet_ptr = std::make_shared<packet>();
+        std::lock_guard<std::mutex>write_guard(packet_buffer_mutex);
+        packet_buffer.push_back(packet_ptr);
     }
 }
 
@@ -208,9 +212,12 @@ bool Visualizer::update() {
 }
 
 void Visualizer::draw() {
-    std::unique_lock<std::mutex>read_guard(packet_buffer_mutex);
-    signal_box.update_signal(packet_buffer);
-    read_guard.unlock();
+    std::unique_lock<std::mutex>read_write_guard(packet_buffer_mutex);
+    std::vector<std::shared_ptr<packet>> packet_buffer_copy(packet_buffer);
+    packet_buffer.clear();
+    read_write_guard.unlock();
+
+    signal_box.update_signal(packet_buffer_copy);
 
     for (auto & layer : visual_layers) {
         layer->draw(renderer, signal_box);

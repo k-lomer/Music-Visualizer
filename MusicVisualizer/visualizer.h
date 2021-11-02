@@ -53,7 +53,7 @@ private:
     std::atomic_bool exit_recording_thread_flag = false;
     std::mutex packet_buffer_mutex;
     typedef std::vector<float> packet;
-    packet packet_buffer; // Must use mutex to access
+    std::vector<std::shared_ptr<packet>> packet_buffer; // Must use mutex to access
     SignalBox signal_box;
 
     // Visual Layer members

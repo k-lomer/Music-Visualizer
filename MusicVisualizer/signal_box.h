@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <deque>
+#include <memory>
+#include <vector>
 
 #include "SDL.h"
 #define NOMINMAX // to avoid min and max macros from windows.h
@@ -33,7 +34,7 @@ public:
 
     // Update the base signals
     // param: new_signal - the raw signal to update values
-    void update_signal(const wave & new_signal);
+    void update_signal(const std::vector<std::shared_ptr<wave>>& new_signal);
 
     // Generate a wave based on the current stored signals
     // param: signal_type - the flags describing the processing
