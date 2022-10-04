@@ -15,7 +15,7 @@ MovingWaveLayer::MovingWaveLayer(int num_waves, orientation wave_orientation, do
 
 // this is made trickier than it should be to ensure a smooth transition (wraparound) between waves
 // there is always an extra wave that only becomes visible as the previous one leaves the screen
-void MovingWaveLayer::draw(SDL_Renderer * renderer, const SignalBox & signal_box) {
+void MovingWaveLayer::draw(SDL_Renderer * renderer, const wave & signal) {
     int length = wave_orientation == Horizontal ? window_height : window_width;
     int visible_waves = (int)wave_positions.size() - 1;
     // move wave positions and wrap around waves which are off the screen
@@ -29,14 +29,12 @@ void MovingWaveLayer::draw(SDL_Renderer * renderer, const SignalBox & signal_box
         }
     }
 
-    auto wave = signal_box.gen_wave(signal_type);
-
     for (double pos : wave_positions) {
         if (wave_orientation == Horizontal) {
-            draw_wave(renderer, wave, SDL_Point{0, int(pos)}, SDL_Point{window_width, int(pos) }, amplitude, color);
+            draw_wave(renderer, signal, SDL_Point{0, int(pos)}, SDL_Point{window_width, int(pos) }, amplitude, color);
         }
         else {
-            draw_wave(renderer, wave, SDL_Point{ int(pos), 0}, SDL_Point{ int(pos), window_height }, amplitude, color);
+            draw_wave(renderer, signal, SDL_Point{ int(pos), 0}, SDL_Point{ int(pos), window_height }, amplitude, color);
         }
     }
 

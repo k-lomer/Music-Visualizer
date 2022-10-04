@@ -43,6 +43,8 @@ Visualizer::Visualizer():
     for (int i = 0; i < num_layers_init; ++i) {
         add_visual_layer();
     }
+    signal_box.reset(signal_box_cfg);
+    std::cout << signal_box_cfg << std::endl;
 }
 
 Visualizer::~Visualizer()
@@ -64,7 +66,7 @@ bool Visualizer::init_successful() const {
 }
 
 void Visualizer::add_visual_layer() {
-    visual_layers.push_back(std::move(vl_factory.random_visual_layer(window_width, window_height, palette)));
+    visual_layers.push_back(std::move(vl_factory.random_visual_layer(window_width, window_height, signal_box_cfg, palette)));
 }
 
 void Visualizer::remove_visual_layer() {
@@ -85,7 +87,8 @@ void Visualizer::change_all_layers() {
     for (size_t i = 0; i < num_layers; ++i) {
         change_visual_layer();
     }
-    signal_box.reset();
+    signal_box.reset(signal_box_cfg);
+    std::cout << signal_box_cfg << std::endl;
     layer_change_timer.reset();
 }
 
@@ -220,6 +223,6 @@ void Visualizer::draw() {
     signal_box.update_signal(packet_buffer_copy);
 
     for (auto & layer : visual_layers) {
-        layer->draw(renderer, signal_box);
+        layer->draw(renderer, signal_box.get_wave());
     }
 }

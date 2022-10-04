@@ -43,23 +43,34 @@ float abs_max(const wave & signal);
 // If the signal is empty return zero
 // param: signal - the real float values of a signal
 // return: float - the smallest value
-float min(const wave & signal);
+float min_element(const wave & signal);
 
 // Take the absolute of each value in the signal
 // param: signal - the float values of a signal
 // return: wave - the absolute signal
 wave abs(const wave & signal);
 
-// Update the values of a signal with larger new values or decay
+// Update the values of a signal with larger previous values or decay
 // param: previous_signal - the previous values to use
 // param: new_signal - the new values to use
 // param: decay - value between 0 and 1, the proportion of the previous_signal to keep
-void weighted_decay_update(wave & previous_signal, const wave & new_signal, float decay);
+void weighted_decay_update(const wave & previous_signal, wave & new_signal, float decay);
 
 // Sum the values of a wave and its reflection 
 // param: signal - the signal to use
 // return: wave - the addition of the wave and its reflection
 wave add_reflection(const wave & signal);
+
+// Takes the maximum of the values of a wave and its reflection 
+// param: signal - the signal to use
+// return: wave - the maximum values of the wave and its reflection
+wave max_reflection(const wave & signal);
+
+// Smooth the wave using a moving average window 
+// param: signal - the signal to use
+// param: window_size - the number of values to use in the moving window
+// return: wave - the smoothed wave
+wave smooth(const wave & signal, unsigned int window_size);
 
 // Combine waves from multiple interleafed channels into a single wave
 // param: signal - the signal to use

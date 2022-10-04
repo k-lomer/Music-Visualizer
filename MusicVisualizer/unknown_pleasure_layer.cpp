@@ -26,8 +26,8 @@ UnknownPleasureLayer::UnknownPleasureLayer(int num_waves, int frame_delay, SDL_P
     }
 }
 
-void UnknownPleasureLayer::draw(SDL_Renderer * renderer, const SignalBox & signal_box) {
-    waveforms.push_front(signal_box.gen_wave(signal_type, 0.3));
+void UnknownPleasureLayer::draw(SDL_Renderer * renderer, const wave & signal) {
+    waveforms.push_front(signal);
     waveforms.pop_back();
 
     auto starts = interpolate_line(front_start, back_start, wave_count);

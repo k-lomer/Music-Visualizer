@@ -24,12 +24,14 @@
     <ClInclude Include="draw_utilities.h" />
     <ClInclude Include="dsp_utilities.h" />
     <ClInclude Include="parametric.h" />
+    <ClInclude Include="prominent_peaks.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="draw_utilities.cpp" />
     <ClCompile Include="dsp_utilities.cpp" />
     <ClCompile Include="parametric.cpp" />
+    <ClCompile Include="prominent_peaks.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

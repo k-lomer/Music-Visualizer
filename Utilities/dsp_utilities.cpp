@@ -96,10 +96,10 @@ wave vertical_shift(const wave & signal, float shift){
         return signal;
     }
 
-    wave scaled_signal(signal.size());
-    std::transform(signal.begin(), signal.end(), scaled_signal.begin(),
+    wave shifted_signal(signal.size());
+    std::transform(signal.begin(), signal.end(), shifted_signal.begin(),
         std::bind(std::plus<float>(), std::placeholders::_1, shift));
-    return scaled_signal;
+    return shifted_signal;
 }
 
 float abs_max(const wave & signal) {
@@ -111,7 +111,7 @@ float abs_max(const wave & signal) {
     return std::max(std::fabsf(*min_max.first), std::fabsf(*min_max.second));
 }
 
-float min(const wave & signal) {
+float min_element(const wave & signal) {
     if (signal.empty()) {
         return 0.0f;
     }
@@ -128,28 +128,18 @@ wave abs(const wave & signal) {
     return abs_signal;
 }
 
-void weighted_decay_update(wave & previous_signal, const wave & new_signal, float decay) {
-    if (previous_signal.empty()) {
-        previous_signal = new_signal;
+void weighted_decay_update(const wave & previous_signal, wave & new_signal, float decay) {
+    if (new_signal.empty()) {
+        new_signal = scale(previous_signal, decay);
     }
-    else if (new_signal.empty()) {
-        for (auto & amplitude : previous_signal) {
-            amplitude *= decay;
-        }
-    }
-    else {
-        size_t shared_length = std::min(previous_signal.size(), new_signal.size());
-        for (size_t i = 0; i < shared_length; ++i) {
-            if (new_signal[i] > decay * previous_signal[i]) {
-                previous_signal[i] = new_signal[i];
+    else if (!previous_signal.empty()) {
+        wave decayed_signal = scale(previous_signal, decay);
+        decayed_signal.resize(new_signal.size(), 0.0f);
+
+        for (size_t i = 0; i < new_signal.size(); ++i) {
+            if (std::fabs(new_signal[i]) < std::fabs(decayed_signal[i])) {
+                new_signal[i] = decayed_signal[i];
             }
-            else {
-                previous_signal[i] = decay * previous_signal[i];
-            }
-        }
-        // shrink to smaller size if needed
-        if (previous_signal.size() > new_signal.size()) {
-            previous_signal.resize(shared_length);
         }
     }
 }
@@ -163,6 +153,35 @@ wave add_reflection(const wave & signal) {
     std::reverse(reflection.begin(), reflection.end());
     std::transform(signal.begin(), signal.end(), reflection.begin(), reflection.begin(), std::plus<float>());
     return reflection;
+}
+
+wave max_reflection(const wave & signal) {
+    if (signal.empty()) {
+        return signal;
+    }
+
+    wave reflection(signal);
+    std::reverse(reflection.begin(), reflection.end());
+    std::transform(signal.begin(), signal.end(), reflection.begin(), reflection.begin(),
+        [](float a, float b) {return std::max(a, b); });
+    return reflection;
+}
+
+wave smooth(const wave & signal, unsigned int window_size) {
+    if (signal.size() < window_size || window_size < 2) {
+        return signal;
+    }
+
+    wave smoothie(signal.size() - window_size + 1, 0.0);
+    for (unsigned int i = 0; i < smoothie.size(); ++i)
+    {
+        for (unsigned int j = 0; j < window_size; ++j)
+            smoothie[i] += signal[i + j];
+
+        smoothie[i] /= window_size;
+    }
+
+    return smoothie;
 }
 
 wave squish_channels(const wave& signal, unsigned int channels) {

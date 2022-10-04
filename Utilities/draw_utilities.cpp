@@ -1,5 +1,6 @@
 #include "draw_utilities.h"
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 
@@ -7,8 +8,41 @@ int distance(const SDL_Point& v_1, const SDL_Point& v_2) {
     return int(sqrt((std::pow(v_1.x - v_2.x, 2) + std::pow(v_1.y - v_2.y, 2))));
 }
 
+double distance(const SDL_FPoint& v_1, const SDL_FPoint& v_2) {
+    return double(sqrt((std::pow(v_1.x - v_2.x, 2) + std::pow(v_1.y - v_2.y, 2))));
+}
+
 double angle(const SDL_Point& v_1, const SDL_Point& v_2) {
     return atan2(double(v_2.y - v_1.y), double(v_2.x - v_1.x));
+}
+
+double angle(const SDL_FPoint& v_1, const SDL_FPoint& v_2) {
+    return atan2(double(v_2.y - v_1.y), double(v_2.x - v_1.x));
+}
+
+SDL_Point float_to_pixel_point(const SDL_FPoint& p) {
+    return SDL_Point{ std::lround(p.x), std::lround(p.y) };
+}
+
+SDL_FPoint pixel_to_float_point(const SDL_Point& p) {
+    return SDL_FPoint{ float(p.x), float(p.y) };
+}
+
+std::vector<SDL_Point> float_to_pixel_points(const std::vector<SDL_FPoint>& points) {
+    std::vector<SDL_Point> ret(points.size());
+    std::transform(points.cbegin(), points.cend(), ret.begin(), float_to_pixel_point);
+    return ret;
+}
+
+// Convert a vector of points from pixel (int) to float
+std::vector<SDL_FPoint> pixel_to_float_points(const std::vector<SDL_Point>& points) {
+    std::vector<SDL_FPoint> ret(points.size());
+    std::transform(points.cbegin(), points.cend(), ret.begin(), pixel_to_float_point);
+    return ret;
+}
+
+SDL_FPoint translate_point(const SDL_FPoint & v, const SDL_FPoint & translation) {
+    return SDL_FPoint{ v.x + translation.x, v.y + translation.y };
 }
 
 SDL_Point translate_point(const SDL_Point & v, const SDL_Point & translation) {
@@ -23,6 +57,14 @@ std::vector<SDL_Point> translate(const std::vector<SDL_Point>& points, const SDL
     return translated_points;
 }
 
+std::vector<SDL_FPoint> translate(const std::vector<SDL_FPoint>& points, const SDL_FPoint & translation) {
+    std::vector<SDL_FPoint> translated_points;
+    for (const auto &point : points) {
+        translated_points.push_back(SDL_FPoint{ point.x + translation.x, point.y + translation.y });
+    }
+    return translated_points;
+}
+
 std::vector<SDL_Point> rotate(const std::vector<SDL_Point>& points, const SDL_Point & centre, double radians) {
     std::vector<SDL_Point> rotated_points;
 
@@ -32,7 +74,16 @@ std::vector<SDL_Point> rotate(const std::vector<SDL_Point>& points, const SDL_Po
     return rotated_points;
 }
 
-std::vector<SDL_Point> scale(const std::vector<SDL_FPoint> & points, double scale_factor) {
+std::vector<SDL_FPoint> rotate(const std::vector<SDL_FPoint>& points, const SDL_FPoint & centre, double radians) {
+    std::vector<SDL_FPoint> rotated_points;
+
+    for (const auto &point : points) {
+        rotated_points.push_back(rotate_point(point, centre, radians));
+    }
+    return rotated_points;
+}
+
+std::vector<SDL_Point> scale(const std::vector<SDL_Point> & points, double scale_factor) {
     std::vector<SDL_Point> scaled_points;
 
     for (const auto & point : points) {
@@ -41,6 +92,22 @@ std::vector<SDL_Point> scale(const std::vector<SDL_FPoint> & points, double scal
     return scaled_points;
 }
 
+std::vector<SDL_FPoint> scale(const std::vector<SDL_FPoint> & points, double scale_factor) {
+    std::vector<SDL_FPoint> scaled_points;
+
+    for (const auto & point : points) {
+        scaled_points.push_back(SDL_FPoint{ float(scale_factor) * point.x, float(scale_factor) * point.y });
+    }
+    return scaled_points;
+}
+
+std::vector<SDL_Point> scale(const std::vector<SDL_Point> & points, double scale_factor, const SDL_Point& centre) {
+    return translate(scale(translate(points, SDL_Point{ -centre.x, -centre.y }), scale_factor), centre);
+}
+
+std::vector<SDL_FPoint> scale(const std::vector<SDL_FPoint> & points, double scale_factor, const SDL_FPoint& centre) {
+    return translate(scale(translate(points, SDL_FPoint{ -centre.x, -centre.y }), scale_factor), centre);
+}
 
 SDL_Point rotate_point(const SDL_Point &v, const SDL_Point &centre, double radians) {
     double c = cos(radians);
@@ -49,6 +116,15 @@ SDL_Point rotate_point(const SDL_Point &v, const SDL_Point &centre, double radia
     SDL_Point offset = { v.x - centre.x, v.y - centre.y };
     SDL_Point rotated = { int(double(offset.x) * c - double(offset.y) * s) , int(double(offset.x) * s + double(offset.y) * c) };
     return SDL_Point{ rotated.x + centre.x, rotated.y + centre.y };
+}
+
+SDL_FPoint rotate_point(const SDL_FPoint &v, const SDL_FPoint &centre, double radians) {
+    float c = float(cos(radians));
+    float s = float(sin(radians));
+
+    SDL_FPoint offset = { v.x - centre.x, v.y - centre.y };
+    SDL_FPoint rotated = {offset.x * c - offset.y * s, offset.x * s + offset.y * c};
+    return SDL_FPoint{ rotated.x + centre.x, rotated.y + centre.y };
 }
 
 std::vector<SDL_Point> interpolate_line(const SDL_Point & v_1, const SDL_Point & v_2, int num_points) {
@@ -68,6 +144,11 @@ std::vector<SDL_Point> interpolate_line(const SDL_Point & v_1, const SDL_Point &
 
     return line_points;
 }
+
+SDL_Point point_on_line(const SDL_Point & v_1, const SDL_Point & v_2, double position) {
+    return { int(v_1.x * (1.0 - position) + v_2.x * position), int(v_1.y * (1.0 - position) + v_2.y * position) };
+}
+
 
 std::vector<SDL_Point> gen_wave_points(std::vector<float> wave, int length, int amplitude) {
     // Handle silent/empty wave
@@ -225,8 +306,8 @@ std::vector<SDL_Point> bresenhams_circle_points(int r) {
 void draw_wave(SDL_Renderer * const renderer, const std::vector<float> &wave, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color) {
     int length = distance(start, end);
     if (length == 0) { return; }
+
     std::vector<SDL_Point> wave_points = gen_wave_points(wave, length, -amplitude);
-    
     // move to correct start and end points
     wave_points = translate(wave_points, start);
     wave_points = rotate(wave_points, start, angle(start, end));
@@ -247,16 +328,11 @@ void draw_wave_fill(SDL_Renderer * const renderer, const std::vector<float> &wav
             // generate column points in the polygon between two wave points
             SDL_Point w_1 = wave_points[i];
             SDL_Point w_2 = wave_points[i + 1];
-            auto polygon_points = interpolate_line(w_1, w_2, abs(w_2.x - w_1.x));
+            auto polygon_points = interpolate_line(w_1, w_2, abs(w_2.x - w_1.x) + 1);
             for (int j = 0; j < polygon_points.size() - 1; ++j) {
-                if (j % 2 == 0) {
-                    fill_points.push_back(SDL_Point{ polygon_points[j].x, 0 });
-                    fill_points.push_back(SDL_Point{ polygon_points[j] });
-                }
-                else {
-                    fill_points.push_back(SDL_Point{ polygon_points[j] });
-                    fill_points.push_back(SDL_Point{ polygon_points[j].x, 0 });
-                }
+                fill_points.push_back(SDL_Point{ polygon_points[j].x, 0 });
+                fill_points.push_back(SDL_Point{ polygon_points[j] });
+                fill_points.push_back(SDL_Point{ polygon_points[j].x, 0 });
             }
         }
 

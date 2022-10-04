@@ -23,8 +23,10 @@ public:
     // param: wave_color - the color of the waves on the sides
     PolygonLayer(const std::vector<SDL_Point> & poly_vertices, SDL_Point poly_centre, double rotation_rate, int wave_amplitude, SDL_Color wave_color);
 
-    virtual void draw(SDL_Renderer * renderer, const SignalBox & signal_box) override;
-    std::vector<SDL_Point> get_vertices() const {return vertices;}
+    virtual void draw(SDL_Renderer * renderer, const wave & signal) override;
+    std::vector<SDL_Point> get_vertices() const;
+    void set_rotation(double rot) {rotation = rot;}
+    double get_rotation() const {return rotation;}
 
 private:
     SDL_Point centre;

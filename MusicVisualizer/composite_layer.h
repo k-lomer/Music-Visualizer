@@ -18,7 +18,10 @@ public:
     // param: layer - the layer to add
     void add_layer(std::unique_ptr<VisualLayer> layer);
 
-    virtual void draw(SDL_Renderer * const renderer, const SignalBox & signal_box) override;
+    // Clear the existing layers
+    void clear_layers();
+
+    virtual void draw(SDL_Renderer * const renderer, const wave & signal) override;
 
 
 protected:

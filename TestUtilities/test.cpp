@@ -14,61 +14,61 @@ void check_dft(const wave& input, const wave& expected_output) {
 }
 
 TEST(TestFourierTransform, TestSingle1) {
-    wave input{ 1.0 };
-    wave expected_output{ 1.0 };
+    wave input{ 1.0f };
+    wave expected_output{ 1.0f };
     check_dft(input, expected_output);
 }
 
 TEST(TestFourierTransform, TestSingle2) {
-    wave input{ -1.0 };
-    wave expected_output{ 1.0 };
+    wave input{ -1.0f };
+    wave expected_output{ 1.0f };
     check_dft(input, expected_output);
 }
 
 TEST(TestFourierTransform, TestSingle3) {
-    wave input{ 0.0 };
-    wave expected_output{ 0.0 };
+    wave input{ 0.0f };
+    wave expected_output{ 0.0f };
     check_dft(input, expected_output);
 }
 
 TEST(TestFourierTransform, TestSingle4) {
-    wave input{ 0.1 };
-    wave expected_output{ 0.1 };
+    wave input{ 0.1f };
+    wave expected_output{ 0.1f };
     check_dft(input, expected_output);
 }
 
 TEST(TestFourierTransform, TestDouble) {
-    wave input{ 1.0, -1.0 };
-    wave expected_output{ 0.0, 2.0 };
+    wave input{ 1.0f, -1.0f };
+    wave expected_output{ 0.0f, 2.0f };
     check_dft(input, expected_output);
 }
 
 TEST(TestFourierTransform, TestTrim) {
-    wave input{ 1.0, -1.0, 0.0 };
-    wave expected_output{ 0.0, 2.0 };
+    wave input{ 1.0f, -1.0f, 0.0f };
+    wave expected_output{ 0.0f, 2.0f };
     check_dft(input, expected_output);
 }
 
 TEST(TestFourierTransform, TestImpulse) {
-    wave input{ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-    wave expected_output{ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
+    wave input{ 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+    wave expected_output{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
     check_dft(input, expected_output);
 }
 
 TEST(TestFourierTransform, TestSine) {
-    wave input{ 1.0, 0.0, -1.0, 0.0, 1.0, 0.0, -1.0, 0.0 };
-    wave expected_output{ 0.0, 0.0, 4.0, 0.0, 0.0, 0.0, 4.0, 0.0 };
+    wave input{ 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f };
+    wave expected_output{ 0.0f, 0.0f, 4.0f, 0.0f, 0.0f, 0.0f, 4.0f, 0.0f };
     check_dft(input, expected_output);
 }
 
 TEST(TestFourierTransform, TestRandomValues) {
-    wave input{ 1.0, -1.0, 0.4, 0.8, 1.2, -0.3, -0.7, 0.9 };
-    wave expected_output{ 2.3, 0.82170414, 3.90512484, 1.68071482, 1.5, 1.68071482, 3.90512484, 0.82170414 };
+    wave input{ 1.0f, -1.0f, 0.4f, 0.8f, 1.2f, -0.3f, -0.7f, 0.9f };
+    wave expected_output{ 2.3f, 0.82170414f, 3.90512484f, 1.68071482f, 1.5f, 1.68071482f, 3.90512484f, 0.82170414f };
     check_dft(input, expected_output);
 }
 
 TEST(TestFourierTransform, TestRandomValuesTrim) {
-    wave input{ 1.0, -1.0, 0.4, 0.8, 1.2, -0.3, -0.7, 0.9, 0.0, 0.1, 0.2 };
-    wave expected_output{ 2.3, 0.82170414, 3.90512484, 1.68071482, 1.5, 1.68071482, 3.90512484, 0.82170414 };
+    wave input{ 1.0f, -1.0f, 0.4f, 0.8f, 1.2f, -0.3f, -0.7f, 0.9f, 0.0f, 0.1f, 0.2f };
+    wave expected_output{ 2.3f, 0.82170414f, 3.90512484f, 1.68071482f, 1.5f, 1.68071482f, 3.90512484f, 0.82170414f };
     check_dft(input, expected_output);
 }

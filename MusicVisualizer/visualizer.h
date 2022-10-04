@@ -55,6 +55,7 @@ private:
     typedef std::vector<float> packet;
     std::vector<std::shared_ptr<packet>> packet_buffer; // Must use mutex to access
     SignalBox signal_box;
+    SignalBoxConfig signal_box_cfg;
 
     // Visual Layer members
     VisualLayerFactory vl_factory;
@@ -65,7 +66,7 @@ private:
     Color::color_palette palette = Color::Vaporwave;
 
     // Debug FPS
-    bool debug_print_fps = true;
+    bool debug_print_fps = false;
     CountdownTimer<std::chrono::seconds> fps_timer;
     int frames = 0;
 

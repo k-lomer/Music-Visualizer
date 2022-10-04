@@ -15,7 +15,7 @@ TunnelLayer::TunnelLayer(int width, int height, int num_waves, int levels, int w
     scale_difference = 1.0 / double(levels + 1);
 }
 
-void TunnelLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box) {
+void TunnelLayer::draw(SDL_Renderer * const renderer, const wave & signal) {
     if (scale_rate > 0.0) {
         // check if largest box is still visible
         ScreenBoxLayer & largest_box = dynamic_cast<ScreenBoxLayer &>(*visual_layers.front());
@@ -41,5 +41,5 @@ void TunnelLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_b
         }
     }
 
-    CompositeLayer::draw(renderer, signal_box);
+    CompositeLayer::draw(renderer, signal);
 }

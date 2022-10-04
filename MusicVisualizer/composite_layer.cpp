@@ -3,12 +3,16 @@
 CompositeLayer::CompositeLayer() {}
 CompositeLayer::CompositeLayer(std::deque<std::unique_ptr<VisualLayer>> layers) : visual_layers(std::move(layers)) {}
 
-void CompositeLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box) {
+void CompositeLayer::draw(SDL_Renderer * const renderer, const wave & signal) {
     for (const auto & layer : visual_layers) {
-        layer->draw(renderer, signal_box);
+        layer->draw(renderer, signal);
     }
 }
 
 void CompositeLayer::add_layer(std::unique_ptr<VisualLayer> layer) {
     visual_layers.push_back(std::move(layer));
+}
+
+void CompositeLayer::clear_layers() {
+    visual_layers.clear();
 }

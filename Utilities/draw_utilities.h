@@ -7,26 +7,68 @@
 // Calculate the distance between two points
 int distance(const SDL_Point& v_1, const SDL_Point& v_2);
 
+// Calculate the distance between two points
+double distance(const SDL_FPoint& v_1, const SDL_FPoint& v_2);
+
 // Calculate the angle from horizontal of the line between two points
 double angle(const SDL_Point& v_1, const SDL_Point& v_2);
+
+// Calculate the angle from horizontal of the line between two points
+double angle(const SDL_FPoint& v_1, const SDL_FPoint& v_2);
+
+// Convert a point from float to pixel (int)
+SDL_Point float_to_pixel_point(const SDL_FPoint& p);
+
+// Convert a point from pixel (int) to float
+SDL_FPoint pixel_to_float_point(const SDL_Point& p);
+
+// Convert a vector of points from float to pixel (int)
+std::vector<SDL_Point> float_to_pixel_points(const std::vector<SDL_FPoint>& points);
+
+// Convert a vector of points from pixel (int) to float
+std::vector<SDL_FPoint> pixel_to_float_points(const std::vector<SDL_Point>& points);
 
 // Translate a single point
 SDL_Point translate_point(const SDL_Point & v, const SDL_Point & translation);
 
+// Translate a single point
+SDL_FPoint translate_point(const SDL_FPoint & v, const SDL_FPoint & translation);
+
 // Translate a vector of points
 std::vector<SDL_Point> translate(const std::vector<SDL_Point>& points, const SDL_Point & translation);
+
+// Translate a vector of points
+std::vector<SDL_FPoint> translate(const std::vector<SDL_FPoint>& points, const SDL_FPoint & translation);
 
 // Rotate a single point about the centre
 SDL_Point rotate_point(const SDL_Point &v, const SDL_Point &centre, double radians);
 
+// Rotate a single point about the centre
+SDL_FPoint rotate_point(const SDL_FPoint &v, const SDL_FPoint &centre, double radians);
+
 // Rotate a vector of points about the centre
 std::vector<SDL_Point> rotate(const std::vector<SDL_Point>& points, const SDL_Point & centre, double radians);
 
+// Rotate a vector of points about the centre
+std::vector<SDL_FPoint> rotate(const std::vector<SDL_FPoint>& points, const SDL_FPoint & centre, double radians);
+
 // Scale a vector of points about (0,0)
-std::vector<SDL_Point> scale(const std::vector<SDL_FPoint> & points, double scale_factor);
+std::vector<SDL_Point> scale(const std::vector<SDL_Point> & points, double scale_factor);
+
+// Scale a vector of points about (0,0)
+std::vector<SDL_FPoint> scale(const std::vector<SDL_FPoint> & points, double scale_factor);
+
+// Scale a vector of points about some centre
+std::vector<SDL_Point> scale(const std::vector<SDL_Point> & points, double scale_factor, const SDL_Point& centre);
+
+// Scale a vector of points about some centre
+std::vector<SDL_FPoint> scale(const std::vector<SDL_FPoint> & points, double scale_factor, const SDL_FPoint& centre);
 
 // Interpolate the points on a straight line
 std::vector<SDL_Point> interpolate_line(const SDL_Point & v_1, const SDL_Point & v_2, int num_points);
+
+// Find the point at a fixed poisition on the line between them
+SDL_Point point_on_line(const SDL_Point & v_1, const SDL_Point & v_2, double position);
 
 // Generate a wave of pixel points
 // param: wave - the amplitude of each point on the wave

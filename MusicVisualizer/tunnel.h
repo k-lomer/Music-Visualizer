@@ -10,7 +10,7 @@ public:
     // param: levels - the number of boxes to draw
     TunnelLayer(int width, int height, int num_waves, int levels, int wave_amplitude, SDL_Color wave_color, double box_scale_rate);
 
-    virtual void draw(SDL_Renderer * const renderer, const SignalBox & signal_box) override;
+    virtual void draw(SDL_Renderer * const renderer, const wave & signal) override;
 
 private:
     int window_width;

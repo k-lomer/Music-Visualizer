@@ -1,9 +1,8 @@
 #pragma once
 
 #include <vector>
-
+#include "../Utilities/dsp_utilities.h"
 #include "SDL.h"
-#include "signal_box.h"
 
 class VisualLayer {
 public:
@@ -11,12 +10,9 @@ public:
     
     // Draw the layer
     // param: renderer - the SDL renderer to draw the layer on
-    // pararm: signal_box - contains audio signal information
-    virtual void draw(SDL_Renderer * const renderer, const SignalBox & signal_box) = 0;
+    // pararm: signal - contains audio signal information
+    virtual void draw(SDL_Renderer * const renderer, const wave & signal) = 0;
     virtual ~VisualLayer() {};
-
-protected:
-    SignalFlag signal_type = Decay | Reflect;
 };
 
 enum orientation{Horizontal, Vertical};

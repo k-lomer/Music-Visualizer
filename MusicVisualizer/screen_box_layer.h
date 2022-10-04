@@ -13,7 +13,7 @@ public:
     ScreenBoxLayer(int num_waves, int width, int height, int wave_amplitude, SDL_Color wave_color, double box_scale = 1.0, double box_scale_rate = 0.0)
         : wave_count(num_waves), window_width(width), window_height(height), amplitude(wave_amplitude), color(wave_color), scale(box_scale), scale_rate(box_scale_rate){}
 
-    virtual void draw(SDL_Renderer * renderer, const SignalBox & signal_box) override;
+    virtual void draw(SDL_Renderer * renderer, const wave & signal) override;
 
     double get_scale() const { return scale; }
 

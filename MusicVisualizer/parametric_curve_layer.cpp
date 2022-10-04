@@ -6,18 +6,18 @@
 #include "../Utilities/parametric.h"
 
 
-void ParametricCurveLayer::draw(SDL_Renderer * const renderer, const SignalBox & signal_box) {
-    float max_value = signal_box.get_max(true);
+void ParametricCurveLayer::draw(SDL_Renderer * const renderer, const wave & signal) {
+    float value = peak.get_peak_positions(signal).front();
     if (direction) {
-        curve.set_coeffs((x_coeff - baseline) * max_value + baseline, (y_coeff - baseline) * (1 - max_value) + baseline);
+        curve.set_coeffs((x_coeff - baseline) * value + baseline, (y_coeff - baseline) * (1 - value) + baseline);
     }
     else {
-        curve.set_coeffs((x_coeff - baseline) * (1 - max_value) + baseline, (y_coeff - baseline) * max_value + baseline);
+        curve.set_coeffs((x_coeff - baseline) * (1 - value) + baseline, (y_coeff - baseline) * value + baseline);
     }
     std::vector<SDL_FPoint> raw_points = curve.gen_even_points(num_points);
     
     for (int i = 0; i < scales.size(); ++i) {
-        std::vector<SDL_Point> points = translate(scale(raw_points, scales[i]), centre);
+        std::vector<SDL_Point> points = translate(float_to_pixel_points(scale(raw_points, scales[i])), centre);
         points.push_back(points[0]); // join first and last points
         SDL_Color color = colors[i % colors.size()];
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);

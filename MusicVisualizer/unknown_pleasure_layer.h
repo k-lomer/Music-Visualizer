@@ -33,7 +33,7 @@ public:
     UnknownPleasureLayer(int num_waves, int frame_delay, SDL_Point first_wave_start, SDL_Point first_wave_end,
         SDL_Point last_wave_start, SDL_Point last_wave_end, int wave_amplitude, const std::vector<SDL_Color> & fill_colors);
 
-    virtual void draw(SDL_Renderer * renderer, const SignalBox & signal_box) override;
+    virtual void draw(SDL_Renderer * renderer, const wave & signal) override;
 
 private:
     int wave_count;

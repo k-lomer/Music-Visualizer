@@ -134,12 +134,12 @@
     <ClCompile Include="moving_wave_layer.cpp" />
     <ClCompile Include="parametric_curve_layer.cpp" />
     <ClCompile Include="parametric_wave_layer.cpp" />
+    <ClCompile Include="peak_tracker_layer.cpp" />
     <ClCompile Include="polygon_layer.cpp" />
     <ClCompile Include="polygon_spiral.cpp" />
     <ClCompile Include="sacred_seal.cpp" />
     <ClCompile Include="screen_box_layer.cpp" />
     <ClCompile Include="signal_box.cpp" />
-    <ClCompile Include="circle_grid.cpp" />
     <ClCompile Include="tunnel.cpp" />
     <ClCompile Include="unknown_pleasure_layer.cpp" />
     <ClCompile Include="visualizer.cpp" />
@@ -154,10 +154,10 @@
     <ClInclude Include="audio_sink.h" />
     <ClInclude Include="bars_layer.h" />
     <ClInclude Include="composite_layer.h" />
-    <ClInclude Include="circle_grid.h" />
     <ClInclude Include="moving_wave_layer.h" />
     <ClInclude Include="parametric_curve_layer.h" />
     <ClInclude Include="parametric_wave_layer.h" />
+    <ClInclude Include="peak_tracker_layer.h" />
     <ClInclude Include="polygon_layer.h" />
     <ClInclude Include="polygon_spiral.h" />
     <ClInclude Include="sacred_seal.h" />

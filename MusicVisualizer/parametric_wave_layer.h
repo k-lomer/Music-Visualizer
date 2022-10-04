@@ -11,7 +11,7 @@ public:
         : wave_count(num_waves), wave_span(span), color(wave_color), curve_1(curve_1), curve_2(curve_2),
         centre_1(centre_1), centre_2(centre_2), update_step(step_size), amplitude(amplitude) {}
 
-    virtual void draw(SDL_Renderer * const renderer, const SignalBox & signal_box) override;
+    virtual void draw(SDL_Renderer * const renderer, const wave & signal) override;
 
 private:
     int wave_count;

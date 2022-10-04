@@ -18,7 +18,7 @@ public:
         centre = SDL_Point{ (start.x + end.x) / 2, (start.y + end.y) / 2 };
     }
 
-    virtual void draw(SDL_Renderer * renderer, const SignalBox & signal_box) override;
+    virtual void draw(SDL_Renderer * renderer, const wave & signal) override;
 
 private:
     int wave_count;
