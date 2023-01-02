@@ -344,25 +344,52 @@ void draw_wave_fill(SDL_Renderer * const renderer, const std::vector<float> &wav
 }
 
 
-void draw_bars(SDL_Renderer * const renderer, const std::vector<float> &bar_values, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color) {
-    int length = distance(start, end);
-    if (length == 0) { return; }
-    std::vector<SDL_Point> bar_heights = gen_wave_points(bar_values, length, -amplitude);
+void draw_vertical_bars(SDL_Renderer * const renderer, std::vector<float> bar_values, const SDL_Point &start, const SDL_Point & end, int amplitude, int gap_width, const SDL_Color& color) {
+    int length = abs(end.x - start.x);
+    if (length == 0)
+    {
+        return;
+    }
+
+    // ensure there are not more bars than the length between end and start points
+    if (length < bar_values.size())
+    {
+        bar_values.resize(length);
+    }
+    int num_bars = bar_values.size();
+
+    // check the gap between bars is valid and resize if necessary
+    int num_gaps = num_bars - 1;
+    if (gap_width < 0)
+    {
+        gap_width = 0;
+    }
+    if (gap_width * num_gaps > length - num_bars) // gap should be small enough such that bars have a pixel width of at least 1
+    {
+        gap_width = (length - num_bars) / num_gaps;
+    }
+
+    // find minimum_bar_width
+    int non_gap_pixels = length - gap_width * num_gaps;
+    int min_bar_width = non_gap_pixels / (int)bar_values.size();
+    // account for total length not divisible by number of bars
+    int pixel_remainder = non_gap_pixels % bar_values.size();
+
+    // generate the height of each bar
+    std::vector<SDL_Point> bar_heights = gen_wave_points(bar_values, distance(start,end), -amplitude);
 
     // move to correct start and end points
-    std::vector<SDL_Point> bar_midpoints = translate(bar_heights, start);
-    bar_midpoints = rotate(bar_midpoints, start, angle(start, end));
+    std::vector<SDL_Point> bar_top_positions = translate(bar_heights, start);
+    bar_top_positions = rotate(bar_top_positions, start, angle(start, end));
 
-    int min_bar_width = abs(end.x - start.x) / (int)bar_values.size();
-    // account for total length not divisible by number of bars
-    int pixel_remainder = abs(end.x - start.x) % bar_values.size();
 
     std::vector<SDL_Rect> bars;
     int x_pos = start.x;
     for (int i = 0; i < bar_values.size(); ++i) {
         int bar_width = min_bar_width + (i < pixel_remainder ? 1 : 0);
-        bars.push_back(SDL_Rect{ x_pos, bar_midpoints[i].y - bar_heights[i].y, bar_width, bar_heights[i].y });
+        bars.push_back(SDL_Rect{ x_pos, bar_top_positions[i].y - bar_heights[i].y, bar_width, bar_heights[i].y });
         x_pos += bar_width;
+        x_pos += gap_width;
     }
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderFillRects(renderer, &bars[0], (int)bars.size());

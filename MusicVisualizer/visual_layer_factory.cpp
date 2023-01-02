@@ -76,11 +76,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     switch (new_vl_type) {
     case Bars:
     {
-        int num_bars = get_rand_int(10, 50);
-        SDL_Point bars_start{ 0, window_height / 2 };
-        SDL_Point bars_end{ window_width, window_height / 2 };
-        int amplitude = window_height / 3;
-        return std::make_unique<BarsLayer>(num_bars, bars_start, bars_end, amplitude, wave_color);
+        return random_bars(window_width, window_height, cfg, palette);
     }
     case CheckerBoard:
     {
@@ -280,10 +276,10 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_peak_tracker(int window_
     }
     else {
         cfg.time_window = float(get_rand_double(1.0, 2.0));
-        cfg.decay_factor = 0.8; float(get_rand_double(0.0, 0.5));
-        cfg.smoothing_window = 0.0; float(get_rand_double(0.0, 0.005));
+        cfg.decay_factor = 0.8f;
+        cfg.smoothing_window = float(get_rand_double(0.005, 0.02));
     }
-    int peaks = 1;
+    int peaks = 2;
     SDL_Color wave_color = get_rand_palette_color(palette);
 
     return std::make_unique<PeakTrackerLayer>(peaks, window_width, window_height, wave_color);
@@ -403,6 +399,66 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_wave(int wind
         int amplitude = std::min(window_height, window_width) / get_rand_int(15, 25);
 
         composite->add_layer(std::make_unique<ParametricWaveLayer>(num_waves, span, colors[i % colors.size()], para_curve_1, para_curve_2, centre_1, centre_2, step_size, amplitude));
+    }
+    return composite;
+}
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_bars(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette)
+{
+    wave_signal_config(cfg);
+
+    int num_bars = get_rand_int(20, 80);
+    int amplitude = window_height / 2;
+    int gap_width = 0;
+    if (get_rand_int(1, 5) > 1)
+    {
+        if (get_rand_bool())
+        {
+            // small gap
+            gap_width = get_rand_int(1, 10);
+        }
+        else
+        {
+            // big gap
+            int max_gap_width = window_width / num_bars;
+            gap_width = get_rand_int(1, max_gap_width);
+        }
+    }
+    else
+    {
+        // no gap
+    }
+
+    std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
+
+    int num_layers = get_rand_int(1, 3);
+    double reduction_factor = get_rand_double(0.4, 0.8);
+    if (get_rand_bool())
+    {
+        // central
+        SDL_Point bars_start{ 0, window_height / 2 };
+        SDL_Point bars_end{ window_width, window_height / 2 };
+        for (int i = 0; i < num_layers; ++i)
+        {
+            auto wave_color = get_rand_palette_color(palette);
+            composite->add_layer(std::make_unique<BarsLayer>(num_bars, bars_start, bars_end, amplitude, wave_color, gap_width));
+            composite->add_layer(std::make_unique<BarsLayer>(num_bars, bars_start, bars_end, -amplitude, wave_color, gap_width));
+            amplitude = int(double(amplitude) * reduction_factor);
+        }
+    }
+    else
+    {
+        // top and bottom
+        SDL_Point bars_top_start{ 0, 0 };
+        SDL_Point bars_top_end{ window_width, 0 };
+        SDL_Point bars_bottom_start{ 0, window_height };
+        SDL_Point bars_bottom_end{ window_width, window_height };
+        for (int i = 0; i < num_layers; ++i)
+        {
+            auto wave_color = get_rand_palette_color(palette);
+            composite->add_layer(std::make_unique<BarsLayer>(num_bars, bars_top_start, bars_top_end, -amplitude, wave_color, gap_width));
+            composite->add_layer(std::make_unique<BarsLayer>(num_bars, bars_bottom_start, bars_bottom_end, amplitude, wave_color, gap_width));
+            amplitude = int(double(amplitude) * reduction_factor);
+        }
     }
     return composite;
 }

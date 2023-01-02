@@ -19,8 +19,8 @@ enum visual_layer_type {
     Tunnel,
     WaveSpinner,
     UnknownPleasure,
-    PeakTracker,
     SacredSeal,
+    PeakTracker, // for debugging only
     MIN_VL_TYPE = Bars,
     MAX_VL_TYPE = SacredSeal
 };
@@ -67,6 +67,7 @@ private:
     std::unique_ptr<VisualLayer> random_parametric_curve(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette);
     std::unique_ptr<VisualLayer> random_parametric_wave(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette);
     std::unique_ptr<VisualLayer> random_checker_board(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette);
+    std::unique_ptr<VisualLayer> random_bars(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette);
     std::unique_ptr<VisualLayer> random_scrolling_lines(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette);
     std::unique_ptr<VisualLayer> random_polygon_spiral(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette);
 };

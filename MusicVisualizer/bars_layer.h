@@ -12,8 +12,9 @@ public:
     // param: bars_end - the coordinates of the end of the bars
     // param: bars_amplitude - the the maximum pixel amplitude of the bars
     // param: bars_color - the color of the bars
-    BarsLayer(int num_bars, SDL_Point bars_start, SDL_Point bars_end, int bars_amplitude, SDL_Color bars_color)
-        : divisions(num_bars), start(bars_start), end(bars_end), amplitude(bars_amplitude), color(bars_color) {}
+    // param: bars_gap - the number of pixels between bars
+    BarsLayer(int num_bars, SDL_Point bars_start, SDL_Point bars_end, int bars_amplitude, SDL_Color bars_color, int bars_gap )
+        : divisions(num_bars), start(bars_start), end(bars_end), amplitude(bars_amplitude), color(bars_color), gap_pixels(bars_gap){}
 
     virtual void draw(SDL_Renderer * renderer, const wave & signal) override;
 
@@ -23,4 +24,5 @@ private:
     SDL_Point end;
     int amplitude;
     SDL_Color color;
+    int gap_pixels;
 };

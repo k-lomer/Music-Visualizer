@@ -13,10 +13,7 @@ void BarsLayer::draw(SDL_Renderer * const renderer, const wave & signal) {
         auto begin = signal.begin() + i * bar_step;
         auto end = begin + bar_step;
         bar_values.push_back(*std::max_element(begin, end));
-        //bar_values.push_back(std::accumulate(begin, end, 0.0f) / (float)bar_step);
     }
 
-    draw_bars(renderer, bar_values, start, end, amplitude, color);
-    draw_bars(renderer, bar_values, start, end, -amplitude, color);
-
+    draw_vertical_bars(renderer, bar_values, start, end, amplitude, gap_pixels, color);
 }

@@ -90,4 +90,4 @@ void draw_wave(SDL_Renderer * const renderer, const std::vector<float> &wave, co
 void draw_wave_fill(SDL_Renderer * const renderer, const std::vector<float> &wave, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color);
 
 // Draw bars with the given renderer
-void draw_bars(SDL_Renderer * const renderer, const std::vector<float> &bar_values, const SDL_Point &start, const SDL_Point & end, int amplitude, const SDL_Color& color);
+void draw_vertical_bars(SDL_Renderer * const renderer, std::vector<float> bar_values, const SDL_Point &start, const SDL_Point & end, int amplitude, int gap_width, const SDL_Color& color);
