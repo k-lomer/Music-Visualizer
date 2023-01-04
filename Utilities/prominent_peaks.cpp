@@ -85,7 +85,8 @@ float ProminentPeaks::get_peak_prominence(const wave& signal, int peak_index) {
 
 std::vector< int > ProminentPeaks::get_all_peaks(const wave& signal) {
     std::vector< int > peak_index;
-    for (int i = 1; i < signal.size() - 1; ++i) {
+
+    for (int i = 1; i < int(signal.size()) - 1; ++i) {
         if (signal[i - 1] < signal[i] && signal[i] >= signal[i + 1]) {
             peak_index.push_back(i);
         }

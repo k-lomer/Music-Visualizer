@@ -103,8 +103,19 @@ void SignalBox::update_signal(const std::vector<std::shared_ptr<wave>> & new_sig
 
 void SignalBox::update_raw_signal(const std::vector<std::shared_ptr<wave>>& new_signal)
 {
+    // Get a sample length to use if a wave is empty
+    // Use a deafault or a previous size if available.
+    size_t sample_length = 100;
+    if (!m_previous_signals.empty()) {
+        m_previous_signals.back().size();
+    }
     for (const std::shared_ptr<wave>& signal : new_signal) {
-        m_previous_signals.push_back(squish_channels(*signal, m_channels));
+        if (signal->empty()) {
+            m_previous_signals.push_back(wave(sample_length, 0.0f));
+        }
+        else {
+            m_previous_signals.push_back(squish_channels(*signal, m_channels));
+        }
     }
     wave new_signal_mono = m_previous_signals.empty() ? wave() : m_previous_signals.back();
     // Add to signal history and remove oldest signals if there are excess samples

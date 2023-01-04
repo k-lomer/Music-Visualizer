@@ -6,8 +6,12 @@
 #include "../Utilities/draw_utilities.h"
 
 void BarsLayer::draw(SDL_Renderer * const renderer, const wave & signal) {
-    std::vector<float> bar_values;
+    if (signal.empty()) {
+        return;
+    }
+
     // Take max value for bar across wave points in each step
+    std::vector<float> bar_values;
     int bar_step = (int)signal.size() / divisions;
     for (int i = 0; i < divisions; ++i) {
         auto begin = signal.begin() + i * bar_step;

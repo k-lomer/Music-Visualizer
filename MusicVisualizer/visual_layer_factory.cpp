@@ -175,9 +175,9 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_central_wave(int window_
 
     std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
     int num_colors = get_rand_int(1, 3);
-    int max_height = window_height / 2;
+    int max_height = window_height;
     for (int i = 0; i < num_colors; ++i) {
-        int wave_amplitude = get_rand_int(max_height * 2 / 3, max_height);
+        int wave_amplitude = get_rand_int(max_height / 3, max_height);
         SDL_Color wave_color = get_rand_palette_color(palette);
         int num_waves = get_rand_int(1, 10 / num_colors);
         SDL_Point wave_start{ 0, window_height / 2 };
@@ -396,7 +396,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_wave(int wind
         double step = get_rand_double(M_PI / 80, M_PI / 50);
         double span = step * num_waves;
         double step_size = M_PI / get_rand_double(4.0, 8.0) / 60.0;
-        int amplitude = std::min(window_height, window_width) / get_rand_int(15, 25);
+        int amplitude = std::min(window_height, window_width) / get_rand_int(10, 18);
 
         composite->add_layer(std::make_unique<ParametricWaveLayer>(num_waves, span, colors[i % colors.size()], para_curve_1, para_curve_2, centre_1, centre_2, step_size, amplitude));
     }
@@ -499,7 +499,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_scrolling_lines(int wind
         int num_waves = get_rand_int(2, 8);
         double wave_movement = get_rand_double(-4.0, 4.0);
         auto wave_color = get_rand_palette_color(palette);
-        int wave_amplitude = std::min(window_height, window_width) / get_rand_int(5, 20);
+        int wave_amplitude = std::min(window_height, window_width) / get_rand_int(5, 12);
         composite->add_layer(
             std::make_unique<MovingWaveLayer>(num_waves, wave_orientation, wave_movement, window_width, window_height, wave_amplitude, wave_color));
     }
@@ -514,7 +514,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_polygon_spiral(int windo
     int num_sides = get_rand_int(3, 6);
     double position = get_rand_double(0.3, 0.7);
     double scale_rate = get_rand_double(0.975, 1.025);
-    int wave_amplitude = std::min(window_height, window_width) / get_rand_int(5, 8);
+    int wave_amplitude = std::min(window_height, window_width) / get_rand_int(4, 6);
     auto wave_color = get_rand_palette_color(palette);
     double rotation_rate = get_rand_double(-0.02, 0.02);
     return std::make_unique<PolygonSpiralLayer>(num_sides, window_width, window_height, position, rotation_rate, scale_rate, wave_amplitude, wave_color);
