@@ -13,7 +13,7 @@ wave dft(const wave & signal) {
         return signal;
     }
 
-    // trim signal to length power of 2
+    // Trim the signal to length power of 2.
     size_t n = signal.size();
     int log_2_N = 0;
     while (n > 1) {
@@ -61,8 +61,7 @@ std::vector<std::complex<double>> fft(const std::vector<std::complex<double>> & 
 
     std::vector<std::complex<double>> dft(N, 0.0f);
 
-    for (size_t k = 0; k < N / 2; ++k)
-    {
+    for (size_t k = 0; k < N / 2; ++k) {
         std::complex<double> t = std::polar(1.0, -2 * pi * k / N) * odd[k];
         dft[k] = even[k] + t;
         dft[k + N / 2] = even[k] - t;
@@ -173,10 +172,10 @@ wave smooth(const wave & signal, unsigned int window_size) {
     }
 
     wave smoothie(signal.size() - window_size + 1, 0.0);
-    for (unsigned int i = 0; i < smoothie.size(); ++i)
-    {
-        for (unsigned int j = 0; j < window_size; ++j)
+    for (unsigned int i = 0; i < smoothie.size(); ++i) {
+        for (unsigned int j = 0; j < window_size; ++j) {
             smoothie[i] += signal[i + j];
+        }
 
         smoothie[i] /= window_size;
     }
@@ -190,8 +189,7 @@ wave squish_channels(const wave& signal, unsigned int channels) {
     }
 
     wave mono(signal.size() / channels, 0.0);
-    for (unsigned int i = 0; i < mono.size(); ++i)
-    {
+    for (unsigned int i = 0; i < mono.size(); ++i) {
         for(unsigned int j=0; j < channels; ++j)
         mono[i] += signal[channels * i + j];
     }

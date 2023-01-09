@@ -3,7 +3,7 @@
 #include <queue>
 #include <vector>
 
-ProminentPeaks::ProminentPeaks(int num_peaks) : num_peaks(num_peaks) {}
+ProminentPeaks::ProminentPeaks(int num_peaks) : m_num_peaks(num_peaks) {}
 
 std::vector< double > ProminentPeaks::get_peak_positions(const wave& signal) {
     std::vector<int> all_peak_indexes = get_all_peaks(signal);
@@ -13,9 +13,9 @@ std::vector< double > ProminentPeaks::get_peak_positions(const wave& signal) {
         // No peaks!
         // Set all to zero for now, this could be changed to something later
         // e.g. evenly spaced peaks moving at a consistent rate.
-        return std::vector<double>(num_peaks, 0.0);
+        return std::vector<double>(m_num_peaks, 0.0);
     }
-    else if (all_peak_indexes.size() > num_peaks) {
+    else if (all_peak_indexes.size() > m_num_peaks) {
         // Select num_peaks most prominent peaks.
 
         // Get peak prominences.
@@ -26,7 +26,7 @@ std::vector< double > ProminentPeaks::get_peak_positions(const wave& signal) {
         // Get index of most prominent peaks.
         std::priority_queue< std::pair<float, int>, std::vector< std::pair<float, int> >, std::greater <std::pair<float, int> > > q;
         for (int i = 0; i < peak_significances.size(); ++i) {
-            if (q.size() < num_peaks) {
+            if (q.size() < m_num_peaks) {
                 q.push(std::pair<float, int>(peak_significances[i], all_peak_indexes[i]));
             }
             else if (q.top().first < peak_significances[i]) {
@@ -43,7 +43,7 @@ std::vector< double > ProminentPeaks::get_peak_positions(const wave& signal) {
     else {
         std::sort(all_peak_indexes.begin(), all_peak_indexes.end());
         // Front load with the first index
-        for (int i = 0; i < num_peaks - all_peak_indexes.size(); ++i) {
+        for (int i = 0; i < m_num_peaks - all_peak_indexes.size(); ++i) {
             prominent_peak_indexes.push_back(all_peak_indexes.front());
         }
         for (const auto& index : all_peak_indexes) {

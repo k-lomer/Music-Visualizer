@@ -6,13 +6,13 @@
 
 class VisualLayer {
 public:
-    typedef std::vector<float> packet; // a packet of audio data
-    
-    // Draw the layer
-    // param: renderer - the SDL renderer to draw the layer on
-    // pararm: signal - contains audio signal information
+    // Draw the VisualLayer.
+    // param: renderer                      - the renderer to draw the VisualLayer
+    // param: signal                        - the signal to draw
     virtual void draw(SDL_Renderer * const renderer, const wave & signal) = 0;
+    // VisualLayer destructor.
     virtual ~VisualLayer() {};
 };
 
-enum orientation{Horizontal, Vertical};
+// The orientation of an object.
+enum Orientation{Horizontal, Vertical};

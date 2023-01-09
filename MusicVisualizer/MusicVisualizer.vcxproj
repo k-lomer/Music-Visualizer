@@ -128,7 +128,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="amplitude_circle_layer.cpp" />
     <ClCompile Include="bars_layer.cpp" />
     <ClCompile Include="composite_layer.cpp" />
     <ClCompile Include="moving_wave_layer.cpp" />
@@ -149,7 +148,6 @@
     <ClCompile Include="wave_layer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="amplitude_circle_layer.h" />
     <ClInclude Include="audio_recorder.h" />
     <ClInclude Include="audio_sink.h" />
     <ClInclude Include="bars_layer.h" />

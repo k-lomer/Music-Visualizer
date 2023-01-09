@@ -7,7 +7,7 @@
 
 
 void ParametricCurveLayer::draw(SDL_Renderer * const renderer, const wave & signal) {
-    float value = peak.get_peak_positions(signal).front();
+    double value = peak.get_peak_positions(signal).front();
     if (direction) {
         curve.set_coeffs((x_coeff - baseline) * value + baseline, (y_coeff - baseline) * (1 - value) + baseline);
     }
@@ -18,7 +18,8 @@ void ParametricCurveLayer::draw(SDL_Renderer * const renderer, const wave & sign
     
     for (int i = 0; i < scales.size(); ++i) {
         std::vector<SDL_Point> points = translate(float_to_pixel_points(scale(raw_points, scales[i])), centre);
-        points.push_back(points[0]); // join first and last points
+        // Join the first and last points.
+        points.push_back(points[0]);
         SDL_Color color = colors[i % colors.size()];
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
         SDL_RenderDrawLines(renderer, &points[0], (int)points.size());

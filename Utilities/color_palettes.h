@@ -6,26 +6,29 @@
 #include "colors.h"
 #include "SDL.h"
 
-namespace Color {
-enum color_palette{ Random = 0,
-                    Rainbow,
-                    RGBRainbow,
-                    Ice,
-                    Forrest,
-                    Vaporwave,
-                    Outrun,
-                    Bathroom,
-                    Desert,
-                    Neon,
-                    Pastel,
-                    Cafe,
-                    Mars,
-                    Matrix,
-                    Fuschia,
-                    MAX_CP = Fuschia};
+namespace color {
 
-const std::map < color_palette, std::vector<SDL_Color>> palette_lookup{
-    {Random, {}},
+// Enum for a color palette.
+enum ColorPalette {
+    Rainbow = 0,
+    RGBRainbow,
+    Ice,
+    Forrest,
+    Vaporwave,
+    Outrun,
+    Bathroom,
+    Desert,
+    Neon,
+    Pastel,
+    Cafe,
+    Mars,
+    Matrix,
+    Fuschia,
+    MAX_CP = Fuschia
+};
+
+// Define the color palettes.
+const std::map < ColorPalette, std::vector<SDL_Color>> palette_lookup {
     {Rainbow, {red, orange, yellow, green, blue, indigo, violet}},
     {RGBRainbow, {red, yellow, lime, cyan, blue, magenta}},
     {Ice, {white, light_cyan, pale_turquoise, aqua, corn_flower_blue, dodger_blue}},
@@ -41,4 +44,4 @@ const std::map < color_palette, std::vector<SDL_Color>> palette_lookup{
     {Matrix, {dark_green, lime_green, lime}},
     {Fuschia, {magenta, deep_pink, white, medium_spring_green}}
 };
-}
+} // End namespace color.

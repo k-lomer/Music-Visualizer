@@ -31,8 +31,8 @@ AudioRecorder::AudioRecorder() {
         m_hr = m_device_enumerator->GetDefaultAudioEndpoint(eRender, eConsole, &m_audio_device_endpoint);
     }
 
-    // init audio client
-    WAVEFORMATEX *pwfx = nullptr;
+    // Initialize audio client
+    WAVEFORMATEX* pwfx = nullptr;
     REFERENCE_TIME hns_requested_duration = 100000000;
 
     if (m_hr == S_OK && m_audio_device_endpoint) {
@@ -44,7 +44,7 @@ AudioRecorder::AudioRecorder() {
 
         if (m_hr == S_OK && pwfx) {
             if (pwfx->wFormatTag != WAVE_FORMAT_EXTENSIBLE
-                || reinterpret_cast<WAVEFORMATEXTENSIBLE *>(pwfx)->SubFormat != KSDATAFORMAT_SUBTYPE_IEEE_FLOAT) {
+                || reinterpret_cast<WAVEFORMATEXTENSIBLE*>(pwfx)->SubFormat != KSDATAFORMAT_SUBTYPE_IEEE_FLOAT) {
                 std::cout << "Error: the audio format is not supported" << std::endl;
                 m_hr = S_FALSE;
             }
@@ -64,7 +64,8 @@ AudioRecorder::AudioRecorder() {
         }
 
         if (m_hr == S_OK && m_capture_client) {
-            m_hr = m_audio_client->Start();  // Start recording.
+            // Start recording.
+            m_hr = m_audio_client->Start();
         }
     }
 
@@ -74,7 +75,7 @@ AudioRecorder::AudioRecorder() {
     }
 };
 
-// safely release and nullify pointers (in destructor)
+// Safely release and nullify pointers (in destructor).
 template<class T> inline void safe_release(T* &p_object) {
     if (p_object) {
         p_object->Release();
@@ -84,7 +85,8 @@ template<class T> inline void safe_release(T* &p_object) {
 
 AudioRecorder::~AudioRecorder() {
     if (m_audio_client) {
-        m_audio_client->Stop();  // Stop recording.
+        // Stop recording.
+        m_audio_client->Stop();
     }
 
     safe_release(m_device_enumerator);
@@ -97,16 +99,16 @@ bool AudioRecorder::init_successful() const {
     return (m_hr == S_OK) && m_audio_client && m_capture_client;
 }
 
-void AudioRecorder::record(AudioSink * audio_sink, std::atomic_bool &exit_flag) const {
+void AudioRecorder::record(AudioSink* audio_sink, std::atomic_bool& exit_flag) const {
     m_hr = S_OK;
     UINT32 packet_length = 0;
-    BYTE *data = nullptr;
+    BYTE* data = nullptr;
     UINT32 num_frames_available;
     DWORD flags;
 
     while (!exit_flag) {
         m_hr = m_capture_client->GetNextPacketSize(&packet_length);
-        while (packet_length != 0 && !exit_flag) // while there are available packets
+        while (packet_length != 0 && !exit_flag) // While there are available packets.
         {
             // Get the available data in the shared buffer.
             data = nullptr;
@@ -115,11 +117,12 @@ void AudioRecorder::record(AudioSink * audio_sink, std::atomic_bool &exit_flag) 
                 &num_frames_available,
                 &flags, nullptr, nullptr);
 
-            if (flags & AUDCLNT_BUFFERFLAGS_SILENT)	{
-                data = nullptr;  // data pointer is null for silence
+            if (flags & AUDCLNT_BUFFERFLAGS_SILENT) {
+                // Data pointer is null for silence.
+                data = nullptr;
             }
             audio_sink->copy_data((float*)data, m_num_channels, num_frames_available);
-            
+
             m_hr = m_capture_client->ReleaseBuffer(num_frames_available);
             m_hr = m_capture_client->GetNextPacketSize(&packet_length);
         }

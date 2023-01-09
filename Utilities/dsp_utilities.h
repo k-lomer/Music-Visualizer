@@ -5,75 +5,76 @@
 
 typedef std::vector<float> wave;
 
-// Compute the dft of a real signal using the FFT algorithm
-// param: signal - the real float values of a signal
-// return: wave - the dft of the signal
+// Compute the dft of a real signal using the FFT algorithm.
+// param: signal                                - the real float values of a signal
+// return: wave                                 - the dft of the signal
 wave dft(const wave & signal);
 
-// A recursive, FFT implementation
-// param: signal - the complex double values of a signal, must have length a power of 2
-// return: std::vector<std::complex<double>> - the dft of the signal
+// A recursive, FFT implementation.
+// param: signal                                - the complex double values of a signal, must have length a power of 2
+// return: std::vector<std::complex<double>>    - the dft of the signal
 std::vector<std::complex<double>> fft(const std::vector<std::complex<double>> & signal);
 
-// Linearly scale a signal so they have absolute max 1
-// If the vector is empty or all zero do nothing
-// param: signal - the real float values of a signal
-// return: wave - the normalized signal
+// Linearly scale a signal so they have absolute max 1.
+// If the vector is empty or all zero do nothing.
+// param: signal                                - the real float values of a signal
+// return: wave                                 - the normalized signal
 wave normalize(const wave & signal);
 
-// Scale the values in a vector by a given factor
-// param: signal - the real float values of a signal
-// param: scale_factor - the factor to multiply the values by
-// return: wave - the scaled signal
+// Scale the values in a vector by a given factor.
+// param: signal                                - the real float values of a signal
+// param: scale_factor                          - the scale factor to multiply the values by
+// return: wave                                 - the scaled signal
 wave scale(const wave & signal, float scale_factor);
 
-// Shift the values in a vector by a given amount (by addition)
-// param: signal - the real float values of a signal
-// param: shift - the factor to multiply the values by
-// return: wave - the signal with all values shifted
+// Shift the values in a vector by a given amount (by addition).
+// param: signal                                - the real float values of a signal
+// param: shift                                 - the factor to multiply the values by
+// return: wave                                 - the signal with all values shifted
 wave vertical_shift(const wave & signal, float shift);
 
-// The largest absolute value of the signal
-// If the signal is empty return zero
-// param: signal - the real float values of a signal
-// return: float - the maximum absolute value
+// The largest absolute value of the signal.
+// If the signal is empty return zero.
+// param: signal                                - the float values of a signal
+// return: float                                - the maximum absolute value
 float abs_max(const wave & signal);
 
-// The smallest value of the signal
-// If the signal is empty return zero
-// param: signal - the real float values of a signal
-// return: float - the smallest value
+// The smallest value of the signal.
+// If the signal is empty return zero.
+// param: signal                                - the float values of a signal
+// return: float                                - the smallest value
 float min_element(const wave & signal);
 
-// Take the absolute of each value in the signal
-// param: signal - the float values of a signal
-// return: wave - the absolute signal
+// Take the absolute of each value in the signal.
+// param: signal                                - the float values of a signal
+// return: wave                                 - the absolute signal
 wave abs(const wave & signal);
 
-// Update the values of a signal with larger previous values or decay
-// param: previous_signal - the previous values to use
-// param: new_signal - the new values to use
-// param: decay - value between 0 and 1, the proportion of the previous_signal to keep
+// Update the values of a signal with larger previous values or decay.
+// param: previous_signal                       - the previous values to use
+// param: new_signal                            - the new values to use, will be updated
+// param: decay                                 - value between 0 and 1, the proportion of the previous_signal to keep
 void weighted_decay_update(const wave & previous_signal, wave & new_signal, float decay);
 
-// Sum the values of a wave and its reflection 
-// param: signal - the signal to use
-// return: wave - the addition of the wave and its reflection
+// Sum the values of a wave and its reflection .
+// param: signal                                - the signal to use
+// return: wave                                 - the addition of the wave and its reflection
 wave add_reflection(const wave & signal);
 
-// Takes the maximum of the values of a wave and its reflection 
-// param: signal - the signal to use
-// return: wave - the maximum values of the wave and its reflection
+// Takes the maximum of the values of a wave and its reflection.
+// Takes the maximum of the values of a wave and its reflection.
+// param: signal                                - the signal to use
+// return: wave                                 - the maximum values of the wave and its reflection
 wave max_reflection(const wave & signal);
 
-// Smooth the wave using a moving average window 
-// param: signal - the signal to use
-// param: window_size - the number of values to use in the moving window
-// return: wave - the smoothed wave
+// Smooth the wave using a moving average window.
+// param: signal                                - the signal to use
+// param: window_size                           - the number of values to use in the moving window
+// return: wave                                 - the smoothed wave
 wave smooth(const wave & signal, unsigned int window_size);
 
-// Combine waves from multiple interleafed channels into a single wave
-// param: signal - the signal to use
-// param: channels - the number of channels
-// return: wave - the combined channels as a single signal
+// Combine waves from multiple interleafed channels into a single wave (by addition).
+// param: signal                                - the signal to use
+// param: channels                              - the number of channels
+// return: wave                                 - the combined channels as a single signal
 wave squish_channels(const wave& signal, unsigned int channels);

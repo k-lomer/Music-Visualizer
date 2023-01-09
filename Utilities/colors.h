@@ -2,7 +2,7 @@
 
 #include "SDL.h"
 
-namespace Color {
+namespace color {
 // Color definitions, from https://www.rapidtables.com/web/color/RGB_Color.html
 const SDL_Color maroon{ 128,0,0,SDL_ALPHA_OPAQUE };
 const SDL_Color dark_red{ 139,0,0,SDL_ALPHA_OPAQUE };
@@ -143,4 +143,4 @@ const SDL_Color light_gray{ 211,211,211,SDL_ALPHA_OPAQUE };
 const SDL_Color gainsboro{ 220,220,220,SDL_ALPHA_OPAQUE };
 const SDL_Color white_smoke{ 245,245,245,SDL_ALPHA_OPAQUE };
 const SDL_Color white{ 255,255,255,SDL_ALPHA_OPAQUE };
-} //end namespace Color
+} // End namespace color.

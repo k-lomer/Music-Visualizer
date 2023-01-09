@@ -2,8 +2,8 @@
 
 #include "../Utilities/draw_utilities.h"
 
-// The vertices are created in this constructor
-// Note that all polygons are initialized with horizontal bottom side
+// The vertices are created in this constructor.
+// Note that all polygons are initialized with horizontal bottom side.
 PolygonLayer::PolygonLayer(int num_sides, int radius, SDL_Point poly_centre, double rotation_rate, int wave_amplitude, SDL_Color wave_color)
     : centre(poly_centre), rotation_rate(rotation_rate), amplitude(wave_amplitude), color(wave_color) {
     SDL_Point first_point = rotate_point(SDL_Point{poly_centre.x, poly_centre.y + radius}, poly_centre, 2*M_PI/num_sides / 2);

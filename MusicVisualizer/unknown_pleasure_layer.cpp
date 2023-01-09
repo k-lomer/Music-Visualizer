@@ -3,26 +3,29 @@
 #include "../Utilities/draw_utilities.h"
 
 UnknownPleasureLayer::UnknownPleasureLayer(int num_waves, int frame_delay, SDL_Point first_wave_start, SDL_Point first_wave_end,
-    SDL_Point last_wave_start, SDL_Point last_wave_end, int wave_amplitude, const std::vector<SDL_Color> & wave_colors, bool fill_waves)
+    SDL_Point last_wave_start, SDL_Point last_wave_end, int wave_amplitude, const std::vector<SDL_Color> & wave_colors, UnknownPleasureFill fill_waves)
     : wave_count(num_waves), delay(frame_delay), front_start(first_wave_start), front_end(first_wave_end),
-    back_start(last_wave_start), back_end(last_wave_end), amplitude(wave_amplitude), line_colors(wave_colors)
+    back_start(last_wave_start), back_end(last_wave_end), amplitude(wave_amplitude), line_colors()
 {
     for (int i = 0; i < wave_count * delay + 1; ++i) {
         waveforms.emplace_back();
     }
 
-    if (fill_waves) {
+    switch (fill_waves) {
+    case UnknownPleasureFill::None: {
+        line_colors = wave_colors;
+        break;
+    }
+    case UnknownPleasureFill::Black: {
+        line_colors = wave_colors;
         fill_colors.push_back(SDL_Color{ 0, 0, 0, SDL_ALPHA_OPAQUE });
+        break;
     }
-}
-
-UnknownPleasureLayer::UnknownPleasureLayer(int num_waves, int frame_delay, SDL_Point first_wave_start, SDL_Point first_wave_end,
-    SDL_Point last_wave_start, SDL_Point last_wave_end, int wave_amplitude, const std::vector<SDL_Color> & fill_colors)
-    : wave_count(num_waves), delay(frame_delay), front_start(first_wave_start), front_end(first_wave_end),
-    back_start(last_wave_start), back_end(last_wave_end), amplitude(wave_amplitude), line_colors(), fill_colors(fill_colors)
-{
-    for (int i = 0; i < wave_count * delay + 1; ++i) {
-        waveforms.emplace_back();
+    case UnknownPleasureFill::Color: {
+        line_colors.push_back(SDL_Color{ 0, 0, 0, SDL_ALPHA_OPAQUE });
+        fill_colors = wave_colors;
+        break;
+    }
     }
 }
 

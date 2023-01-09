@@ -15,5 +15,4 @@ void PeakTrackerLayer::draw(SDL_Renderer * const renderer, const wave & signal) 
         SDL_Point point = point_on_line(start, end, peak_pos);
         draw_circle(renderer, point, 20, color);
     }
-
 }

@@ -5,156 +5,166 @@
 #include <thread>
 #include <vector>
 
-#include "../Utilities/draw_utilities.h"
 #include "SDL.h"
-#include "amplitude_circle_layer.h"
-#include "wave_layer.h"
-#include "polygon_layer.h"
-#include "screen_box_layer.h"
-#include "moving_wave_layer.h"
 
-const std::chrono::seconds Visualizer::change_time(10);
-const int Visualizer::num_layers_init = 1;
+const std::chrono::seconds Visualizer::s_change_time(10);
+const int Visualizer::s_num_layers_init = 1;
 
 Visualizer::Visualizer():
-    recorder(),
-    layer_change_timer(change_time),
-    fps_timer(std::chrono::seconds(1)),
-    signal_box(recorder.get_num_channels(), recorder.get_sample_rate()){
+    m_recorder(),
+    m_layer_change_timer(s_change_time),
+    m_fps_timer(std::chrono::seconds(1)),
+    m_signal_box(m_recorder.get_num_channels(), m_recorder.get_sample_rate()),
+    m_debug_print_signal_cfg(false),
+    m_debug_print_fps(false) {
+    // Initialize SDL.
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cout << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
         return;
     }
 
-    window = SDL_CreateWindow("Visualizer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (window) {
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    // Initialize the SDL window and renderer.
+    m_window = SDL_CreateWindow("Visualizer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_window_width, m_window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (m_window) {
+        m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    }
+    if (m_renderer) {
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderClear(m_renderer);
     }
 
-    if (renderer) {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderClear(renderer);
+    // Check the audio recorder initialization.
+    if (m_recorder.init_successful()) {
+        m_recording_thread = std::thread(&AudioRecorder::record, &m_recorder, (AudioSink *)this, std::ref(m_exit_recording_thread_flag));
     }
 
-    if (recorder.init_successful()) {
-        recording_thread = std::thread(&AudioRecorder::record, &recorder, (AudioSink *)this, std::ref(exit_recording_thread_flag));
-    }
-    
-    for (int i = 0; i < num_layers_init; ++i) {
+    // Add visual layers.
+    for (int i = 0; i < s_num_layers_init; ++i) {
         add_visual_layer();
     }
-    signal_box.reset(signal_box_cfg);
-    std::cout << signal_box_cfg << std::endl;
+
+    // Configure the signal box.
+    m_signal_box.reset(m_signal_box_cfg);
+    if (m_debug_print_signal_cfg) {
+        std::cout << m_signal_box_cfg << std::endl;
+    }
 }
 
 Visualizer::~Visualizer()
 {
-    // Stop recording thread before implicitly destroying AudioRecorder
-    if (recording_thread.joinable()) {
-        exit_recording_thread_flag = true;
-        recording_thread.join();
+    // Stop recording thread before implicitly destroying AudioRecorder.
+    if (m_recording_thread.joinable()) {
+        m_exit_recording_thread_flag = true;
+        m_recording_thread.join();
     }
 
-    // Destroy SDL window
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+    // Destroy SDL window and renderer.
+    SDL_DestroyRenderer(m_renderer);
+    SDL_DestroyWindow(m_window);
     SDL_Quit();
 }
 
 bool Visualizer::init_successful() const {
-    return (renderer && recording_thread.joinable());
+    return (m_renderer && m_recording_thread.joinable());
 }
 
 void Visualizer::add_visual_layer() {
-    visual_layers.push_back(std::move(vl_factory.random_visual_layer(window_width, window_height, signal_box_cfg, palette)));
+    m_visual_layers.push_back(std::move(m_visual_layer_factory.random_visual_layer(m_window_width, m_window_height, m_signal_box_cfg, m_palette)));
 }
 
 void Visualizer::remove_visual_layer() {
-    if (!visual_layers.empty()) {
-        visual_layers.erase(visual_layers.begin());
+    if (!m_visual_layers.empty()) {
+        m_visual_layers.pop_front();
     }
 }
 
 void Visualizer::change_visual_layer() {
-    if (!visual_layers.empty()) {
+    // Remove the layer at the front and add a new one at the back.
+    if (!m_visual_layers.empty()) {
         remove_visual_layer();
         add_visual_layer();
     }
 }
 
 void Visualizer::change_all_layers() {
-    size_t num_layers = visual_layers.size();
+    size_t num_layers = m_visual_layers.size();
     for (size_t i = 0; i < num_layers; ++i) {
         change_visual_layer();
     }
-    signal_box.reset(signal_box_cfg);
-    std::cout << signal_box_cfg << std::endl;
-    layer_change_timer.reset();
+    m_signal_box.reset(m_signal_box_cfg);
+    if (m_debug_print_signal_cfg) {
+        std::cout << m_signal_box_cfg << std::endl;
+    }
+    m_layer_change_timer.reset();
 }
 
 void Visualizer::change_color() {
-    palette = Color::color_palette((palette + 1) % (Color::MAX_CP + 1));
+    m_palette = color::ColorPalette((m_palette + 1) % (color::MAX_CP + 1));
     change_all_layers();
 }
 
-
 void Visualizer::handle_event(const SDL_Event & e) {
-    //Window event occured
+    // Window event occured.
     if (e.type == SDL_WINDOWEVENT) {
         switch (e.window.event) {
-        //Get new dimensions and repaint on window size change
+        // Get new dimensions and repaint on window size change.
         case SDL_WINDOWEVENT_SIZE_CHANGED:
-            window_width = e.window.data1;
-            window_height = e.window.data2;
+            m_window_width = e.window.data1;
+            m_window_height = e.window.data2;
             change_all_layers();
-            SDL_RenderPresent(renderer);
+            SDL_RenderPresent(m_renderer);
             break;
 
-        //Repaint on exposure
+        // Redraw on exposure.
         case SDL_WINDOWEVENT_EXPOSED:
-            SDL_RenderPresent(renderer);
+            SDL_RenderPresent(m_renderer);
             break;
 
         case SDL_WINDOWEVENT_MINIMIZED:
-            mMinimized = true;
+            m_minimized = true;
             break;
 
         case SDL_WINDOWEVENT_MAXIMIZED:
-            mMinimized = false;
+            m_minimized = false;
             break;
 
         case SDL_WINDOWEVENT_RESTORED:
-            mMinimized = false;
+            m_minimized = false;
             break;
         }
 
     }
+    // Keyboard event occurred.
     else if (e.type == SDL_KEYDOWN){
-        //Enter exit full screen on return key
+        // Enter exit full screen on return key.
         if (e.key.keysym.sym == SDLK_RETURN) {
-            if (mFullScreen) {
-                SDL_SetWindowFullscreen(window, SDL_FALSE);
-                mFullScreen = false;
+            if (m_full_screen) {
+                SDL_SetWindowFullscreen(m_window, SDL_FALSE);
+                m_full_screen = false;
             }
             else {
-                SDL_SetWindowFullscreen(window, SDL_TRUE);
-                mFullScreen = true;
-                mMinimized = false;
+                SDL_SetWindowFullscreen(m_window, SDL_TRUE);
+                m_full_screen = true;
+                m_minimized = false;
             }
         }
-        // Change all visuals on space key
+        // Change all visuals on space key.
         else if (e.key.keysym.sym == SDLK_SPACE) {
             change_all_layers();
         }
-        // Change color on 'c' key
+        // Change one visual layer on left or right key.
+        else if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_RIGHT) {
+            change_visual_layer();
+        }
+        // Change color on 'c' key.
         else if (e.key.keysym.sym == SDLK_c) {
             change_color();
         }
-        // Add another visual layer
+        // Add another visual layer on up key.
         else if (e.key.keysym.sym == SDLK_UP) {
             add_visual_layer();
         }
-        // Remove a visual layer
+        // Remove a visual layer on down key.
         else if (e.key.keysym.sym == SDLK_DOWN) {
                 remove_visual_layer();
         }
@@ -162,52 +172,52 @@ void Visualizer::handle_event(const SDL_Event & e) {
 }
 
 void Visualizer::copy_data(float * data, int channels, int frames) {
-    
-
     if (data) {
          std::shared_ptr<packet> packet_ptr = std::make_shared<packet>(data, data + channels * frames);
-         std::lock_guard<std::mutex>write_guard(packet_buffer_mutex);
-         packet_buffer.push_back(packet_ptr);
+         std::lock_guard<std::mutex>write_guard(m_packet_buffer_mutex);
+         m_packet_buffer.push_back(packet_ptr);
     }
     else {
-        // use an empty vector if there is no data (silence)
+        // use an empty vector if there is no data (silence).
         std::shared_ptr<packet> packet_ptr = std::make_shared<packet>();
-        std::lock_guard<std::mutex>write_guard(packet_buffer_mutex);
-        packet_buffer.push_back(packet_ptr);
+        std::lock_guard<std::mutex>write_guard(m_packet_buffer_mutex);
+        m_packet_buffer.push_back(packet_ptr);
     }
 }
 
 bool Visualizer::update() {
-    //Handle events on queue
-    while (SDL_PollEvent(&current_event) != 0) {
-        if (current_event.type == SDL_QUIT) {
+    // Handle events on queue.
+    while (SDL_PollEvent(&m_current_event) != 0) {
+        if (m_current_event.type == SDL_QUIT) {
             return false;
         }
-        handle_event(current_event);
+        handle_event(m_current_event);
     }
 
-    if (layer_change_timer.expired()) {
+    // Change layers if timer has expired.
+    if (m_layer_change_timer.expired()) {
         change_all_layers();
-        layer_change_timer.reset();
+        m_layer_change_timer.reset();
     }
 
-    // Do not render if minimized
-    if (mMinimized) {
+    // Do not render if minimized.
+    if (m_minimized) {
         return true;
     }
 
-    // Render visualizer
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer);
+    // Render the visualizer.
+    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(m_renderer);
     draw();
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(m_renderer);
 
-    if (debug_print_fps) {
-        frames += 1;
-        if (fps_timer.expired()) {
-            std::cout << "FPS: " << frames << std::endl;
-            frames = 0;
-            fps_timer.reset();
+    // Process FPS.
+    if (m_debug_print_fps) {
+        m_fps_frames_counter += 1;
+        if (m_fps_timer.expired()) {
+            std::cout << "FPS: " << m_fps_frames_counter << std::endl;
+            m_fps_frames_counter = 0;
+            m_fps_timer.reset();
         }
     }
 
@@ -215,14 +225,14 @@ bool Visualizer::update() {
 }
 
 void Visualizer::draw() {
-    std::unique_lock<std::mutex>read_write_guard(packet_buffer_mutex);
-    std::vector<std::shared_ptr<packet>> packet_buffer_copy(packet_buffer);
-    packet_buffer.clear();
+    std::unique_lock<std::mutex>read_write_guard(m_packet_buffer_mutex);
+    std::vector<std::shared_ptr<packet>> packet_buffer_copy(m_packet_buffer);
+    m_packet_buffer.clear();
     read_write_guard.unlock();
 
-    signal_box.update_signal(packet_buffer_copy);
+    m_signal_box.update_signal(packet_buffer_copy);
 
-    for (auto & layer : visual_layers) {
-        layer->draw(renderer, signal_box.get_wave());
+    for (auto & layer : m_visual_layers) {
+        layer->draw(m_renderer, m_signal_box.get_wave());
     }
 }

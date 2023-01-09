@@ -10,7 +10,7 @@ void BarsLayer::draw(SDL_Renderer * const renderer, const wave & signal) {
         return;
     }
 
-    // Take max value for bar across wave points in each step
+    // Take the max value for a bar across wave points in each step.
     std::vector<float> bar_values;
     int bar_step = (int)signal.size() / divisions;
     for (int i = 0; i < divisions; ++i) {

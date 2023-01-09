@@ -12,7 +12,6 @@
 #include "polygon_layer.h"
 #include "moving_wave_layer.h"
 #include "parametric_wave_layer.h"
-#include "amplitude_circle_layer.h"
 #include "peak_tracker_layer.h"
 #include "bars_layer.h"
 #include "unknown_pleasure_layer.h"
@@ -22,36 +21,49 @@
 #include "polygon_spiral.h"
 #include "tunnel.h"
 
-VisualLayerFactory::VisualLayerFactory(): random_layer_type(MIN_VL_TYPE, MAX_VL_TYPE), random_bool(0,1), random_color_int(0, 255) {}
+VisualLayerFactory::VisualLayerFactory(): m_random_layer_type(MIN_VL_TYPE, MAX_VL_TYPE), m_random_bool(0,1), m_random_color_int(0, 255) {}
 
-visual_layer_type VisualLayerFactory::get_rand_layer_type(){
-    return (visual_layer_type)random_layer_type(rando);
+VisualLayerType VisualLayerFactory::get_rand_layer_type(){
+    VisualLayerType new_layer = m_previous_layer;
+    // Do not use the same layer twice in a row.
+    while (new_layer == m_previous_layer) {
+        new_layer = (VisualLayerType)m_random_layer_type(m_rando);
+    }
+    m_previous_layer = new_layer;
+    return new_layer;
 }
 
 bool VisualLayerFactory::get_rand_bool(){
-    return (bool)random_bool(rando);
+    return (bool)m_random_bool(m_rando);
 }
 
 int VisualLayerFactory::get_rand_int(int min_val, int max_val) {
     std::uniform_int_distribution<int> random_int(min_val, max_val);
-    return random_int(rando);
+    return random_int(m_rando);
 }
 
 double VisualLayerFactory::get_rand_double(double min_val, double max_val) {
-    std::uniform_real_distribution<> random_double(min_val, max_val);
-    return random_double(rando);
+    std::uniform_real_distribution<double> random_double(min_val, max_val);
+    return random_double(m_rando);
 }
+
+float VisualLayerFactory::get_rand_float(float min_val, float max_val) {
+    std::uniform_real_distribution<float> random_float(min_val, max_val);
+    return random_float(m_rando);
+}
+
 
 SDL_Color VisualLayerFactory::get_rand_color() {
-    return SDL_Color{ (Uint8)random_color_int(rando), (Uint8)random_color_int(rando), (Uint8)random_color_int(rando), SDL_ALPHA_OPAQUE };
+    return SDL_Color{ (Uint8)m_random_color_int(m_rando), (Uint8)m_random_color_int(m_rando), (Uint8)m_random_color_int(m_rando), SDL_ALPHA_OPAQUE };
 }
 
-SDL_Color VisualLayerFactory::get_rand_palette_color(Color::color_palette cp) {
-    int palette_length = (int)Color::palette_lookup.at(cp).size();
+SDL_Color VisualLayerFactory::get_rand_palette_color(color::ColorPalette cp) {
+    int palette_length = (int)color::palette_lookup.at(cp).size();
     if (palette_length > 0) {
-        return Color::palette_lookup.at(cp)[get_rand_int(0, palette_length - 1)];
+        return color::palette_lookup.at(cp)[get_rand_int(0, palette_length - 1)];
     }
-    else { // if there are no colors in the pallette, return a random color
+    else {
+        // If there are no colors in the pallette, return a random color.
         return get_rand_color();
     }
 }
@@ -64,14 +76,8 @@ template <typename T> std::vector<T> VisualLayerFactory::shuffle(std::vector<T> 
     return v;
 }
 
-
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette) {
-    visual_layer_type new_vl_type = get_rand_layer_type();
-
-    wave_signal_config(cfg);
-    
-    int wave_amplitude = window_height / get_rand_int(10, 30);
-    SDL_Color wave_color = get_rand_palette_color(palette);
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
+    VisualLayerType new_vl_type = UnknownPleasure; get_rand_layer_type();
 
     switch (new_vl_type) {
     case Bars:
@@ -123,23 +129,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     {
         return random_sacred_seal(window_width, window_height, cfg, palette);
     }
-    default:
-    {
-        return std::make_unique<CompositeLayer>();
     }
-    }
-}
-
-void VisualLayerFactory::randomise_signal_config(SignalBoxConfig& cfg) {
-    cfg.absolute = get_rand_bool();
-    cfg.frequency_wave = get_rand_bool();
-    cfg.reflect = get_rand_bool();
-    cfg.fix_base = get_rand_bool();
-    cfg.decay_factor = float(get_rand_double(0.8, 0.99));
-    cfg.taper_edges = float(get_rand_double(0.0, 0.5));
-    cfg.normalize = get_rand_bool();
-    cfg.time_window = float(get_rand_double(0.5, 1.0));
-    cfg.smoothing_window = float(get_rand_double(0.0, 0.5));
 }
 
 void VisualLayerFactory::wave_signal_config(SignalBoxConfig& cfg, bool always_taper, bool include_freq ) {
@@ -147,30 +137,30 @@ void VisualLayerFactory::wave_signal_config(SignalBoxConfig& cfg, bool always_ta
     cfg.normalize = false;
     cfg.fix_base = false;
     cfg.reflect = get_rand_bool();
-    cfg.taper_edges = (get_rand_bool() || always_taper ? float(get_rand_double(0.1, 0.5)) : 0.0f);
+    cfg.taper_edges = (get_rand_bool() || always_taper ? get_rand_float(0.1f, 0.5f) : 0.0f);
 
     cfg.frequency_wave = get_rand_bool() && include_freq;
     if (cfg.frequency_wave) {
-        cfg.time_window = float(get_rand_double(0.5, 1.0));
-        cfg.decay_factor = float(get_rand_double(0.5, 0.99));
-        cfg.smoothing_window = float(get_rand_double(0.005, 0.02));
+        cfg.time_window = get_rand_float(0.5f, 1.0f);
+        cfg.decay_factor = get_rand_float(0.5f, 0.99f);
+        cfg.smoothing_window = get_rand_float(0.005f, 0.02f);
     }
     else {
         bool long_time = get_rand_bool();
         if (long_time) {
-            cfg.time_window = float(get_rand_double(0.5, 1.0));
-            cfg.decay_factor = float(get_rand_double(0.94, 0.99));
-            cfg.smoothing_window = float(get_rand_double(0.005, 0.02));
+            cfg.time_window = get_rand_float(0.5f, 1.0f);
+            cfg.decay_factor = get_rand_float(0.94f, 0.99f);
+            cfg.smoothing_window = get_rand_float(0.005f, 0.02f);
         }
         else {
             cfg.time_window = 0.0f;
-            cfg.decay_factor = float(get_rand_double(0.94, 0.99));
-            cfg.smoothing_window = float(get_rand_double(0.0, 0.2));
+            cfg.decay_factor = get_rand_float(0.94f, 0.99f);
+            cfg.smoothing_window = get_rand_float(0.0f, 0.2f);
         }
     }
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_central_wave(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette) {
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_central_wave(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     wave_signal_config(cfg);
 
     std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
@@ -191,7 +181,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_central_wave(int window_
     return composite;
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_tunnel(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette) {
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_tunnel(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     wave_signal_config(cfg, true);
     
     int num_waves = get_rand_int(3, 5);
@@ -202,7 +192,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_tunnel(int window_width,
     return std::make_unique<TunnelLayer>(window_width, window_height, num_waves, levels, wave_amplitude, wave_color, scale_rate);
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_wave_spinner(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette) {
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_wave_spinner(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     wave_signal_config(cfg);
     cfg.reflect = true;
 
@@ -236,7 +226,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_wave_spinner(int window_
     return composite;
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_unknown_pleasure(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette) {
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_unknown_pleasure(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     wave_signal_config(cfg);
 
     int num_waves = get_rand_int(8, 15);
@@ -247,22 +237,19 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_unknown_pleasure(int win
     SDL_Point last_wave_end{ 6 * window_width / 8, window_height / 8 };
     int frame_delay = 10;
 
-    // randomly pick single color or multiple colors
-    std::vector<SDL_Color> colors = get_rand_bool() ? std::vector<SDL_Color>{get_rand_palette_color(palette)} : shuffle(Color::palette_lookup.at(palette));
+    // Randomly pick single color or multiple colors.
+    std::vector<SDL_Color> colors = get_rand_bool() ? std::vector<SDL_Color>{get_rand_palette_color(palette)} : shuffle(color::palette_lookup.at(palette));
 
-    int layer_type = get_rand_int(1, 3);
-    if (layer_type == 1) { // no fill
-        return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, colors, false);
+    int layer_type = get_rand_int(1, 2);
+    if (layer_type == int(UnknownPleasureLayer::UnknownPleasureFill::Black)) {
+        return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, colors, UnknownPleasureLayer::UnknownPleasureFill::Black);
     }
-    else if (layer_type == 2 or colors.size() < 2) { // background fill
-        return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, colors, true);
-    }
-    else { // only fill
-        return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, colors);
+    else { // UnknownPleasureLayer::UnknownPleasureFill::Color
+        return std::make_unique<UnknownPleasureLayer>(num_waves, frame_delay, first_wave_start, first_wave_end, last_wave_start, last_wave_end, wave_amplitude, colors, UnknownPleasureLayer::UnknownPleasureFill::Color);
     }
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_peak_tracker(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette) {
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_peak_tracker(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     cfg.frequency_wave = false; get_rand_bool();
     cfg.absolute = true;
     cfg.normalize = false;
@@ -270,14 +257,14 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_peak_tracker(int window_
     cfg.reflect = false;
     cfg.taper_edges = 0.0;
     if (cfg.frequency_wave) {
-        cfg.time_window = float(get_rand_double(0.5, 1.0));
-        cfg.decay_factor = float(get_rand_double(0.5, 0.99));
-        cfg.smoothing_window = float(get_rand_double(0.005, 0.02));
+        cfg.time_window = get_rand_float(0.5f, 1.0f);
+        cfg.decay_factor = get_rand_float(0.5f, 0.99f);
+        cfg.smoothing_window = get_rand_float(0.005f, 0.02f);
     }
     else {
-        cfg.time_window = float(get_rand_double(1.0, 2.0));
+        cfg.time_window = get_rand_float(1.0f, 2.0f);
         cfg.decay_factor = 0.8f;
-        cfg.smoothing_window = float(get_rand_double(0.005, 0.02));
+        cfg.smoothing_window = get_rand_float(0.005f, 0.02f);
     }
     int peaks = 2;
     SDL_Color wave_color = get_rand_palette_color(palette);
@@ -285,7 +272,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_peak_tracker(int window_
     return std::make_unique<PeakTrackerLayer>(peaks, window_width, window_height, wave_color);
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_sacred_seal(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette) {
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_sacred_seal(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     wave_signal_config(cfg, true);
 
     int layers = get_rand_int(5, 10);
@@ -306,7 +293,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_sacred_seal(int window_w
         SDL_Point centre_right{ 3 * window_width / 4, window_height / 2 };
 
         composite->add_layer(std::make_unique<SacredSealLayer>(config, centre_left, radius, wave_amplitude));
-        // reverse rotation for other seal
+        // Reverse rotation for other seal.
         for (auto & conf : config) {
             conf.rotation_rate *= -1.0;
         }
@@ -323,7 +310,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_sacred_seal(int window_w
             SDL_Point centre_br{ 3 * window_width / 4, 3 * window_height / 4 };
             composite->add_layer(std::make_unique<SacredSealLayer>(config, centre_tl, radius, wave_amplitude));
             composite->add_layer(std::make_unique<SacredSealLayer>(config, centre_br, radius, wave_amplitude));
-            // reverse rotation for other seal
+            // Reverse rotation for other seal.
             for (auto & conf : config) {
                 conf.rotation_rate *= -1.0;
             }
@@ -338,14 +325,14 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_sacred_seal(int window_w
     }
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_curve(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette) {
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_curve(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     cfg.frequency_wave = false;
     cfg.absolute = true;
     cfg.normalize = false;
     cfg.fix_base = false;
     cfg.reflect = false;
     cfg.taper_edges = 0.0f;
-    cfg.time_window = float(get_rand_double(2.0, 5.0));
+    cfg.time_window = get_rand_float(2.0, 5.0);
     cfg.decay_factor = 0.0f;
     cfg.smoothing_window = 0.0f;
 
@@ -364,7 +351,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_curve(int win
     for (int i = 0; i < scale_layers; ++i) {
         layer_scales.push_back(min_scale + (max_scale - min_scale) * double(i) / double(scale_layers));
     }
-    auto colors = shuffle(Color::palette_lookup.at(palette));
+    auto colors = shuffle(color::palette_lookup.at(palette));
     bool horizontal_direction = get_rand_bool();
 
     ParametricEquation2d para_curve(x_coeff, y_coeff, curve_scale);
@@ -374,11 +361,11 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_curve(int win
     return composite;
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_wave(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette) {
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_wave(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     wave_signal_config(cfg, true);
 
     std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
-    auto colors = shuffle(Color::palette_lookup.at(palette));
+    auto colors = shuffle(color::palette_lookup.at(palette));
     int para_wave_layers = get_rand_int(1, 3);
     for (int i = 0; i < para_wave_layers; ++i) {
         double x_coeff_1 = get_rand_double(1.0, 5.0);
@@ -402,7 +389,8 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_wave(int wind
     }
     return composite;
 }
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_bars(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette)
+
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_bars(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette)
 {
     wave_signal_config(cfg);
 
@@ -413,19 +401,19 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_bars(int window_width, i
     {
         if (get_rand_bool())
         {
-            // small gap
+            // Small gap.
             gap_width = get_rand_int(1, 10);
         }
         else
         {
-            // big gap
+            // Big gap.
             int max_gap_width = window_width / num_bars;
             gap_width = get_rand_int(1, max_gap_width);
         }
     }
     else
     {
-        // no gap
+        // No gap.
     }
 
     std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
@@ -434,7 +422,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_bars(int window_width, i
     double reduction_factor = get_rand_double(0.4, 0.8);
     if (get_rand_bool())
     {
-        // central
+        // Central.
         SDL_Point bars_start{ 0, window_height / 2 };
         SDL_Point bars_end{ window_width, window_height / 2 };
         for (int i = 0; i < num_layers; ++i)
@@ -447,7 +435,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_bars(int window_width, i
     }
     else
     {
-        // top and bottom
+        // Top and bottom.
         SDL_Point bars_top_start{ 0, 0 };
         SDL_Point bars_top_end{ window_width, 0 };
         SDL_Point bars_bottom_start{ 0, window_height };
@@ -463,13 +451,12 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_bars(int window_width, i
     return composite;
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_checker_board(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette)
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_checker_board(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette)
 {
     wave_signal_config(cfg, false, false);
     
     cfg.absolute = get_rand_bool();
-    cfg.smoothing_window = float(get_rand_double(0.005, 0.01));
-
+    cfg.smoothing_window = get_rand_float(0.005f, 0.01f);
 
     int amplitude = std::min(window_height, window_width) / get_rand_int(5, 12);
 
@@ -478,7 +465,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_checker_board(int window
 
     for (int i = 0; i < num_line_sets; ++i) {
         int num_waves = get_rand_int(2, 5);
-        orientation wave_orientation = i % 2 ? Horizontal : Vertical;
+        Orientation wave_orientation = i % 2 ? Horizontal : Vertical;
         double wave_movement = get_rand_double(-3.0, 3.0);
         auto wave_color = get_rand_palette_color(palette);
         composite->add_layer(
@@ -487,12 +474,12 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_checker_board(int window
     return composite;
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_scrolling_lines(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette)
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_scrolling_lines(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette)
 {
     wave_signal_config(cfg, false, false);
 
     int num_line_sets = get_rand_int(2, 6);
-    orientation wave_orientation = get_rand_bool() ? Horizontal : Vertical;
+    Orientation wave_orientation = get_rand_bool() ? Horizontal : Vertical;
     std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
 
     for (int i = 0; i < num_line_sets; ++i) {
@@ -507,7 +494,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_scrolling_lines(int wind
     return composite;
 }
 
-std::unique_ptr<VisualLayer> VisualLayerFactory::random_polygon_spiral(int window_width, int window_height, SignalBoxConfig& cfg, Color::color_palette palette)
+std::unique_ptr<VisualLayer> VisualLayerFactory::random_polygon_spiral(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette)
 {
     wave_signal_config(cfg, false, false);
 

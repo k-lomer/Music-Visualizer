@@ -1,7 +1,84 @@
-Max value passes between visual changes
-After effects
-    - fade
-    - blur
-    - kaleidescope
-    - wave
-    - glitch
+Wave heights
+    - wave layer
+    - tunnel
+    - checkerboard
+    - parametric curve
+Position of unknown pleasure layer
+Add screenbox layer
+Set max number of layers
+Make decay much less when the wave time window is large
+Bars not always all shown?
+Make multiple layers work with different signal box configs
+Make wave/packet/Orientation a universal type?
+Layer priority - Back, Front
+Small sine wave instead of silence
+Namespaces
+Version
+Create installer
+Package
+Update github page README
+Linter
+Refactor window height and width and possibly signal box into base class
+Update audio recorder to modern c++
+Improve frequency spectrum
+Tweak visuals to look better with portait windows
+Optimise signal processing, throw away excess wave values and do smart smoothing
+Refactor the visual layer/composite layer system
+Wave line thickness
+MinMax bounds function
+Horizontal bars
+Stagger the changing of multiple visual layers
+Move Random numbers into utilities
+Refactor layers to better handle movement updates/customization (Movement updater base class? None, Linear, Oscillator, Circular etc.)
+GPU fragment shader infrastructure
+GPU fragment shaders
+    - Rain
+    - Pixelate
+    - Blur
+    - Fuzz
+    - Kaleidoscope
+    - Glitch
+    - Warp/Barrel
+    - Acid
+    - Fractal
+    - Hyperbolic
+    - Droste
+    - Fade
+New layers
+    - Flower
+    - Constellation
+    - Spiral
+    - Moving bars
+    - Floating Grid
+    - Ripples
+    - Image import
+    - Perlin noise
+    - Voronoi
+    - Wave circle
+    - Spectogram
+    - Colour Splash
+New GPU layers
+    - Tunnel
+    - 3D Model
+    - Hypercube
+    - Outrun landscape
+Colour Gradient
+    - Class
+    - Add to bars
+    - Add to spectogram
+    - Add to other visuals
+UI Customization
+    - Visual Selection
+    - Colour selection
+    - 3D model selection
+    - Image selection
+    - Audio interface selection
+Plugin Infrastructure (more planning required)
+Performance improvements
+    Profile layers
+    Use GPGPU for functions
+Debug prompt
+BPM detection
+Web embedding
+
+
