@@ -77,7 +77,7 @@ template <typename T> std::vector<T> VisualLayerFactory::shuffle(std::vector<T> 
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
-    VisualLayerType new_vl_type = UnknownPleasure; get_rand_layer_type();
+    VisualLayerType new_vl_type = get_rand_layer_type();
 
     switch (new_vl_type) {
     case Bars:
