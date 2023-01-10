@@ -84,14 +84,16 @@ private:
     VisualLayerFactory m_visual_layer_factory;
     // The current visual layers to display.
     std::deque<std::unique_ptr<VisualLayer>> m_visual_layers;
+    // The initial color palette to use for visual layers.
+    color::ColorPalette m_palette = color::ColorPalette::Mars;
     // The timer responsible for changing the visual layers.
     CountdownTimer<std::chrono::seconds> m_layer_change_timer;
     // The time to display a visual layer for.
     static const std::chrono::seconds s_change_time;
     // The number of visual layers to initialize.
-    static const int s_num_layers_init;
-    // The initial color palette to use for visual layers.
-    color::ColorPalette m_palette = color::ColorPalette::Mars;
+    static const size_t s_num_layers_init;
+    // The maximum number of visual layers allowed.
+    static const size_t s_max_layers;
 
 
     // Debug FPS members.

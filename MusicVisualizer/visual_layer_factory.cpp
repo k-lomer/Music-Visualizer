@@ -458,7 +458,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_checker_board(int window
     cfg.absolute = get_rand_bool();
     cfg.smoothing_window = get_rand_float(0.005f, 0.01f);
 
-    int amplitude = std::min(window_height, window_width) / get_rand_int(5, 12);
+    int amplitude = std::min(window_height, window_width) / get_rand_int(7, 14);
 
     int num_line_sets = get_rand_int(3, 6);
     std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();

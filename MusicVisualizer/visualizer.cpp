@@ -8,7 +8,8 @@
 #include "SDL.h"
 
 const std::chrono::seconds Visualizer::s_change_time(10);
-const int Visualizer::s_num_layers_init = 1;
+const size_t Visualizer::s_num_layers_init = 1;
+const size_t Visualizer::s_max_layers = 5;
 
 Visualizer::Visualizer():
     m_recorder(),
@@ -69,7 +70,9 @@ bool Visualizer::init_successful() const {
 }
 
 void Visualizer::add_visual_layer() {
-    m_visual_layers.push_back(std::move(m_visual_layer_factory.random_visual_layer(m_window_width, m_window_height, m_signal_box_cfg, m_palette)));
+    if (m_visual_layers.size() < s_max_layers) {
+        m_visual_layers.push_back(std::move(m_visual_layer_factory.random_visual_layer(m_window_width, m_window_height, m_signal_box_cfg, m_palette)));
+    }
 }
 
 void Visualizer::remove_visual_layer() {

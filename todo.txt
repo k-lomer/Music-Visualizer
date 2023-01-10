@@ -1,11 +1,8 @@
 Wave heights
     - wave layer
     - tunnel
-    - checkerboard
-    - parametric curve
 Position of unknown pleasure layer
 Add screenbox layer
-Set max number of layers
 Make decay much less when the wave time window is large
 Bars not always all shown?
 Make multiple layers work with different signal box configs
