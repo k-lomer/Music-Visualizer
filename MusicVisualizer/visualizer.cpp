@@ -15,9 +15,7 @@ Visualizer::Visualizer():
     m_recorder(),
     m_layer_change_timer(s_change_time),
     m_fps_timer(std::chrono::seconds(1)),
-    m_signal_box(m_recorder.get_num_channels(), m_recorder.get_sample_rate()),
-    m_debug_print_signal_cfg(false),
-    m_debug_print_fps(false) {
+    m_debug_print_fps(true) {
     // Initialize SDL.
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cout << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
@@ -43,12 +41,6 @@ Visualizer::Visualizer():
     for (int i = 0; i < s_num_layers_init; ++i) {
         add_visual_layer();
     }
-
-    // Configure the signal box.
-    m_signal_box.reset(m_signal_box_cfg);
-    if (m_debug_print_signal_cfg) {
-        std::cout << m_signal_box_cfg << std::endl;
-    }
 }
 
 Visualizer::~Visualizer()
@@ -71,7 +63,11 @@ bool Visualizer::init_successful() const {
 
 void Visualizer::add_visual_layer() {
     if (m_visual_layers.size() < s_max_layers) {
-        m_visual_layers.push_back(std::move(m_visual_layer_factory.random_visual_layer(m_window_width, m_window_height, m_signal_box_cfg, m_palette)));
+        VisualLayerItems layer_items = {std::unique_ptr<VisualLayer>(), SignalBox(m_recorder.get_num_channels(), m_recorder.get_sample_rate())};
+        SignalBoxConfig config;
+        layer_items.visual_layer = std::move(m_visual_layer_factory.random_visual_layer(m_window_width, m_window_height, config, m_palette));
+        layer_items.signal_box.reset(config);
+        m_visual_layers.push_back(std::move(layer_items));
     }
 }
 
@@ -93,10 +89,6 @@ void Visualizer::change_all_layers() {
     size_t num_layers = m_visual_layers.size();
     for (size_t i = 0; i < num_layers; ++i) {
         change_visual_layer();
-    }
-    m_signal_box.reset(m_signal_box_cfg);
-    if (m_debug_print_signal_cfg) {
-        std::cout << m_signal_box_cfg << std::endl;
     }
     m_layer_change_timer.reset();
 }
@@ -233,9 +225,8 @@ void Visualizer::draw() {
     m_packet_buffer.clear();
     read_write_guard.unlock();
 
-    m_signal_box.update_signal(packet_buffer_copy);
-
     for (auto & layer : m_visual_layers) {
-        layer->draw(m_renderer, m_signal_box.get_wave());
+        layer.signal_box.update_signal(packet_buffer_copy);
+        layer.visual_layer->draw(m_renderer, layer.signal_box.get_wave());
     }
 }

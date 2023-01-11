@@ -14,6 +14,15 @@
 #include "visual_layer.h"
 #include "visual_layer_factory.h"
 
+
+// The items associated with each visual layer.
+struct VisualLayerItems {
+    // The visual layer.
+    std::unique_ptr<VisualLayer> visual_layer;
+    // The corresponding signal box.
+    SignalBox signal_box;
+};
+
 // Visualizer class.
 // This class owns the SDL window and performs visual updates based on system audio.
 class Visualizer: public AudioSink {
@@ -70,20 +79,13 @@ private:
     typedef std::vector<float> packet;
     // The buffer for storing audio data packets, must use a mutex to access this as it is used by multiple threads.
     std::vector<std::shared_ptr<packet>> m_packet_buffer;
-    // The signal box for signal processing.
-    SignalBox m_signal_box;
-    // The config for the signal box.
-    SignalBoxConfig m_signal_box_cfg;
-    // Whether to debug print the signal config.
-    bool m_debug_print_signal_cfg;
-
 
     // Visual layer members.
     //
     // The visual layer factory, for generating visual layers.
     VisualLayerFactory m_visual_layer_factory;
-    // The current visual layers to display.
-    std::deque<std::unique_ptr<VisualLayer>> m_visual_layers;
+    // The current visual layers to display and their corresponding items.
+    std::deque<VisualLayerItems> m_visual_layers;
     // The initial color palette to use for visual layers.
     color::ColorPalette m_palette = color::ColorPalette::Mars;
     // The timer responsible for changing the visual layers.

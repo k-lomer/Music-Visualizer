@@ -2,27 +2,29 @@ Wave heights
     - wave layer
     - tunnel
 Position of unknown pleasure layer
-Add screenbox layer
 Make decay much less when the wave time window is large
 Bars not always all shown?
 Make multiple layers work with different signal box configs
 Make wave/packet/Orientation a universal type?
 Layer priority - Back, Front
-Small sine wave instead of silence
 Namespaces
 Version
 Create installer
 Package
 Update github page README
+v0.1
+
 Linter
 Refactor window height and width and possibly signal box into base class
 Update audio recorder to modern c++
 Improve frequency spectrum
+Small sine wave instead of silence
 Tweak visuals to look better with portait windows
 Optimise signal processing, throw away excess wave values and do smart smoothing
 Refactor the visual layer/composite layer system
 Wave line thickness
 MinMax bounds function
+Add screenbox layer
 Horizontal bars
 Stagger the changing of multiple visual layers
 Move Random numbers into utilities
@@ -41,6 +43,8 @@ GPU fragment shaders
     - Hyperbolic
     - Droste
     - Fade
+v0.2
+
 New layers
     - Flower
     - Constellation
@@ -70,12 +74,13 @@ UI Customization
     - 3D model selection
     - Image selection
     - Audio interface selection
-Plugin Infrastructure (more planning required)
 Performance improvements
     Profile layers
     Use GPGPU for functions
+v1.0
+
+Plugin Infrastructure (more planning required)
 Debug prompt
 BPM detection
-Web embedding
 
 

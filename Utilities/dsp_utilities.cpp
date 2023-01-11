@@ -171,13 +171,17 @@ wave smooth(const wave & signal, unsigned int window_size) {
         return signal;
     }
 
-    wave smoothie(signal.size() - window_size + 1, 0.0);
-    for (unsigned int i = 0; i < smoothie.size(); ++i) {
-        for (unsigned int j = 0; j < window_size; ++j) {
-            smoothie[i] += signal[i + j];
-        }
+    wave smoothie(signal.size() - window_size + 1, 0.0f);
+    // Reduce complexity by keeping window total in a moving average.
+    float window_total = 0.0f;
+    for (unsigned int j = 0; j < window_size - 1; ++j) {
+        window_total += signal[j];
+    }
 
-        smoothie[i] /= window_size;
+    for (unsigned int i = 0; i < smoothie.size(); ++i) {
+        window_total += signal[i + window_size - 1];
+        smoothie[i] = window_total / window_size;
+        window_total -= signal[i];
     }
 
     return smoothie;

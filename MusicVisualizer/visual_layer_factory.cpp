@@ -129,6 +129,8 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     {
         return random_sacred_seal(window_width, window_height, cfg, palette);
     }
+    default:
+        return std::unique_ptr<VisualLayer>();
     }
 }
 
@@ -141,16 +143,16 @@ void VisualLayerFactory::wave_signal_config(SignalBoxConfig& cfg, bool always_ta
 
     cfg.frequency_wave = get_rand_bool() && include_freq;
     if (cfg.frequency_wave) {
-        cfg.time_window = get_rand_float(0.5f, 1.0f);
+        cfg.time_window = get_rand_float(0.1f, 0.3f);
         cfg.decay_factor = get_rand_float(0.5f, 0.99f);
-        cfg.smoothing_window = get_rand_float(0.005f, 0.02f);
+        cfg.smoothing_window = get_rand_float(0.0f, 0.01f);
     }
     else {
         bool long_time = get_rand_bool();
         if (long_time) {
-            cfg.time_window = get_rand_float(0.5f, 1.0f);
-            cfg.decay_factor = get_rand_float(0.94f, 0.99f);
-            cfg.smoothing_window = get_rand_float(0.005f, 0.02f);
+            cfg.time_window = get_rand_float(0.5f, 1.5f);
+            cfg.decay_factor = get_rand_float(0.94f, 0.98f);
+            cfg.smoothing_window = get_rand_float(0.02f, 0.2f);
         }
         else {
             cfg.time_window = 0.0f;

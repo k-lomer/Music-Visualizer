@@ -104,7 +104,7 @@ void SignalBox::update_signal(const std::vector<std::shared_ptr<wave>> & new_sig
 void SignalBox::update_raw_signal(const std::vector<std::shared_ptr<wave>>& new_signal)
 {
     // Get a sample length to use if a wave is empty.
-    // Use a deafault or a previous size if available.
+    // Use a default or a previous size if available.
     size_t sample_length = 100;
     if (!m_previous_signals.empty()) {
         m_previous_signals.back().size();
