@@ -2,13 +2,15 @@
 #include "visualizer.h"
 
 #include <iostream>
+#include <list>
+#include <map>
 #include <thread>
 #include <vector>
 
 #include "SDL.h"
 
 const std::chrono::seconds Visualizer::s_change_time(10);
-const size_t Visualizer::s_num_layers_init = 1;
+const size_t Visualizer::s_num_layers_init = 2;
 const size_t Visualizer::s_max_layers = 5;
 
 Visualizer::Visualizer():
@@ -225,8 +227,21 @@ void Visualizer::draw() {
     m_packet_buffer.clear();
     read_write_guard.unlock();
 
-    for (auto & layer : m_visual_layers) {
-        layer.signal_box.update_signal(packet_buffer_copy);
-        layer.visual_layer->draw(m_renderer, layer.signal_box.get_wave());
+    // Build precedence to index map.
+    std::map<int, std::list<size_t>> precedences;
+    for (size_t i = 0; i < m_visual_layers.size(); ++i) {
+        int p = m_visual_layers[i].visual_layer->get_precedence();
+        precedences[p].push_back(i);
     }
+
+    // Iterate through precedences in ascending order.
+    for (const auto& precedence_index_pair : precedences) {
+        const auto& indexes = precedence_index_pair.second;
+        for (size_t i : indexes) {
+            m_visual_layers[i].signal_box.update_signal(packet_buffer_copy);
+            const wave& w = m_visual_layers[i].signal_box.get_wave();
+            m_visual_layers[i].visual_layer->draw(m_renderer, w);
+        }
+    }
+
 }

@@ -5,6 +5,9 @@
 
 #include "../Utilities/draw_utilities.h"
 
+BarsLayer::BarsLayer(int num_bars, SDL_Point bars_start, SDL_Point bars_end, int bars_amplitude, SDL_Color bars_color, int bars_gap)
+    : divisions(num_bars), start(bars_start), end(bars_end), amplitude(bars_amplitude), color(bars_color), gap_pixels(bars_gap) {}
+
 void BarsLayer::draw(SDL_Renderer * const renderer, const wave & signal) {
     if (signal.empty()) {
         return;

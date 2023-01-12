@@ -1,12 +1,7 @@
-Wave heights
-    - wave layer
-    - tunnel
+
 Position of unknown pleasure layer
-Make decay much less when the wave time window is large
 Bars not always all shown?
-Make multiple layers work with different signal box configs
 Make wave/packet/Orientation a universal type?
-Layer priority - Back, Front
 Namespaces
 Version
 Create installer
@@ -18,9 +13,13 @@ Linter
 Refactor window height and width and possibly signal box into base class
 Update audio recorder to modern c++
 Improve frequency spectrum
+multithread signalbox processing
 Small sine wave instead of silence
 Tweak visuals to look better with portait windows
 Optimise signal processing, throw away excess wave values and do smart smoothing
+Wave heights are sometimes > 1, should check how scaling is done in the signal box, seen on the layers:
+    - wave layer
+    - tunnel
 Refactor the visual layer/composite layer system
 Wave line thickness
 MinMax bounds function
@@ -58,6 +57,7 @@ New layers
     - Wave circle
     - Spectogram
     - Colour Splash
+    - Stutter effect
 New GPU layers
     - Tunnel
     - 3D Model
@@ -68,6 +68,8 @@ Colour Gradient
     - Add to bars
     - Add to spectogram
     - Add to other visuals
+v0.3
+
 UI Customization
     - Visual Selection
     - Colour selection

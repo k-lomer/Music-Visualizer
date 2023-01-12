@@ -180,18 +180,23 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_central_wave(int window_
         composite->add_layer(std::make_unique<WaveLayer>(num_waves, wave_start, wave_end, wave_amplitude, wave_color));
         max_height = wave_amplitude;
     }
+    composite->set_precedence(5);
     return composite;
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_tunnel(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     wave_signal_config(cfg, true);
-    
-    int num_waves = get_rand_int(3, 5);
-    int levels = get_rand_int(2, 4);
-    int wave_amplitude = std::min(window_height, window_width) / 2 / levels;
-    double scale_rate = get_rand_double(-0.005, 0.005);
-    SDL_Color wave_color  = get_rand_palette_color(palette);
-    return std::make_unique<TunnelLayer>(window_width, window_height, num_waves, levels, wave_amplitude, wave_color, scale_rate);
+    std::unique_ptr<CompositeLayer> composite = std::make_unique<CompositeLayer>();
+    int num_tunnels = get_rand_int(1, 3);
+    for (int i = 0; i < num_tunnels; ++i) {
+        int num_waves = get_rand_int(3, 5);
+        int levels = get_rand_int(2, 4);
+        int wave_amplitude = std::min(window_height, window_width) / 2 / levels;
+        double scale_rate = get_rand_double(-0.005, 0.005);
+        SDL_Color wave_color = get_rand_palette_color(palette);
+        composite->add_layer(std::make_unique<TunnelLayer>(window_width, window_height, num_waves, levels, wave_amplitude, wave_color, scale_rate));
+    }
+    return composite;
 }
 
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_wave_spinner(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
@@ -225,6 +230,8 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_wave_spinner(int window_
             composite->add_layer(std::make_unique<WaveLayer>(wave_count, wave_start, wave_end, wave_amplitude, wave_color, initial_rotation, rotation_rate / (i + 1)));
         }
     }
+    composite->set_precedence(1);
+
     return composite;
 }
 
@@ -360,6 +367,8 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_curve(int win
     composite->add_layer(std::make_unique<ParametricCurveLayer>(colors, para_curve, coeff_baseline, centre, layer_scales, horizontal_direction));
     ParametricEquation2d inverted_para_curve(x_coeff, y_coeff, -curve_scale);
     composite->add_layer(std::make_unique<ParametricCurveLayer>(colors, inverted_para_curve, coeff_baseline, centre, layer_scales, horizontal_direction));
+    composite->set_precedence(1);
+
     return composite;
 }
 
@@ -389,6 +398,8 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_wave(int wind
 
         composite->add_layer(std::make_unique<ParametricWaveLayer>(num_waves, span, colors[i % colors.size()], para_curve_1, para_curve_2, centre_1, centre_2, step_size, amplitude));
     }
+    composite->set_precedence(-1);
+
     return composite;
 }
 
@@ -450,6 +461,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_bars(int window_width, i
             amplitude = int(double(amplitude) * reduction_factor);
         }
     }
+    composite->set_precedence(10);
     return composite;
 }
 
@@ -473,6 +485,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_checker_board(int window
         composite->add_layer(
             std::make_unique<MovingWaveLayer>(num_waves, wave_orientation, wave_movement, window_width, window_height, amplitude, wave_color));
     }
+    composite->set_precedence(1);
     return composite;
 }
 
@@ -492,7 +505,7 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_scrolling_lines(int wind
         composite->add_layer(
             std::make_unique<MovingWaveLayer>(num_waves, wave_orientation, wave_movement, window_width, window_height, wave_amplitude, wave_color));
     }
-
+    composite->set_precedence(6);
     return composite;
 }
 

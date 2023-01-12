@@ -7,6 +7,8 @@ UnknownPleasureLayer::UnknownPleasureLayer(int num_waves, int frame_delay, SDL_P
     : wave_count(num_waves), delay(frame_delay), front_start(first_wave_start), front_end(first_wave_end),
     back_start(last_wave_start), back_end(last_wave_end), amplitude(wave_amplitude), line_colors()
 {
+    set_precedence(-10);
+
     for (int i = 0; i < wave_count * delay + 1; ++i) {
         waveforms.emplace_back();
     }
