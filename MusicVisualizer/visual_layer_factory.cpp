@@ -238,12 +238,13 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_wave_spinner(int window_
 std::unique_ptr<VisualLayer> VisualLayerFactory::random_unknown_pleasure(int window_width, int window_height, SignalBoxConfig& cfg, color::ColorPalette palette) {
     wave_signal_config(cfg);
 
-    int num_waves = get_rand_int(8, 15);
-    int wave_amplitude = window_height / 6;
-    SDL_Point first_wave_start{ window_width / 8, 6 * window_height / 8 };
-    SDL_Point first_wave_end{ 7 * window_width / 8, 6 * window_height / 8 };
-    SDL_Point last_wave_start{ 2 * window_width / 8, window_height / 8 };
-    SDL_Point last_wave_end{ 6 * window_width / 8, window_height / 8 };
+    int num_waves = get_rand_int(9, 18);
+    int wave_amplitude = window_height / 5;
+    SDL_Point first_wave_start{ 0, window_height - 1 };
+    SDL_Point first_wave_end{ window_width, window_height - 1 };
+    // Last wave is invisible above the top of the screen.
+    SDL_Point last_wave_start{ 2 * window_width / 8, -1 };
+    SDL_Point last_wave_end{ 6 * window_width / 8, -1 };
     int frame_delay = 10;
 
     // Randomly pick single color or multiple colors.
