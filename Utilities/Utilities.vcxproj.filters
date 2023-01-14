@@ -36,6 +36,9 @@
     <ClInclude Include="prominent_peaks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\MusicVisualizer\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="draw_utilities.cpp">

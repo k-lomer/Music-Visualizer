@@ -46,7 +46,7 @@ public:
     void copy_data(float * data, int channels, int frames) override;
 
 private:
-    // Applicationi window members.
+    // Application window members.
     //
     // The SDL window.
     SDL_Window* m_window = nullptr;
@@ -62,6 +62,8 @@ private:
     bool m_full_screen = false;
     // Whether the visualizer application is minimized.
     bool m_minimized = false;
+    // The name of the application.
+    const std::string m_name;
 
 
     // Audio recording members.

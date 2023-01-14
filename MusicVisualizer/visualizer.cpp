@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "SDL.h"
+#include "../Utilities/version.h"
 
 const std::chrono::seconds Visualizer::s_change_time(10);
 const size_t Visualizer::s_num_layers_init = 2;
@@ -17,7 +18,8 @@ Visualizer::Visualizer():
     m_recorder(),
     m_layer_change_timer(s_change_time),
     m_fps_timer(std::chrono::seconds(1)),
-    m_debug_print_fps(true) {
+    m_debug_print_fps(true),
+    m_name("ICSound " + version::get_version()) {
     // Initialize SDL.
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cout << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
@@ -25,7 +27,7 @@ Visualizer::Visualizer():
     }
 
     // Initialize the SDL window and renderer.
-    m_window = SDL_CreateWindow("Visualizer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_window_width, m_window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    m_window = SDL_CreateWindow(m_name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_window_width, m_window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (m_window) {
         m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     }
