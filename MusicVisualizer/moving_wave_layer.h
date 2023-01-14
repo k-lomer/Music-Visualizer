@@ -23,17 +23,17 @@ public:
 
 private:
     // The orientation of the waves.
-    Orientation wave_orientation;
+    Orientation m_wave_orientation;
     // The per pixel movement at each update.
-    double movement;
+    double m_movement;
     // The window width.
-    int window_width;
+    int m_window_width;
     // The window height.
-    int window_height;
+    int m_window_height;
     // The maximum amplitude of the waves.
-    int amplitude;
+    int m_amplitude;
     // The color of the waves.
-    SDL_Color color;
+    SDL_Color m_color;
     // The current positions of waves in given orientation.
-    std::vector<double> wave_positions;
+    std::vector<double> m_wave_positions;
 };

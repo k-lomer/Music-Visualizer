@@ -20,15 +20,15 @@ public:
 
 private:
     // The class which identifies the prominent peaks.
-    ProminentPeaks peaks;
+    ProminentPeaks m_peaks;
     // The width of the window.
-    int window_width;
+    int m_window_width;
     // The height of the window.
-    int window_height;
+    int m_window_height;
     // The color of the wave.
-    SDL_Color color;
+    SDL_Color m_color;
     // The start point of the wave.
-    SDL_Point start;
+    SDL_Point m_start;
     // The end point of the wave.
-    SDL_Point end;
+    SDL_Point m_end;
 };

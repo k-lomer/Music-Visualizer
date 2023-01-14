@@ -18,8 +18,8 @@ public:
     // param: amplitude                     - the maximum amplitude of the waves
     ParametricWaveLayer(int num_waves, double span, const SDL_Color & wave_color, const ParametricEquation2d & curve_1, const ParametricEquation2d & curve_2,
         const SDL_Point & centre_1, const SDL_Point & centre_2, double step_size, int amplitude)
-        : wave_count(num_waves), wave_span(span), color(wave_color), curve_1(curve_1), curve_2(curve_2),
-        centre_1(centre_1), centre_2(centre_2), update_step(step_size), amplitude(amplitude) {}
+        : m_wave_count(num_waves), m_wave_span(span), m_color(wave_color), m_curve_1(curve_1), m_curve_2(curve_2),
+        m_centre_1(centre_1), m_centre_2(centre_2), m_update_step(step_size), m_amplitude(amplitude) {}
 
     // Draw the ParametricWaveLayer.
     // param: renderer                      - the renderer to draw the ParametricWaveLayer
@@ -28,23 +28,23 @@ public:
 
 private:
     // The number of waves to draw.
-    int wave_count;
+    int m_wave_count;
     // the span of parameter t to be covered by the waves.
-    double wave_span;
+    double m_wave_span;
     // The color of the waves.
-    SDL_Color color;
+    SDL_Color m_color;
     // The curve defining the start points of the waves.
-    const ParametricEquation2d curve_1;
+    const ParametricEquation2d m_curve_1;
     // The curve defining the end points of the waves.
-    const ParametricEquation2d curve_2;
+    const ParametricEquation2d m_curve_2;
     // The centre of the first curve.
-    SDL_Point centre_1;
+    SDL_Point m_centre_1;
     // The centre of the second curve.
-    SDL_Point centre_2;
+    SDL_Point m_centre_2;
     // The amout to update the current position on each frame.
-    double update_step;
+    double m_update_step;
     // The current position on the parametric curves, parameter t.
-    double current_pos = 0.0;
+    double m_current_pos = 0.0;
     // The maximum amplitude of the waves.
-    int amplitude;
+    int m_amplitude;
 };

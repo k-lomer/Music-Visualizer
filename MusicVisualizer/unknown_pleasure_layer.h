@@ -35,23 +35,23 @@ public:
 
 private:
     // The number of waves to draw.
-    int wave_count;
+    int m_wave_count;
     // The number of frames of delay between each wave.
-    int delay;
+    int m_delay;
     // The coordinates of the start of the front wave.
-    SDL_Point front_start;
+    SDL_Point m_front_start;
     // The coordinates of the end of the front wave.
-    SDL_Point front_end;
+    SDL_Point m_front_end;
     // The coordinates of the start of the back wave.
-    SDL_Point back_start;
+    SDL_Point m_back_start;
     // The coordinates of the end of the back wave.
-    SDL_Point back_end;
+    SDL_Point m_back_end;
     // The maximum aplitude of the waves.
-    int amplitude;
+    int m_amplitude;
     // The colors to draw the waves.
-    std::vector<SDL_Color> line_colors;
+    std::vector<SDL_Color> m_line_colors;
     // The different waves to draw.
-    std::deque<std::vector<float>> waveforms;
+    std::deque<std::vector<float>> m_waveforms;
     // The colors to fill the waves.
-    std::vector<SDL_Color> fill_colors;
+    std::vector<SDL_Color> m_fill_colors;
 };

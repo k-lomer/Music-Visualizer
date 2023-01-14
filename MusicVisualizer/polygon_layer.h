@@ -36,23 +36,23 @@ public:
 
     // Set the rotation about the centre for this polygon.
     // param: rot                           - the rotation in radians
-    void set_rotation(double rot) {rotation = rot;}
+    void set_rotation(double rot) {m_rotation = rot;}
 
     // Get the rotation about the centre for this polygon.
     // param: double                        - the rotation in radians
-    double get_rotation() const {return rotation;}
+    double get_rotation() const {return m_rotation;}
 
 private:
     // The centre coordinates of this polygon.
-    SDL_Point centre;
+    SDL_Point m_centre;
     // The maximum aplitude of the waves on the edges.
-    int amplitude;
+    int m_amplitude;
     // The color to draw this polygon.
-    SDL_Color color;
+    SDL_Color m_color;
     // The ordered vertices which make up the polygon.
-    std::vector<SDL_Point> vertices;
+    std::vector<SDL_Point> m_vertices;
     // The rate of rotation.
-    double rotation_rate;
+    double m_rotation_rate;
     // The current rotation.
-    double rotation = 0.0;
+    double m_rotation = 0.0;
 };

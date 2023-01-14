@@ -14,29 +14,29 @@ public:
     // param: box_scale                     - the scale of the box
     // param: box_scale_rate                - the rate at which to scale the box
     ScreenBoxLayer(int num_waves, int width, int height, int wave_amplitude, SDL_Color wave_color, double box_scale = 1.0, double box_scale_rate = 0.0)
-        : wave_count(num_waves), window_width(width), window_height(height), amplitude(wave_amplitude), color(wave_color), scale(box_scale), scale_rate(box_scale_rate){}
+        : m_wave_count(num_waves), m_window_width(width), m_window_height(height), m_amplitude(wave_amplitude), m_color(wave_color), m_scale(box_scale), m_scale_rate(box_scale_rate){}
 
     // Draw the ScreenBoxLayer.
     // param: renderer                      - the renderer to draw the ScreenBoxLayer
     // param: signal                        - the signal to draw
     virtual void draw(SDL_Renderer * renderer, const wave & signal) override;
 
-    double get_scale() const { return scale; }
+    double get_scale() const { return m_scale; }
 
 private:
     // The number of waves to draw.
-    int wave_count;
+    int m_wave_count;
     // The width of the window.
-    int window_width;
+    int m_window_width;
     // The height of the window.
-    int window_height;
+    int m_window_height;
     // The maximum amplitude of waves.
-    int amplitude;
+    int m_amplitude;
     // The color to draw waves.
-    SDL_Color color;
+    SDL_Color m_color;
     // The scale of the box, about the centre of the window.
-    double scale;
+    double m_scale;
     // The rate at which to scale the box.
-    double scale_rate;
+    double m_scale_rate;
 };
 
