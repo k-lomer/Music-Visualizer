@@ -1,6 +1,4 @@
 
-Position of unknown pleasure layer
-Bars not always all shown?
 Make wave/packet/Orientation a universal type?
 Namespaces
 Version

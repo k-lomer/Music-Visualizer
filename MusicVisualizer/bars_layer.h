@@ -8,7 +8,7 @@
 class BarsLayer : public VisualLayer {
 public:
     // Bars layer constructor.
-    // param: divisions                         - the number of bars to draw
+    // param: num_bars                          - the number of bars to draw
     // param: bars_start                        - the coordinates of the start of the bars
     // param: bars_end                          - the coordinates of the end of the bars
     // param: bars_amplitude                    - the the maximum pixel amplitude of the bars
@@ -23,15 +23,15 @@ public:
 
 private:
     // The number of divisions for the bars.
-    int divisions;
+    int m_divisions;
     // The start point of the bars.
-    SDL_Point start;
+    SDL_Point m_start;
     // The end point of the bars.
-    SDL_Point end;
+    SDL_Point m_end;
     // The maximum amplitude of the bars.
-    int amplitude;
+    int m_amplitude;
     // The color to draw the bars.
-    SDL_Color color;
+    SDL_Color m_color;
     // The pixel gap between the bars.
-    int gap_pixels;
+    int m_gap_pixels;
 };
