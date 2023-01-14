@@ -1,6 +1,5 @@
 #include "dsp_utilities.h"
 
-#include <iostream>
 #include <algorithm>
 #include <complex>
 #include <cmath>

@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 
 int distance(const SDL_Point& p_1, const SDL_Point& p_2) {
     return int(sqrt((std::pow(p_1.x - p_2.x, 2) + std::pow(p_1.y - p_2.y, 2))));
@@ -240,7 +239,6 @@ void draw_circle(SDL_Renderer * const renderer, const SDL_Point & centre, int ra
             fill_points.push_back(SDL_Point{ inner_points[i].x, -inner_points[i].y });
             fill_points.push_back(SDL_Point{ outer_points[i].x, -outer_points[i].y });
         }
-        std::cout << std::endl;
         for (int i = 0; i < inner_points.size(); ++i) {
             fill_points.push_back(SDL_Point{ -inner_points[i].x, -inner_points[i].y });
             fill_points.push_back(SDL_Point{ -outer_points[i].x, -outer_points[i].y });

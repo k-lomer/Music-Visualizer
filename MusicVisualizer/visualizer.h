@@ -14,7 +14,6 @@
 #include "visual_layer.h"
 #include "visual_layer_factory.h"
 
-
 // The items associated with each visual layer.
 struct VisualLayerItems {
     // The visual layer.

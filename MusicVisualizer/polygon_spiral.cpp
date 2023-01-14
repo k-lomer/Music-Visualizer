@@ -1,6 +1,5 @@
 #include "polygon_spiral.h"
 
-#include <iostream>
 #include <algorithm>
 
 #include "../Utilities/draw_utilities.h"

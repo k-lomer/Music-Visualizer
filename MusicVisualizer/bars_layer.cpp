@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <numeric>
-#include <iostream>
 
 #include "../Utilities/draw_utilities.h"
 

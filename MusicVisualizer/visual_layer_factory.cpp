@@ -1,6 +1,5 @@
 #include "visual_layer_factory.h"
 
-#include <iostream>
 #include <numeric>
 
 #include "signal_box.h"
