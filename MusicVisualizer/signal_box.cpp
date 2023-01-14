@@ -27,7 +27,6 @@ SignalBoxConfig SignalBox::enforce_bounds(const SignalBoxConfig& cfg) {
 
 void SignalBox::reset(const SignalBoxConfig& cfg) {
     m_cfg = enforce_bounds(cfg);
-    m_raw_signal = wave();
     m_updated_abs_signal = wave();
     m_signal_max = 0.0f;
     m_updated_max = 0.0f;
