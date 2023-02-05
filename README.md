@@ -5,7 +5,7 @@ A music visualizer application for windows.
 - Real-time audio visualizations
 - 12 different visuals which can be layered up
 - 14 different colour palettes
-- Works on any audio interface and output
+- Works on any audio interface or output
 
 ## Installation and usage
 1. Download the latest version from releases.
