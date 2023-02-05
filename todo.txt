@@ -1,16 +1,18 @@
-
-Make wave/packet/Orientation a universal type?
-Namespaces
-Version
-Create installer
-Package
+Reset audio interface on silence
+Name
+Check Installer
+Package/Release
 Update github page README
 v0.1
 
 Linter
+Namespaces
+Debug text
+Make wave/packet/Orientation a universal type?
 Refactor window height and width and possibly signal box into base class
 Update audio recorder to modern c++
 Improve frequency spectrum
+Optimize get_all_peaks
 multithread signalbox processing
 Small sine wave instead of silence
 Tweak visuals to look better with portait windows

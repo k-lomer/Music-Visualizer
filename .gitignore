@@ -36,3 +36,5 @@
 SDL2-devel-2.0.12-VC/
 x64/
 MusicVisualizer/x64/
+SetupPackage/Debug/
+SetupPackage/Release/
