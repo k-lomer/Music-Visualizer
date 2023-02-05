@@ -26,6 +26,8 @@ public:
 private:
     // The number of peaks to identify.
     int m_num_peaks;
+    // The window size a point must be maximal in to be considered a peak.
+    const double m_window_size = 0.05;
 
     // Get all peaks in a signal.
     // param: signal                - the signal to check

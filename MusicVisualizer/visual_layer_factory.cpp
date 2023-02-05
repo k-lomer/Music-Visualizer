@@ -90,7 +90,6 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_visual_layer(int window_
     case ParametricCurve:
     {
         return random_parametric_curve(window_width, window_height, cfg, palette);
-
     }
     case ParametricWave:
     {
@@ -341,9 +340,9 @@ std::unique_ptr<VisualLayer> VisualLayerFactory::random_parametric_curve(int win
     cfg.fix_base = false;
     cfg.reflect = false;
     cfg.taper_edges = 0.0f;
-    cfg.time_window = get_rand_float(2.0, 5.0);
+    cfg.time_window = 3.0f;
     cfg.decay_factor = 0.0f;
-    cfg.smoothing_window = 0.0f;
+    cfg.smoothing_window = 0.1f;
 
     double x_coeff = get_rand_double(2.0, 3.0);
     double y_coeff = get_rand_double(2.0, 3.0);

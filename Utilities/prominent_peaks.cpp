@@ -7,6 +7,7 @@ ProminentPeaks::ProminentPeaks(int num_peaks) : m_num_peaks(num_peaks) {}
 
 std::vector< double > ProminentPeaks::get_peak_positions(const wave& signal) {
     std::vector<int> all_peak_indexes = get_all_peaks(signal);
+
     std::vector<int> prominent_peak_indexes;
     if (signal.empty() || all_peak_indexes.empty())
     {
@@ -85,9 +86,17 @@ float ProminentPeaks::get_peak_prominence(const wave& signal, int peak_index) {
 
 std::vector< int > ProminentPeaks::get_all_peaks(const wave& signal) {
     std::vector< int > peak_index;
+    int peak_window = int(signal.size() * m_window_size);
 
-    for (int i = 1; i < int(signal.size()) - 1; ++i) {
-        if (signal[i - 1] < signal[i] && signal[i] >= signal[i + 1]) {
+    for (int i = peak_window; i < int(signal.size()) - peak_window; ++i) {
+        bool is_peak = true;
+        for (int j = 1; j <= peak_window; ++j) {
+            if (signal[i - j] >= signal[i] || signal[i] < signal[i + j]) {
+                is_peak = false;
+                break;
+            }
+        }
+        if (is_peak) {
             peak_index.push_back(i);
         }
     }
