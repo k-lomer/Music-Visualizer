@@ -17,6 +17,62 @@ const IID IID_IAudioCaptureClient = __uuidof(IAudioCaptureClient);
 
 
 AudioRecorder::AudioRecorder() {
+    init();
+};
+
+// Safely release and nullify pointers.
+template<class T> inline void safe_release(T* &p_object) {
+    if (p_object) {
+        p_object->Release();
+        p_object = nullptr;
+    }
+}
+
+AudioRecorder::~AudioRecorder() {
+    terminate();
+}
+
+bool AudioRecorder::init_successful() const {
+    return (m_hr == S_OK) && m_audio_client && m_capture_client;
+}
+
+void AudioRecorder::reset() {
+    terminate();
+    init();
+}
+
+void AudioRecorder::record(AudioSink* audio_sink, std::atomic_bool& exit_flag) const {
+    m_hr = S_OK;
+    UINT32 packet_length = 0;
+    BYTE* data = nullptr;
+    UINT32 num_frames_available;
+    DWORD flags;
+
+    while (!exit_flag) {
+        m_hr = m_capture_client->GetNextPacketSize(&packet_length);
+        while (packet_length != 0 && !exit_flag) // While there are available packets.
+        {
+            // Get the available data in the shared buffer.
+            data = nullptr;
+            m_hr = m_capture_client->GetBuffer(
+                &data,
+                &num_frames_available,
+                &flags, nullptr, nullptr);
+
+            if (flags & AUDCLNT_BUFFERFLAGS_SILENT) {
+                // Data pointer is null for silence.
+                data = nullptr;
+            }
+            audio_sink->copy_data((float*)data, m_num_channels, num_frames_available);
+
+            m_hr = m_capture_client->ReleaseBuffer(num_frames_available);
+            m_hr = m_capture_client->GetNextPacketSize(&packet_length);
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(s_sleep_time));
+    }
+}
+
+void AudioRecorder::init() {
     m_hr = S_OK;
     m_audio_client = nullptr;
 
@@ -71,19 +127,10 @@ AudioRecorder::AudioRecorder() {
 
     if (m_hr != S_OK) {
         std::cout << "Error: During AudioRecorder intialization - " << _com_error(m_hr).ErrorMessage() << std::endl;
-
-    }
-};
-
-// Safely release and nullify pointers (in destructor).
-template<class T> inline void safe_release(T* &p_object) {
-    if (p_object) {
-        p_object->Release();
-        p_object = nullptr;
     }
 }
 
-AudioRecorder::~AudioRecorder() {
+void AudioRecorder::terminate() {
     if (m_audio_client) {
         // Stop recording.
         m_audio_client->Stop();
@@ -93,39 +140,4 @@ AudioRecorder::~AudioRecorder() {
     safe_release(m_audio_device_endpoint);
     safe_release(m_audio_client);
     safe_release(m_capture_client);
-}
-
-bool AudioRecorder::init_successful() const {
-    return (m_hr == S_OK) && m_audio_client && m_capture_client;
-}
-
-void AudioRecorder::record(AudioSink* audio_sink, std::atomic_bool& exit_flag) const {
-    m_hr = S_OK;
-    UINT32 packet_length = 0;
-    BYTE* data = nullptr;
-    UINT32 num_frames_available;
-    DWORD flags;
-
-    while (!exit_flag) {
-        m_hr = m_capture_client->GetNextPacketSize(&packet_length);
-        while (packet_length != 0 && !exit_flag) // While there are available packets.
-        {
-            // Get the available data in the shared buffer.
-            data = nullptr;
-            m_hr = m_capture_client->GetBuffer(
-                &data,
-                &num_frames_available,
-                &flags, nullptr, nullptr);
-
-            if (flags & AUDCLNT_BUFFERFLAGS_SILENT) {
-                // Data pointer is null for silence.
-                data = nullptr;
-            }
-            audio_sink->copy_data((float*)data, m_num_channels, num_frames_available);
-
-            m_hr = m_capture_client->ReleaseBuffer(num_frames_available);
-            m_hr = m_capture_client->GetNextPacketSize(&packet_length);
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(s_sleep_time));
-    }
 }

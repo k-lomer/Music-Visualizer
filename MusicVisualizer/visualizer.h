@@ -80,6 +80,8 @@ private:
     typedef std::vector<float> packet;
     // The buffer for storing audio data packets, must use a mutex to access this as it is used by multiple threads.
     std::vector<std::shared_ptr<packet>> m_packet_buffer;
+    // Whether to reset the audio recorder due to no audio data packets coming through the sink.
+    bool m_reset_audio_recorder = false;
 
     // Visual layer members.
     //
@@ -127,6 +129,9 @@ private:
 
     // Change the color palette.
     void change_color();
+
+    // Reset the audio recorder.
+    void reset_audio_recorder();
 
     // Draw the visual layers on the screen.
     void draw();

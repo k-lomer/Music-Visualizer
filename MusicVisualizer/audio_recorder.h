@@ -13,12 +13,21 @@ class AudioRecorder {
 public:
     // AudioRecorder constructor.
     AudioRecorder();
+    // Don't allow construction by copy. Bad things can happen with pointer member variables.
+    AudioRecorder(const AudioRecorder&) = delete;
     // AudioRecorder destructor.
     ~AudioRecorder();
+    // Don't allow assignment. Bad things can happen with pointer member variables.
+    AudioRecorder& operator=(AudioRecorder const&) = delete;
+    // Don't allow assignment. Bad things can happen with pointer member variables.
+    AudioRecorder& operator=(AudioRecorder&&) = delete;
 
     // The status of the initialization process.
     // return: bool             - whether the initialization was successful
     bool init_successful() const;
+
+    // Reset the AudioRecorder.
+    void reset();
 
     // Record audio data from the system indefinitely.
     // param: audio_sink        - class which copies the recorded packets
@@ -34,6 +43,12 @@ public:
     unsigned long get_sample_rate() const { return m_sample_rate; }
 
 private:
+    // Initialize the AudioRecorder member variables.
+    void init();
+
+    // Terminate the AudioRecorder member variables.
+    void terminate();
+
     // The result flag for audio operations.
     mutable HRESULT m_hr;
     // The audio device enumerator.

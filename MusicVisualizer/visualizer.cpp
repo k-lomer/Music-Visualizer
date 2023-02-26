@@ -95,6 +95,11 @@ void Visualizer::change_all_layers() {
         change_visual_layer();
     }
     m_layer_change_timer.reset();
+
+    // If the audio recorder has stopped recordings, this is where it should be restarted.
+    if (m_reset_audio_recorder) {
+        reset_audio_recorder();
+    }
 }
 
 void Visualizer::change_color() {
@@ -171,16 +176,20 @@ void Visualizer::handle_event(const SDL_Event & e) {
 }
 
 void Visualizer::copy_data(float * data, int channels, int frames) {
-    if (data) {
-         std::shared_ptr<packet> packet_ptr = std::make_shared<packet>(data, data + channels * frames);
-         std::lock_guard<std::mutex>write_guard(m_packet_buffer_mutex);
-         m_packet_buffer.push_back(packet_ptr);
+    if (data && frames > 0) {
+        std::shared_ptr<packet> packet_ptr = std::make_shared<packet>(data, data + channels * frames);
+        std::lock_guard<std::mutex>write_guard(m_packet_buffer_mutex);
+        m_packet_buffer.push_back(packet_ptr);
+        // Keep recording.
+        m_reset_audio_recorder = false;
     }
     else {
-        // use an empty vector if there is no data (silence).
+        // Use an empty vector if there is no data (silence).
         std::shared_ptr<packet> packet_ptr = std::make_shared<packet>();
         std::lock_guard<std::mutex>write_guard(m_packet_buffer_mutex);
         m_packet_buffer.push_back(packet_ptr);
+        // Reset the audio recorder at the next possible chance.
+        m_reset_audio_recorder = true;
     }
 }
 
@@ -223,11 +232,38 @@ bool Visualizer::update() {
     return true;
 }
 
+void Visualizer::reset_audio_recorder()
+{
+    // Wait for recording thread to exit.
+    m_exit_recording_thread_flag = true;
+    if (m_recording_thread.joinable()) {
+        m_recording_thread.join();
+    }
+    // Set flag to continue recording.
+    m_exit_recording_thread_flag = false;
+    m_reset_audio_recorder = false;
+    // Reset the audio recorder.
+    m_recorder.reset();
+    // Create a new audio recorder thread.
+    if (m_recorder.init_successful()) {
+        m_recording_thread = std::thread(&AudioRecorder::record, &m_recorder, (AudioSink *)this, std::ref(m_exit_recording_thread_flag));
+    }
+    else {
+        // Problem. Try again soon.
+        std::cout << "Audio recorder initialization failed on reset." << std::endl;
+        m_exit_recording_thread_flag = true;
+        m_reset_audio_recorder = true;
+    }
+}
+
 void Visualizer::draw() {
+    // Copy and new packets.
     std::unique_lock<std::mutex>read_write_guard(m_packet_buffer_mutex);
     std::vector<std::shared_ptr<packet>> packet_buffer_copy(m_packet_buffer);
     m_packet_buffer.clear();
     read_write_guard.unlock();
+    // Set recording status flag.
+    m_reset_audio_recorder = packet_buffer_copy.empty();
 
     // Build precedence to index map.
     std::map<int, std::list<size_t>> precedences;
@@ -245,5 +281,4 @@ void Visualizer::draw() {
             m_visual_layers[i].visual_layer->draw(m_renderer, w);
         }
     }
-
 }
