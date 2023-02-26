@@ -1,4 +1,6 @@
 # Music-Visualizer
+![](https://github.com/k-lomer/Music-Visualizer/blob/main/docs/preview.gif)
+
 A music visualizer application for windows.
 
 ## Features
